@@ -1,0 +1,125 @@
+{
+  "description": "Jeu d'evaluation multilingue. Chaque entree est la MEME question posee en francais, en arabe et en anglais. Le corpus arXiv etant entierement en anglais, un moteur reellement independant de la langue doit renvoyer approximativement les memes articles pour les trois formulations. Le taux de recouvrement mesure cette propriete sans necessiter la moindre annotation manuelle.",
+  "triplets": [
+    {
+      "theme": "fraude bancaire",
+      "fr": "détection de la fraude bancaire par apprentissage automatique",
+      "ar": "كشف الاحتيال المصرفي باستخدام التعلم الآلي",
+      "en": "machine learning for banking fraud detection"
+    },
+    {
+      "theme": "traduction automatique",
+      "fr": "traduction automatique neuronale entre langues",
+      "ar": "الترجمة الآلية العصبية بين اللغات",
+      "en": "neural machine translation between languages"
+    },
+    {
+      "theme": "imagerie médicale",
+      "fr": "diagnostic médical à partir d'images par apprentissage profond",
+      "ar": "التشخيص الطبي من الصور باستخدام التعلم العميق",
+      "en": "deep learning for medical image diagnosis"
+    },
+    {
+      "theme": "conduite autonome",
+      "fr": "perception visuelle pour la conduite autonome",
+      "ar": "الإدراك البصري للقيادة الذاتية",
+      "en": "visual perception for autonomous driving"
+    },
+    {
+      "theme": "attaques adverses",
+      "fr": "attaques adverses contre les réseaux de neurones",
+      "ar": "الهجمات العدائية على الشبكات العصبية",
+      "en": "adversarial attacks against neural networks"
+    },
+    {
+      "theme": "apprentissage fédéré",
+      "fr": "apprentissage fédéré et protection de la vie privée",
+      "ar": "التعلم الموحد وحماية خصوصية البيانات",
+      "en": "federated learning and data privacy"
+    },
+    {
+      "theme": "raisonnement des LLM",
+      "fr": "capacités de raisonnement des grands modèles de langue",
+      "ar": "قدرات الاستدلال في نماذج اللغة الكبيرة",
+      "en": "reasoning abilities of large language models"
+    },
+    {
+      "theme": "recommandation",
+      "fr": "systèmes de recommandation personnalisés",
+      "ar": "أنظمة التوصية المخصصة",
+      "en": "personalized recommender systems"
+    },
+    {
+      "theme": "désinformation",
+      "fr": "détection automatique de fausses informations",
+      "ar": "الكشف الآلي عن الأخبار الزائفة",
+      "en": "automatic fake news detection"
+    },
+    {
+      "theme": "reconnaissance vocale",
+      "fr": "reconnaissance automatique de la parole",
+      "ar": "التعرف التلقائي على الكلام",
+      "en": "automatic speech recognition"
+    },
+    {
+      "theme": "apprentissage par renforcement",
+      "fr": "apprentissage par renforcement pour les jeux",
+      "ar": "التعلم المعزز في الألعاب",
+      "en": "reinforcement learning for games"
+    },
+    {
+      "theme": "compression de modèles",
+      "fr": "compression et distillation de modèles de réseaux de neurones",
+      "ar": "ضغط وتقطير نماذج الشبكات العصبية",
+      "en": "neural network model compression and distillation"
+    },
+    {
+      "theme": "anomalies réseau",
+      "fr": "détection d'anomalies dans le trafic réseau",
+      "ar": "كشف الشذوذ في حركة مرور الشبكة",
+      "en": "anomaly detection in network traffic"
+    },
+    {
+      "theme": "modèles de diffusion",
+      "fr": "génération d'images par modèles de diffusion",
+      "ar": "توليد الصور باستخدام نماذج الانتشار",
+      "en": "image generation with diffusion models"
+    },
+    {
+      "theme": "réseaux sur graphes",
+      "fr": "réseaux de neurones sur graphes",
+      "ar": "الشبكات العصبية للرسوم البيانية",
+      "en": "graph neural networks"
+    },
+    {
+      "theme": "analyse de sentiment",
+      "fr": "analyse des sentiments dans les textes",
+      "ar": "تحليل المشاعر في النصوص",
+      "en": "sentiment analysis in text"
+    },
+    {
+      "theme": "séries temporelles",
+      "fr": "prévision de séries temporelles",
+      "ar": "التنبؤ بالسلاسل الزمنية",
+      "en": "time series forecasting"
+    },
+    {
+      "theme": "confidentialité différentielle",
+      "fr": "confidentialité différentielle pour l'apprentissage automatique",
+      "ar": "الخصوصية التفاضلية في التعلم الآلي",
+      "en": "differential privacy for machine learning"
+    },
+    {
+      "theme": "segmentation d'images",
+      "fr": "segmentation sémantique d'images",
+      "ar": "التجزئة الدلالية للصور",
+      "en": "semantic image segmentation"
+    },
+    {
+      "theme": "recherche dense",
+      "fr": "recherche d'information dense et question-réponse",
+      "ar": "استرجاع المعلومات الكثيف والإجابة على الأسئلة",
+      "en": "dense information retrieval and question answering"
+    }
+  ]
+}
