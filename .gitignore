@@ -1,0 +1,15 @@
+__pycache__/
+*.py[cod]
+.venv/
+venv/
+
+# Données et index : volumineux et reconstructibles
+data/brut/*.jsonl
+data/index/*
+
+.streamlit/
+.pytest_cache/
+.DS_Store
+
+# PDF et apercus generes (reconstructibles avec scripts/5_exporter_pdf.py)
+export/

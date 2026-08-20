@@ -1,0 +1,23 @@
+# Dépendances du projet
+# Installation :  python -m pip install -r requirements.txt
+
+# Modèle d'embeddings (installe aussi torch et transformers)
+sentence-transformers>=3.0.0
+
+# Index vectoriel
+faiss-cpu>=1.8.0
+numpy>=1.26.0
+
+# Baseline lexicale de comparaison
+rank-bm25>=0.2.2
+
+# API
+fastapi>=0.115.0
+uvicorn>=0.30.0
+
+# Interface graphique
+streamlit>=1.38.0
+requests>=2.32.0
+
+# Tests
+pytest>=8.0.0
