@@ -1,0 +1,16 @@
+{
+  "nb_documents": 8520,
+  "nb_passages": 10832,
+  "duree_preparation_s": 0.52,
+  "duree_encodage_s": 729.99,
+  "dimension": 384,
+  "duree_construction_index_s": 0.14,
+  "type_index": "flat",
+  "taille_index_mo": 15.87,
+  "bm25": {
+    "nb_passages": 10832,
+    "duree_construction_index_s": 0.97
+  },
+  "duree_totale_s": 732.35,
+  "modele": "intfloat/multilingual-e5-small"
+}
