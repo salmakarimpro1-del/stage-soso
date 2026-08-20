@@ -1,0 +1,907 @@
+<title>Du mot au vecteur</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:wght@400;500&family=Newsreader:ital,opsz,wght@0,6..72,400;0,6..72,500;0,6..72,600;1,6..72,400&display=swap">
+
+<style>
+:root{
+  --ground:#F1F3EE;
+  --surface:#FBFCFA;
+  --ink:#151A18;
+  --ink-soft:#586360;
+  --ink-faint:#8A938F;
+  --rule:#D6DCD3;
+  --rule-soft:#E5E9E1;
+  --accent:#0F544C;
+  --accent-tint:#E0EBE7;
+  --mark:#7C2F4E;
+  --mark-tint:#F2E4E9;
+  --shadow:rgba(21,26,24,.07);
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --ground:#0E1211;
+    --surface:#151B19;
+    --ink:#E7ECE9;
+    --ink-soft:#9AA4A0;
+    --ink-faint:#6E7975;
+    --rule:#28312E;
+    --rule-soft:#1E2523;
+    --accent:#63C1B1;
+    --accent-tint:#16302C;
+    --mark:#DB8FA9;
+    --mark-tint:#301B23;
+    --shadow:rgba(0,0,0,.4);
+  }
+}
+:root[data-theme="dark"]{
+  --ground:#0E1211;
+  --surface:#151B19;
+  --ink:#E7ECE9;
+  --ink-soft:#9AA4A0;
+  --ink-faint:#6E7975;
+  --rule:#28312E;
+  --rule-soft:#1E2523;
+  --accent:#63C1B1;
+  --accent-tint:#16302C;
+  --mark:#DB8FA9;
+  --mark-tint:#301B23;
+  --shadow:rgba(0,0,0,.4);
+}
+
+*{box-sizing:border-box}
+body{
+  margin:0;
+  background:var(--ground);
+  color:var(--ink);
+  font-family:"IBM Plex Sans",-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
+  font-size:16.5px;
+  line-height:1.68;
+  -webkit-font-smoothing:antialiased;
+}
+a{color:var(--accent);text-decoration:none;border-bottom:1px solid color-mix(in srgb,var(--accent) 35%,transparent)}
+a:hover{border-bottom-color:var(--accent)}
+a:focus-visible,input:focus-visible{outline:2px solid var(--accent);outline-offset:3px}
+
+.wrap{max-width:1240px;margin:0 auto;padding:0 32px}
+
+/* ---------- en-tête ---------- */
+.masthead{border-bottom:1px solid var(--rule);padding:72px 0 40px}
+.eyebrow{
+  font-family:"IBM Plex Mono",monospace;font-size:12px;letter-spacing:.14em;
+  text-transform:uppercase;color:var(--ink-faint);margin:0 0 20px
+}
+h1{
+  font-family:Newsreader,Georgia,serif;font-weight:500;font-size:clamp(2.6rem,6vw,4.1rem);
+  line-height:1.03;letter-spacing:-.018em;margin:0;text-wrap:balance;max-width:15ch
+}
+.standfirst{
+  font-family:Newsreader,Georgia,serif;font-size:1.28rem;line-height:1.55;color:var(--ink-soft);
+  max-width:56ch;margin:22px 0 0
+}
+.facts{display:flex;flex-wrap:wrap;gap:0;margin-top:36px;border-top:1px solid var(--rule-soft)}
+.fact{padding:16px 28px 0 0;margin-right:28px;border-right:1px solid var(--rule-soft)}
+.fact:last-child{border-right:0}
+.fact dt{font-family:"IBM Plex Mono",monospace;font-size:11px;letter-spacing:.12em;
+  text-transform:uppercase;color:var(--ink-faint);margin:0 0 4px}
+.fact dd{margin:0;font-size:1.05rem;font-variant-numeric:tabular-nums}
+
+/* ---------- grille ---------- */
+.layout{display:grid;grid-template-columns:1fr;gap:0;padding:0 0 96px}
+@media (min-width:1060px){
+  .layout{grid-template-columns:214px 1fr;gap:64px;align-items:start}
+}
+
+/* ---------- rail ---------- */
+.rail{display:none}
+@media (min-width:1060px){
+  .rail{display:block;position:sticky;top:28px;padding-top:44px}
+}
+.rail h2{font-family:"IBM Plex Mono",monospace;font-size:11px;letter-spacing:.12em;
+  text-transform:uppercase;color:var(--ink-faint);font-weight:400;margin:0 0 14px}
+.rail ol{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:2px}
+.rail a{display:flex;gap:10px;padding:5px 0;font-size:14px;color:var(--ink-soft);border:0;line-height:1.35}
+.rail a:hover{color:var(--accent)}
+.rail .n{font-family:"IBM Plex Mono",monospace;font-size:12px;color:var(--ink-faint);padding-top:1px}
+.progress{margin-top:26px;padding-top:18px;border-top:1px solid var(--rule)}
+.progress p{margin:0;font-family:"IBM Plex Mono",monospace;font-size:12px;color:var(--ink-faint)}
+.bar{height:3px;background:var(--rule);margin-top:9px;position:relative;overflow:hidden}
+.bar span{position:absolute;inset:0 auto 0 0;width:0;background:var(--accent);transition:width .25s ease}
+
+/* ---------- contenu ---------- */
+main{min-width:0;padding-top:44px}
+section{padding:0 0 12px;margin-bottom:56px}
+section+section{border-top:1px solid var(--rule);padding-top:52px}
+
+.mhead{display:flex;align-items:baseline;gap:16px;flex-wrap:wrap;margin-bottom:6px}
+.mnum{font-family:"IBM Plex Mono",monospace;font-size:12px;letter-spacing:.1em;
+  text-transform:uppercase;color:var(--accent)}
+.mtime{font-family:"IBM Plex Mono",monospace;font-size:12px;color:var(--ink-faint);
+  margin-left:auto;font-variant-numeric:tabular-nums}
+h2.mtitle{font-family:Newsreader,Georgia,serif;font-weight:500;font-size:2.05rem;
+  line-height:1.14;letter-spacing:-.012em;margin:0;flex-basis:100%;text-wrap:balance}
+.lede{color:var(--ink-soft);max-width:64ch;margin:12px 0 30px;font-size:1.04rem}
+
+.block{display:grid;grid-template-columns:1fr;gap:8px;margin-bottom:26px}
+@media (min-width:760px){
+  .block{grid-template-columns:118px 1fr;gap:26px}
+}
+.blabel{font-family:"IBM Plex Mono",monospace;font-size:11px;letter-spacing:.11em;
+  text-transform:uppercase;color:var(--ink-faint);padding-top:5px}
+.bbody{min-width:0;max-width:66ch}
+.bbody>*:first-child{margin-top:0}
+.bbody>*:last-child{margin-bottom:0}
+.bbody p{margin:0 0 12px}
+
+ul.plain{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:9px}
+ul.plain li{padding-left:18px;position:relative}
+ul.plain li::before{content:"";position:absolute;left:0;top:.68em;width:7px;height:1px;background:var(--ink-faint)}
+
+/* ressources */
+ul.res{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:0}
+ul.res li{padding:11px 0;border-bottom:1px solid var(--rule-soft);display:flex;gap:14px;align-items:baseline}
+ul.res li:first-child{padding-top:0}
+ul.res li:last-child{border-bottom:0}
+.rtag{font-family:"IBM Plex Mono",monospace;font-size:10px;letter-spacing:.1em;text-transform:uppercase;
+  color:var(--ink-faint);flex:0 0 62px;padding-top:2px}
+.rbody{min-width:0}
+.rbody em{display:block;font-style:normal;color:var(--ink-soft);font-size:.92rem;line-height:1.5;margin-top:1px}
+.free{color:var(--accent);font-family:"IBM Plex Mono",monospace;font-size:10px;
+  letter-spacing:.08em;text-transform:uppercase;margin-left:7px;white-space:nowrap}
+
+/* tâches */
+ul.tasks{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:2px}
+.task{display:flex;gap:12px;align-items:flex-start;padding:8px 0;cursor:pointer}
+.task input{margin:.42em 0 0;accent-color:var(--accent);width:15px;height:15px;flex:0 0 auto;cursor:pointer}
+.task span{min-width:0}
+.task input:checked+span{color:var(--ink-faint);text-decoration:line-through;
+  text-decoration-color:var(--rule);text-decoration-thickness:1px}
+code{font-family:"IBM Plex Mono",monospace;font-size:.88em;background:var(--rule-soft);
+  padding:1px 5px;border-radius:2px;color:var(--ink)}
+
+/* preuve de maîtrise */
+.proof{border-left:2px solid var(--accent);padding:2px 0 2px 18px;color:var(--ink-soft);
+  font-family:Newsreader,Georgia,serif;font-size:1.09rem;line-height:1.5;max-width:60ch}
+.proof strong{color:var(--ink);font-weight:500}
+
+/* tableaux */
+.scroller{overflow-x:auto;margin:0 0 8px}
+table{border-collapse:collapse;width:100%;font-size:.95rem;min-width:520px}
+th,td{text-align:left;padding:10px 16px 10px 0;border-bottom:1px solid var(--rule-soft);vertical-align:top}
+th{font-family:"IBM Plex Mono",monospace;font-size:11px;letter-spacing:.1em;text-transform:uppercase;
+  color:var(--ink-faint);font-weight:400;border-bottom-color:var(--rule)}
+td.w{font-family:"IBM Plex Mono",monospace;font-size:.86rem;color:var(--accent);white-space:nowrap}
+
+/* méthode */
+.method{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:0;
+  border-top:1px solid var(--rule)}
+.step{padding:22px 24px 24px 0;border-right:1px solid var(--rule-soft)}
+.step:last-child{border-right:0}
+.step h3{font-family:Newsreader,Georgia,serif;font-weight:500;font-size:1.24rem;margin:0 0 7px}
+.step p{margin:0;font-size:.95rem;color:var(--ink-soft);line-height:1.55}
+.step .k{font-family:"IBM Plex Mono",monospace;font-size:11px;color:var(--ink-faint);
+  letter-spacing:.1em;display:block;margin-bottom:9px}
+
+/* questions de soutenance */
+dl.qa{margin:0;display:flex;flex-direction:column;gap:0}
+dl.qa div{padding:14px 0;border-bottom:1px solid var(--rule-soft)}
+dl.qa div:last-child{border-bottom:0}
+dl.qa dt{font-family:Newsreader,Georgia,serif;font-size:1.14rem;font-weight:500;margin:0 0 4px}
+dl.qa dd{margin:0;color:var(--ink-soft);font-size:.98rem;max-width:70ch}
+
+.note{background:var(--accent-tint);padding:20px 24px;margin:30px 0 0;max-width:66ch}
+.note p{margin:0;font-size:.98rem;color:var(--ink)}
+.note .t{font-family:"IBM Plex Mono",monospace;font-size:11px;letter-spacing:.11em;
+  text-transform:uppercase;color:var(--accent);display:block;margin-bottom:8px}
+
+footer{border-top:1px solid var(--rule);padding:34px 0 60px;color:var(--ink-faint);font-size:.92rem}
+
+@media (prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important}}
+
+/* ---------- impression / export PDF ---------- */
+@media print{
+  :root,:root:not([data-theme="light"]){
+    --ground:#FFFFFF;
+    --surface:#FFFFFF;
+    --ink:#151A18;
+    --ink-soft:#4C5653;
+    --ink-faint:#7A837F;
+    --rule:#C9D0C6;
+    --rule-soft:#E1E6DE;
+    --accent:#0F544C;
+    --accent-tint:#E8F0ED;
+    --mark:#7C2F4E;
+    --mark-tint:#F2E4E9;
+  }
+  @page{size:A4;margin:16mm 14mm}
+  body{background:#fff;font-size:10.4pt;line-height:1.52;-webkit-print-color-adjust:exact;print-color-adjust:exact}
+  .wrap{max-width:none;padding:0}
+  .rail{display:none!important}
+  .layout{grid-template-columns:1fr!important;gap:0!important;padding-bottom:0}
+  main{padding-top:0}
+  .masthead{padding:0 0 22px}
+  h1{font-size:30pt}
+  .standfirst{font-size:12pt}
+  section{margin-bottom:0;padding-bottom:0}
+  section+section{break-before:page;border-top:0;padding-top:0}
+  h2.mtitle{font-size:18pt}
+  .mhead,h2.mtitle,.lede,.blabel{break-after:avoid}
+  .block,.proof,.note,.step,ul.res li,ul.tasks li,dl.qa div,tr{break-inside:avoid}
+  table{min-width:0;font-size:9.4pt}
+  .scroller{overflow:visible}
+  a{border-bottom:0;text-decoration:underline;text-decoration-thickness:.5px}
+  .task input{-webkit-appearance:none;appearance:none;border:1px solid var(--ink-faint);
+    border-radius:2px;background:#fff}
+  .progress{display:none}
+  footer{padding-bottom:0}
+}
+</style>
+
+<div class="wrap">
+
+<header class="masthead">
+  <p class="eyebrow">Plan de travail — moteur de recherche sémantique</p>
+  <h1>Du mot au vecteur</h1>
+  <p class="standfirst">Neuf modules pour comprendre, ligne par ligne, le moteur que tu es en train de construire. Chaque notion s'apprend en modifiant le code réel du projet et en observant ce qui casse.</p>
+  <dl class="facts">
+    <div class="fact"><dt>Durée</dt><dd>86 heures</dd></div>
+    <div class="fact"><dt>Rythme conseillé</dt><dd>6 semaines</dd></div>
+    <div class="fact"><dt>Prérequis</dt><dd>aucun</dd></div>
+    <div class="fact"><dt>Coût des ressources</dt><dd>0 €</dd></div>
+  </dl>
+</header>
+
+<div class="layout">
+
+  <nav class="rail" aria-label="Sommaire des modules">
+    <h2>Modules</h2>
+    <ol>
+      <li><a href="#methode"><span class="n">—</span><span>La méthode</span></a></li>
+      <li><a href="#m0"><span class="n">00</span><span>Le socle Python</span></a></li>
+      <li><a href="#m1"><span class="n">01</span><span>Données et API</span></a></li>
+      <li><a href="#m2"><span class="n">02</span><span>Du mot au vecteur</span></a></li>
+      <li><a href="#m3"><span class="n">03</span><span>Recherche vectorielle</span></a></li>
+      <li><a href="#m4"><span class="n">04</span><span>Évaluer un moteur</span></a></li>
+      <li><a href="#m5"><span class="n">05</span><span>Servir avec FastAPI</span></a></li>
+      <li><a href="#m6"><span class="n">06</span><span>L'interface</span></a></li>
+      <li><a href="#m7"><span class="n">07</span><span>Méthode d'ingénieur</span></a></li>
+      <li><a href="#m8"><span class="n">08</span><span>Aller plus loin</span></a></li>
+      <li><a href="#calendrier"><span class="n">—</span><span>Calendrier</span></a></li>
+      <li><a href="#soutenance"><span class="n">—</span><span>Soutenance</span></a></li>
+    </ol>
+    <div class="progress">
+      <p><span id="fait">0</span> / <span id="total">0</span> exercices faits</p>
+      <div class="bar"><span id="jauge"></span></div>
+    </div>
+  </nav>
+
+  <main>
+
+  <!-- ================= MÉTHODE ================= -->
+  <section id="methode">
+    <div class="mhead">
+      <span class="mnum">Avant de commencer</span>
+      <h2 class="mtitle">Quatre gestes, répétés sur chaque notion</h2>
+    </div>
+    <p class="lede">Lire de la documentation sans toucher au code produit l'illusion de comprendre. La compréhension réelle arrive au moment où quelque chose casse et où tu sais pourquoi. Applique ces quatre gestes à chaque concept du plan, dans cet ordre.</p>
+
+    <div class="method">
+      <div class="step">
+        <span class="k">01</span>
+        <h3>Lire</h3>
+        <p>Une ressource, une seule, jusqu'au bout. Pas six onglets ouverts en parallèle.</p>
+      </div>
+      <div class="step">
+        <span class="k">02</span>
+        <h3>Exécuter</h3>
+        <p>Fais tourner le code du projet qui utilise la notion. Observe la sortie réelle, pas celle que tu imagines.</p>
+      </div>
+      <div class="step">
+        <span class="k">03</span>
+        <h3>Casser</h3>
+        <p>Change une valeur, supprime une ligne, inverse une condition. Prédis ce qui va se passer, puis vérifie.</p>
+      </div>
+      <div class="step">
+        <span class="k">04</span>
+        <h3>Expliquer</h3>
+        <p>Dis-le à voix haute en trois phrases, sans jargon. Si tu bloques, tu n'as pas encore compris.</p>
+      </div>
+    </div>
+
+    <div class="note">
+      <span class="t">Le geste qui compte</span>
+      <p>Le troisième. Casser volontairement est le seul moyen de découvrir ce qu'une ligne de code protège réellement. Chaque module ci-dessous contient au moins un exercice de sabotage délibéré.</p>
+    </div>
+  </section>
+
+  <!-- ================= MODULE 0 ================= -->
+  <section id="m0">
+    <div class="mhead">
+      <span class="mnum">Module 00</span>
+      <span class="mtime">10 h</span>
+      <h2 class="mtitle">Le socle Python</h2>
+    </div>
+    <p class="lede">Tu n'as pas besoin de maîtriser Python pour commencer, mais tu dois pouvoir lire le code du projet sans être bloqué par la syntaxe. Ce module ne vise que ça : la lecture fluide.</p>
+
+    <div class="block">
+      <span class="blabel">Comprendre</span>
+      <div class="bbody">
+        <ul class="plain">
+          <li>Types de base, listes, dictionnaires, et surtout les compréhensions de liste — le projet en est rempli</li>
+          <li>Fonctions, paramètres par défaut, valeurs de retour multiples</li>
+          <li>Classes, méthodes, <code>self</code>, propriétés — <code>MoteurSemantique</code> en est une</li>
+          <li>Modules, imports, et pourquoi les scripts commencent par <code>sys.path.insert</code></li>
+          <li>Lire une trace d'erreur de bas en haut : la dernière ligne dit quoi, les précédentes disent où</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="block">
+      <span class="blabel">Ressources</span>
+      <div class="bbody">
+        <ul class="res">
+          <li><span class="rtag">Doc</span><span class="rbody"><a href="https://docs.python.org/fr/3/tutorial/">Le tutoriel officiel Python</a><em>En français, complet, gratuit. Chapitres 3 à 6 et 9 suffisent pour ce projet.</em></span></li>
+          <li><span class="rtag">Cours</span><span class="rbody"><a href="https://www.kaggle.com/learn/python">Kaggle Learn — Python</a><span class="free">certificat gratuit</span><em>Sept leçons courtes avec exercices corrigés dans le navigateur. Comptez cinq heures.</em></span></li>
+          <li><span class="rtag">Réf.</span><span class="rbody"><a href="https://realpython.com/">Real Python</a><em>À consulter au coup par coup quand une notion précise bloque, pas à lire en entier.</em></span></li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="block">
+      <span class="blabel">Fais-le</span>
+      <div class="bbody">
+        <ul class="tasks">
+          <li><label class="task"><input type="checkbox"><span>Ouvre <code>config.py</code> et explique chaque paramètre à voix haute. Ceux que tu ne sais pas expliquer sont ta liste de questions pour la suite.</span></label></li>
+          <li><label class="task"><input type="checkbox"><span>Change <code>TOP_K</code> de 10 à 3, relance <code>scripts/3_chercher.py</code>, observe. Remets 10.</span></label></li>
+          <li><label class="task"><input type="checkbox"><span>Lis <code>src/pretraitement.py</code> en entier. Avant de l'exécuter, écris sur papier ce que <code>decouper_en_passages</code> renvoie pour un texte de 500 mots. Vérifie ensuite.</span></label></li>
+          <li><label class="task"><input type="checkbox"><span>Provoque une erreur exprès : renomme <code>id_doc</code> en <code>id_document</code> dans <code>resultats.py</code>, lance les tests, lis la trace, remets en état.</span></label></li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="block">
+      <span class="blabel">Maîtrise</span>
+      <div class="bbody">
+        <p class="proof">Tu maîtrises ce module quand tu peux expliquer, sans hésiter, ce que produit la ligne <strong><code>[p["texte_indexe"] for p in self.passages]</code></strong> et pourquoi elle est nécessaire avant l'encodage.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ================= MODULE 1 ================= -->
+  <section id="m1">
+    <div class="mhead">
+      <span class="mnum">Module 01</span>
+      <span class="mtime">6 h</span>
+      <h2 class="mtitle">Données et API</h2>
+    </div>
+    <p class="lede">Aucun moteur de recherche n'existe sans corpus. Ce module porte sur la façon d'aller chercher des données chez quelqu'un d'autre, proprement et sans se faire bloquer.</p>
+
+    <div class="block">
+      <span class="blabel">Comprendre</span>
+      <div class="bbody">
+        <ul class="plain">
+          <li>HTTP : ce qu'est une requête GET, ce que signifient les codes 200, 404, 429 et 503</li>
+          <li>Ce qu'est une API REST, et la différence entre paramètres d'URL et corps de requête</li>
+          <li>JSON et XML : deux façons d'écrire des données structurées, et pourquoi arXiv répond en XML</li>
+          <li>La pagination : pourquoi on ne récupère jamais 10 000 résultats d'un coup</li>
+          <li>La limitation de débit, et pourquoi le projet attend trois secondes entre deux appels</li>
+          <li>Le format JSONL, et pourquoi il bat le CSV et le JSON pour un corpus de documents</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="block">
+      <span class="blabel">Ressources</span>
+      <div class="bbody">
+        <ul class="res">
+          <li><span class="rtag">Doc</span><span class="rbody"><a href="https://info.arxiv.org/help/api/user-manual.html">Manuel de l'API arXiv</a><em>La source exacte de ce qu'implémente <code>src/collecte.py</code>. Lis la section sur les requêtes et celle sur la pagination.</em></span></li>
+          <li><span class="rtag">Doc</span><span class="rbody"><a href="https://developer.mozilla.org/fr/docs/Web/HTTP">HTTP sur MDN</a><em>En français. La référence pour tout ce qui touche au web, à garder ouverte.</em></span></li>
+          <li><span class="rtag">Réf.</span><span class="rbody"><a href="https://jsonlines.org/">Le format JSON Lines</a><em>Une page. Elle explique en cinq minutes pourquoi ce format existe.</em></span></li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="block">
+      <span class="blabel">Fais-le</span>
+      <div class="bbody">
+        <ul class="tasks">
+          <li><label class="task"><input type="checkbox"><span>Ajoute la catégorie <code>cs.SE</code> dans <code>config.py</code> et relance la collecte avec <code>--par-categorie 50</code>.</span></label></li>
+          <li><label class="task"><input type="checkbox"><span>Modifie <code>_analyser_entree</code> pour extraire aussi le lien PDF de chaque article. Vérifie qu'il apparaît dans le JSONL.</span></label></li>
+          <li><label class="task"><input type="checkbox"><span>Mets <code>DELAI_ENTRE_REQUETES</code> à 0 et lance une grosse collecte. Observe ce que renvoie arXiv. Remets 3.</span></label></li>
+          <li><label class="task"><input type="checkbox"><span>Ouvre le fichier JSONL dans un éditeur de texte. Compte les lignes, lis-en une entièrement.</span></label></li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="block">
+      <span class="blabel">Maîtrise</span>
+      <div class="bbody">
+        <p class="proof">Tu maîtrises ce module quand tu peux expliquer <strong>pourquoi un même article apparaît dans plusieurs catégories</strong> et comment le code évite de le compter deux fois.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ================= MODULE 2 ================= -->
+  <section id="m2">
+    <div class="mhead">
+      <span class="mnum">Module 02</span>
+      <span class="mtime">22 h</span>
+      <h2 class="mtitle">Du mot au vecteur</h2>
+    </div>
+    <p class="lede">Le cœur du sujet, et de loin le module le plus long. Il retrace en quatre étapes l'histoire qui va du simple comptage de mots jusqu'aux embeddings multilingues. Ne saute aucune étape : chacune existe parce que la précédente avait un mur.</p>
+
+    <div class="block">
+      <span class="blabel">Étape 1</span>
+      <div class="bbody">
+        <p><strong>Compter les mots.</strong> Sac de mots, TF-IDF, BM25. Comment on transforme un document en vecteur de fréquences, pourquoi un mot rare pèse plus qu'un mot fréquent, et pourquoi un document long doit être pénalisé. Puis le mur : deux textes qui disent la même chose avec d'autres mots ont un score de zéro.</p>
+      </div>
+    </div>
+
+    <div class="block">
+      <span class="blabel">Étape 2</span>
+      <div class="bbody">
+        <p><strong>Un vecteur par mot.</strong> Word2Vec, l'idée qu'un mot se définit par son voisinage, et la fameuse arithmétique <code>roi − homme + femme ≈ reine</code>. Puis le mur suivant : un seul vecteur par mot, donc « avocat » le fruit et « avocat » le juriste partagent le même point.</p>
+      </div>
+    </div>
+
+    <div class="block">
+      <span class="blabel">Étape 3</span>
+      <div class="bbody">
+        <p><strong>Un vecteur par mot en contexte.</strong> Le mécanisme d'attention, l'architecture Transformer, BERT. Chaque mot reçoit un vecteur qui dépend de la phrase entière. Puis le mur : BERT compare deux phrases seulement en les lisant ensemble — pour chercher dans 10 000 documents, il faudrait 10 000 passages du modèle à chaque requête.</p>
+      </div>
+    </div>
+
+    <div class="block">
+      <span class="blabel">Étape 4</span>
+      <div class="bbody">
+        <p><strong>Un vecteur par phrase, calculable à l'avance.</strong> Sentence-BERT : deux copies du même modèle entraînées côte à côte à rapprocher les phrases de même sens et à éloigner les autres. C'est ce qui rend l'indexation possible. Puis E5, entraîné sur des paires traduites, d'où la propriété multilingue du projet — et ses préfixes obligatoires.</p>
+      </div>
+    </div>
+
+    <div class="block">
+      <span class="blabel">Ressources</span>
+      <div class="bbody">
+        <ul class="res">
+          <li><span class="rtag">Cours</span><span class="rbody"><a href="https://huggingface.co/learn/nlp-course">Cours NLP de Hugging Face</a><span class="free">certificat gratuit</span><em>La ressource centrale de ce module. Chapitres 1, 2 et 6. Comptez douze heures.</em></span></li>
+          <li><span class="rtag">Article</span><span class="rbody"><a href="https://jalammar.github.io/illustrated-word2vec/">The Illustrated Word2vec</a><em>Jay Alammar explique par le dessin. Commence ici, avant toute formule.</em></span></li>
+          <li><span class="rtag">Article</span><span class="rbody"><a href="https://jalammar.github.io/illustrated-transformer/">The Illustrated Transformer</a><em>La meilleure explication visuelle de l'attention qui existe. À relire deux fois.</em></span></li>
+          <li><span class="rtag">Article</span><span class="rbody"><a href="https://jalammar.github.io/illustrated-bert/">The Illustrated BERT</a><em>Fait le lien entre Transformer et les modèles que tu utilises réellement.</em></span></li>
+          <li><span class="rtag">Doc</span><span class="rbody"><a href="https://www.sbert.net/">Documentation Sentence-Transformers</a><em>La bibliothèque du projet. Lis « Semantic Search » et « Pretrained Models ».</em></span></li>
+          <li><span class="rtag">Papier</span><span class="rbody"><a href="https://arxiv.org/abs/1908.10084">Sentence-BERT (Reimers &amp; Gurevych, 2019)</a><em>Neuf pages. À citer dans ton rapport : c'est l'article fondateur de la méthode.</em></span></li>
+          <li><span class="rtag">Papier</span><span class="rbody"><a href="https://arxiv.org/abs/2212.03533">Text Embeddings by Weakly-Supervised Contrastive Pre-training</a><em>Le papier du modèle E5 que le projet utilise. Il explique les préfixes.</em></span></li>
+          <li><span class="rtag">Outil</span><span class="rbody"><a href="https://huggingface.co/spaces/mteb/leaderboard">Classement MTEB</a><em>Le comparatif public des modèles d'embeddings. Sert à justifier ton choix de modèle.</em></span></li>
+          <li><span class="rtag">Vidéo</span><span class="rbody"><a href="https://www.youtube.com/playlist?list=PLZHQObOWTQDNU6R1_67000Dx_ZCJB-3pi">3Blue1Brown — réseaux de neurones</a><em>Pour l'intuition mathématique. Sous-titres français disponibles.</em></span></li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="block">
+      <span class="blabel">Fais-le</span>
+      <div class="bbody">
+        <ul class="tasks">
+          <li><label class="task"><input type="checkbox"><span>Encode deux phrases avec l'<code>Encodeur</code> du projet, puis calcule leur cosinus <em>à la main</em> avec <code>numpy.dot</code>. Retrouve le même chiffre que FAISS.</span></label></li>
+          <li><label class="task"><input type="checkbox"><span>Encode « détection de fraude », « fraud detection » et « كشف الاحتيال ». Compare les trois cosinus deux à deux. C'est la preuve du multilingue, en trois lignes de code.</span></label></li>
+          <li><label class="task"><input type="checkbox"><span>Trouve deux phrases <em>sans aucun mot commun</em> dont le cosinus dépasse 0,8. Note-les : c'est ton exemple de soutenance.</span></label></li>
+          <li><label class="task"><input type="checkbox"><span>Sabotage : vide <code>PREFIXE_REQUETE</code> et <code>PREFIXE_DOCUMENT</code>, réindexe sur un petit corpus, relance l'évaluation. Mesure la chute. Remets les préfixes.</span></label></li>
+          <li><label class="task"><input type="checkbox"><span>Sabotage : passe <code>normalize_embeddings</code> à <code>False</code> dans <code>embeddings.py</code> et observe les scores devenir incohérents. Comprends pourquoi avant de remettre <code>True</code>.</span></label></li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="block">
+      <span class="blabel">Maîtrise</span>
+      <div class="bbody">
+        <p class="proof">Tu maîtrises ce module quand tu peux expliquer <strong>pourquoi une requête et un document ne reçoivent pas le même préfixe</strong>, et pourquoi 384 nombres suffisent à représenter le sens d'un résumé scientifique.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ================= MODULE 3 ================= -->
+  <section id="m3">
+    <div class="mhead">
+      <span class="mnum">Module 03</span>
+      <span class="mtime">10 h</span>
+      <h2 class="mtitle">Recherche vectorielle</h2>
+    </div>
+    <p class="lede">Avoir de bons vecteurs ne suffit pas : il faut trouver les plus proches en quelques millisecondes parmi des dizaines de milliers. C'est un problème de structure de données, pas de linguistique.</p>
+
+    <div class="block">
+      <span class="blabel">Comprendre</span>
+      <div class="bbody">
+        <ul class="plain">
+          <li>Trois façons de mesurer une proximité : distance euclidienne, produit scalaire, cosinus — et quand elles coïncident</li>
+          <li>La normalisation, et pourquoi elle transforme un produit scalaire en cosinus</li>
+          <li>Pourquoi mesurer un angle plutôt qu'une distance quand les textes ont des longueurs différentes</li>
+          <li>Recherche exacte contre recherche approchée : ce qu'on gagne, ce qu'on perd</li>
+          <li>Les grandes familles d'index : IVF (quartiers), HNSW (graphe de voisinage), PQ (compression)</li>
+          <li>Le compromis rappel/latence, et comment le mesurer plutôt que le supposer</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="block">
+      <span class="blabel">Ressources</span>
+      <div class="bbody">
+        <ul class="res">
+          <li><span class="rtag">Doc</span><span class="rbody"><a href="https://github.com/facebookresearch/faiss/wiki">Wiki FAISS</a><em>La documentation officielle. Lis en priorité « Guidelines to choose an index ».</em></span></li>
+          <li><span class="rtag">Cours</span><span class="rbody"><a href="https://www.pinecone.io/learn/series/faiss/">Série FAISS de Pinecone</a><em>Pédagogique, illustré, avec du code. La meilleure entrée en matière sur les index approchés.</em></span></li>
+          <li><span class="rtag">Papier</span><span class="rbody"><a href="https://arxiv.org/abs/1603.09320">HNSW (Malkov &amp; Yashunin, 2016)</a><em>L'index approché le plus utilisé aujourd'hui. À lire après avoir compris IVF.</em></span></li>
+          <li><span class="rtag">Livre</span><span class="rbody"><a href="https://nlp.stanford.edu/IR-book/">Introduction to Information Retrieval</a><span class="free">gratuit en ligne</span><em>Le manuel de référence du domaine, Stanford. Chapitres 1, 6 et 7 pour ce module.</em></span></li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="block">
+      <span class="blabel">Fais-le</span>
+      <div class="bbody">
+        <ul class="tasks">
+          <li><label class="task"><input type="checkbox"><span>Sur papier : place cinq vecteurs à deux dimensions, calcule leurs cosinus avec une requête, classe-les. Reproduis ensuite le résultat avec <code>IndexVectoriel</code>.</span></label></li>
+          <li><label class="task"><input type="checkbox"><span>Lance <code>scripts/4_evaluer.py</code> et lis le tableau « index exact contre index approximatif ». Explique la relation entre <code>nprobe</code>, la vitesse et le rappel.</span></label></li>
+          <li><label class="task"><input type="checkbox"><span>Passe <code>TYPE_INDEX</code> à <code>"ivf"</code>, réindexe, compare les résultats d'une même requête avec ceux de l'index exact. Note les différences.</span></label></li>
+          <li><label class="task"><input type="checkbox"><span>Mets <code>NB_SONDES_IVF</code> à 1. Mesure ce que tu perds. Puis à 100 : mesure ce que tu ne gagnes plus.</span></label></li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="block">
+      <span class="blabel">Maîtrise</span>
+      <div class="bbody">
+        <p class="proof">Tu maîtrises ce module quand tu peux dire <strong>à partir de quelle taille de corpus l'index exact cesse d'être raisonnable</strong>, et ce que <code>nprobe</code> contrôle exactement.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ================= MODULE 4 ================= -->
+  <section id="m4">
+    <div class="mhead">
+      <span class="mnum">Module 04</span>
+      <span class="mtime">10 h</span>
+      <h2 class="mtitle">Évaluer un moteur</h2>
+    </div>
+    <p class="lede">C'est le module qui sépare un projet étudiant d'un travail sérieux, et celui que presque personne ne traite correctement. Sans mesure, « ça marche bien » n'est qu'une opinion.</p>
+
+    <div class="block">
+      <span class="blabel">Comprendre</span>
+      <div class="bbody">
+        <ul class="plain">
+          <li>La notion de pertinence, et ce qu'est une annotation de référence (les <em>qrels</em>)</li>
+          <li>Précision et rappel, et pourquoi ils se confondent quand il n'y a qu'un seul bon document</li>
+          <li>Le MRR : pourquoi être premier vaut deux fois être deuxième</li>
+          <li>Le nDCG : pourquoi le gain décroît de façon logarithmique avec le rang</li>
+          <li>La fuite de données en évaluation — l'erreur la plus fréquente et la plus invisible</li>
+          <li>Les grands jeux d'évaluation publics : BEIR, MS MARCO, MIRACL pour le multilingue</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="block">
+      <span class="blabel">Ressources</span>
+      <div class="bbody">
+        <ul class="res">
+          <li><span class="rtag">Livre</span><span class="rbody"><a href="https://nlp.stanford.edu/IR-book/html/htmledition/evaluation-in-information-retrieval-1.html">Evaluation in Information Retrieval</a><span class="free">gratuit en ligne</span><em>Chapitre 8 du manuel de Stanford. La référence à citer dans ton rapport.</em></span></li>
+          <li><span class="rtag">Papier</span><span class="rbody"><a href="https://arxiv.org/abs/2104.08663">BEIR (Thakur et al., 2021)</a><em>Le protocole d'évaluation standard des moteurs sémantiques. Montre à quoi ressemble une évaluation rigoureuse.</em></span></li>
+          <li><span class="rtag">Outil</span><span class="rbody"><a href="https://microsoft.github.io/msmarco/">MS MARCO</a><em>Le jeu de données de référence pour la recherche de passages. Utile si tu veux comparer tes chiffres à la littérature.</em></span></li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="block">
+      <span class="blabel">Fais-le</span>
+      <div class="bbody">
+        <ul class="tasks">
+          <li><label class="task"><input type="checkbox"><span>Prends trois requêtes, note les rangs à la main, calcule recall@5 et MRR au crayon. Compare avec la sortie de <code>src/evaluation.py</code>.</span></label></li>
+          <li><label class="task"><input type="checkbox"><span>Sabotage instructif : passe <code>INCLURE_TITRE_DANS_INDEX</code> à <code>True</code>, réindexe, réévalue. Regarde BM25 exploser artificiellement. Tu viens de fabriquer une fuite de données — comprends-la, puis remets <code>False</code>.</span></label></li>
+          <li><label class="task"><input type="checkbox"><span>Ajoute dix questions à <code>eval/requetes_multilingues.json</code> dans un domaine que tu connais, et relance l'évaluation multilingue.</span></label></li>
+          <li><label class="task"><input type="checkbox"><span>Lis <code>resultats/rapport_evaluation.md</code> ligne par ligne et rédige un paragraphe de commentaire pour chaque tableau. C'est un morceau de ton rapport, déjà écrit.</span></label></li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="block">
+      <span class="blabel">Maîtrise</span>
+      <div class="bbody">
+        <p class="proof">Tu maîtrises ce module quand tu peux justifier, seul face à un jury, <strong>pourquoi le titre des articles n'est pas indexé</strong> — et pourquoi ce détail rend toutes tes autres mesures crédibles.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ================= MODULE 5 ================= -->
+  <section id="m5">
+    <div class="mhead">
+      <span class="mnum">Module 05</span>
+      <span class="mtime">8 h</span>
+      <h2 class="mtitle">Servir avec FastAPI</h2>
+    </div>
+    <p class="lede">Transformer une bibliothèque Python en service que n'importe quelle application peut interroger. C'est ce qui fait la différence entre un script et un système.</p>
+
+    <div class="block">
+      <span class="blabel">Comprendre</span>
+      <div class="bbody">
+        <ul class="plain">
+          <li>Le modèle client/serveur, et ce qui se passe réellement entre les deux</li>
+          <li>Routes, verbes HTTP, paramètres d'URL contre corps JSON : quand utiliser lequel</li>
+          <li>La validation par Pydantic, et pourquoi une erreur 422 est une bonne nouvelle</li>
+          <li>OpenAPI et la page <code>/docs</code> générée automatiquement</li>
+          <li>Synchrone contre asynchrone, sans se noyer : ce que <code>async</code> change et ne change pas</li>
+          <li>Le cycle de vie de l'application, et pourquoi l'index se charge au démarrage et pas à chaque requête</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="block">
+      <span class="blabel">Ressources</span>
+      <div class="bbody">
+        <ul class="res">
+          <li><span class="rtag">Doc</span><span class="rbody"><a href="https://fastapi.tiangolo.com/fr/tutorial/">Tutoriel FastAPI</a><em>Partiellement traduit en français, exceptionnellement bien écrit. Suis-le dans l'ordre jusqu'à « Gestionnaire d'erreurs ».</em></span></li>
+          <li><span class="rtag">Doc</span><span class="rbody"><a href="https://docs.pydantic.dev/latest/concepts/models/">Modèles Pydantic</a><em>Comprends comment un schéma valide les données et génère la documentation.</em></span></li>
+          <li><span class="rtag">Réf.</span><span class="rbody"><a href="https://developer.mozilla.org/fr/docs/Web/HTTP/Status">Codes de statut HTTP</a><em>En français. À garder sous la main pour choisir le bon code dans tes propres routes.</em></span></li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="block">
+      <span class="blabel">Fais-le</span>
+      <div class="bbody">
+        <ul class="tasks">
+          <li><label class="task"><input type="checkbox"><span>Lance l'API, ouvre <code>/docs</code>, exécute une recherche depuis le navigateur sans écrire une ligne de code.</span></label></li>
+          <li><label class="task"><input type="checkbox"><span>Appelle <code>/recherche</code> sans le paramètre <code>q</code>. Lis l'erreur 422 et comprends d'où vient sa formulation.</span></label></li>
+          <li><label class="task"><input type="checkbox"><span>Ajoute une route <code>/categories</code> qui renvoie la liste des catégories présentes dans l'index avec leur nombre d'articles.</span></label></li>
+          <li><label class="task"><input type="checkbox"><span>Ajoute à <code>/recherche</code> un paramètre optionnel <code>categorie</code> qui filtre les résultats.</span></label></li>
+          <li><label class="task"><input type="checkbox"><span>Sabotage : déplace le chargement de l'index depuis <code>lifespan</code> vers l'intérieur de la route. Mesure la latence. Comprends, puis annule.</span></label></li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="block">
+      <span class="blabel">Maîtrise</span>
+      <div class="bbody">
+        <p class="proof">Tu maîtrises ce module quand tu peux expliquer <strong>ce que devient le temps de réponse si l'index est rechargé à chaque requête</strong>, et pourquoi la validation Pydantic est écrite une seule fois pour deux usages.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ================= MODULE 6 ================= -->
+  <section id="m6">
+    <div class="mhead">
+      <span class="mnum">Module 06</span>
+      <span class="mtime">4 h</span>
+      <h2 class="mtitle">L'interface</h2>
+    </div>
+    <p class="lede">Le module le plus court, mais celui que le jury verra en premier. Streamlit permet de construire une interface correcte en quelques dizaines de lignes, à condition de comprendre son modèle d'exécution, qui déroute au début.</p>
+
+    <div class="block">
+      <span class="blabel">Comprendre</span>
+      <div class="bbody">
+        <ul class="plain">
+          <li>Le principe de ré-exécution : à chaque interaction, Streamlit relance le script <em>entier</em>, du haut vers le bas</li>
+          <li>Conséquence directe : sans <code>session_state</code>, rien ne survit à un clic</li>
+          <li>Les widgets, leur valeur de retour, leur clé</li>
+          <li>La mise en page : colonnes, conteneurs, barre latérale</li>
+          <li>La mise en cache, et pourquoi elle est indispensable dès qu'un chargement est lent</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="block">
+      <span class="blabel">Ressources</span>
+      <div class="bbody">
+        <ul class="res">
+          <li><span class="rtag">Doc</span><span class="rbody"><a href="https://docs.streamlit.io/">Documentation Streamlit</a><em>Commence par « Main concepts », qui explique le modèle de ré-exécution.</em></span></li>
+          <li><span class="rtag">Cours</span><span class="rbody"><a href="https://30days.streamlit.app/">30 Days of Streamlit</a><em>Trente exercices courts. Les dix premiers suffisent largement pour ce projet.</em></span></li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="block">
+      <span class="blabel">Fais-le</span>
+      <div class="bbody">
+        <ul class="tasks">
+          <li><label class="task"><input type="checkbox"><span>Ajoute un <code>st.write</code> tout en haut de <code>ui/app.py</code> et clique sur plusieurs widgets. Observe qu'il se ré-exécute à chaque fois.</span></label></li>
+          <li><label class="task"><input type="checkbox"><span>Ajoute un filtre par catégorie dans la barre latérale, branché sur la route que tu as créée au module 05.</span></label></li>
+          <li><label class="task"><input type="checkbox"><span>Ajoute un graphique en barres des scores des dix résultats. La différence visuelle entre les deux moteurs est frappante.</span></label></li>
+          <li><label class="task"><input type="checkbox"><span>Ajoute un bouton d'export des résultats en CSV.</span></label></li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="block">
+      <span class="blabel">Maîtrise</span>
+      <div class="bbody">
+        <p class="proof">Tu maîtrises ce module quand tu peux expliquer <strong>pourquoi les boutons d'exemple passent par <code>session_state</code></strong> au lieu d'écrire directement dans le champ de saisie.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ================= MODULE 7 ================= -->
+  <section id="m7">
+    <div class="mhead">
+      <span class="mnum">Module 07</span>
+      <span class="mtime">8 h</span>
+      <h2 class="mtitle">Méthode d'ingénieur</h2>
+    </div>
+    <p class="lede">Ce qui distingue du code qui marche d'un projet qu'on peut reprendre, défendre et faire évoluer. Ces compétences comptent autant que le sujet en entretien d'embauche.</p>
+
+    <div class="block">
+      <span class="blabel">Comprendre</span>
+      <div class="bbody">
+        <ul class="plain">
+          <li>Git : commit, historique, branche, et à quoi sert vraiment un <code>.gitignore</code></li>
+          <li>Les tests automatiques : ce qu'un test vérifie, ce qu'il ne vérifie pas</li>
+          <li>Pourquoi séparer un projet en modules à responsabilité unique</li>
+          <li>Les annotations de type : de la documentation que la machine peut vérifier</li>
+          <li>La reproductibilité : pourquoi l'évaluation utilise une graine aléatoire fixe</li>
+          <li>L'environnement virtuel, et pourquoi on ne l'installe jamais dans le Python du système</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="block">
+      <span class="blabel">Ressources</span>
+      <div class="bbody">
+        <ul class="res">
+          <li><span class="rtag">Livre</span><span class="rbody"><a href="https://git-scm.com/book/fr/v2">Pro Git</a><span class="free">gratuit, en français</span><em>Chapitres 1 à 3. Le reste viendra quand tu en auras besoin.</em></span></li>
+          <li><span class="rtag">Doc</span><span class="rbody"><a href="https://docs.pytest.org/">Documentation pytest</a><em>Lis « Get Started » puis « How to write and report assertions ».</em></span></li>
+          <li><span class="rtag">Réf.</span><span class="rbody"><a href="https://peps.python.org/pep-0008/">PEP 8 — style de code Python</a><em>La convention que suit tout le projet. Une lecture, une fois, suffit.</em></span></li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="block">
+      <span class="blabel">Fais-le</span>
+      <div class="bbody">
+        <ul class="tasks">
+          <li><label class="task"><input type="checkbox"><span>Initialise un dépôt git dans le projet et fais un premier commit. Vérifie que <code>data/</code> n'y est pas.</span></label></li>
+          <li><label class="task"><input type="checkbox"><span>Lis les 19 tests de <code>tests/test_moteur.py</code> et explique pour chacun ce qu'il protège.</span></label></li>
+          <li><label class="task"><input type="checkbox"><span>Sabotage : dans <code>regrouper_par_document</code>, remplace le meilleur score par le dernier. Lance les tests, regarde lequel tombe, répare.</span></label></li>
+          <li><label class="task"><input type="checkbox"><span>Écris un test qui échoue volontairement, puis modifie le code jusqu'à le faire passer. C'est le cycle de développement piloté par les tests.</span></label></li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="block">
+      <span class="blabel">Maîtrise</span>
+      <div class="bbody">
+        <p class="proof">Tu maîtrises ce module quand tu peux expliquer <strong>ce que la graine aléatoire fixe garantit dans l'évaluation</strong>, et pourquoi sans elle tes chiffres changeraient à chaque exécution.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ================= MODULE 8 ================= -->
+  <section id="m8">
+    <div class="mhead">
+      <span class="mnum">Module 08</span>
+      <span class="mtime">8 h — optionnel</span>
+      <h2 class="mtitle">Aller plus loin</h2>
+    </div>
+    <p class="lede">Quatre extensions, par ordre de rapport entre effort et effet. Chacune vaut un chapitre supplémentaire de rapport et une question de moins en soutenance.</p>
+
+    <div class="block">
+      <span class="blabel">Extensions</span>
+      <div class="bbody">
+        <ul class="plain">
+          <li><strong>Recherche hybride.</strong> Fusionner les classements sémantique et BM25 par Reciprocal Rank Fusion. Souvent meilleur que chacun séparément, et les deux moteurs sont déjà en place — c'est l'extension la plus rentable du lot.</li>
+          <li><strong>Reranking.</strong> Repasser les cinquante premiers résultats dans un cross-encoder, qui lit la requête et le document ensemble. Gain net de précision, coût en latence à mesurer.</li>
+          <li><strong>Réponse générée (RAG).</strong> Brancher un modèle de langue sur les résultats pour produire une synthèse citant ses sources. Spectaculaire en démonstration.</li>
+          <li><strong>Passage à l'échelle.</strong> Indexer 500 000 articles et trouver expérimentalement le point où l'index exact cesse d'être tenable.</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="block">
+      <span class="blabel">Ressources</span>
+      <div class="bbody">
+        <ul class="res">
+          <li><span class="rtag">Doc</span><span class="rbody"><a href="https://www.sbert.net/examples/applications/cross-encoder/README.html">Cross-encoders</a><em>La documentation du reranking, avec des modèles multilingues prêts à l'emploi.</em></span></li>
+          <li><span class="rtag">Papier</span><span class="rbody"><a href="https://arxiv.org/abs/2005.11401">RAG (Lewis et al., 2020)</a><em>L'article fondateur de la génération augmentée par recherche.</em></span></li>
+          <li><span class="rtag">Papier</span><span class="rbody"><a href="https://arxiv.org/abs/2004.12832">ColBERT (Khattab &amp; Zaharia, 2020)</a><em>Une troisième voie entre bi-encodeur et cross-encoder. À lire une fois le module 02 solide.</em></span></li>
+          <li><span class="rtag">Papier</span><span class="rbody">Reciprocal Rank Fusion (Cormack et al., 2009)<em>Cherche le titre exact : la méthode de fusion tient en une formule d'une ligne, et elle est étonnamment efficace.</em></span></li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <!-- ================= CALENDRIER ================= -->
+  <section id="calendrier">
+    <div class="mhead">
+      <span class="mnum">Rythme</span>
+      <h2 class="mtitle">Six semaines, un livrable par semaine</h2>
+    </div>
+    <p class="lede">Environ douze heures par semaine. Chaque semaine se termine par quelque chose de montrable — c'est ce qui empêche de s'enliser dans la théorie, et ce qui remplit le rapport au fur et à mesure plutôt qu'à la fin.</p>
+
+    <div class="scroller">
+      <table>
+        <thead>
+          <tr><th>Semaine</th><th>Modules</th><th>Ce que tu sais faire à la fin</th><th>Livrable</th></tr>
+        </thead>
+        <tbody>
+          <tr><td class="w">1</td><td>00 · 01</td><td>Lire le code du projet, aller chercher des données chez un tiers</td><td>Corpus collecté et documenté</td></tr>
+          <tr><td class="w">2</td><td>02 — étapes 1 et 2</td><td>Expliquer pourquoi les mots-clés échouent, et ce qu'est un embedding</td><td>Chapitre « état de l'art » du rapport</td></tr>
+          <tr><td class="w">3</td><td>02 — étapes 3 et 4</td><td>Expliquer l'attention, Sentence-BERT, et le multilingue</td><td>Démonstration cosinus en trois langues</td></tr>
+          <tr><td class="w">4</td><td>03 · 04</td><td>Justifier ton index et prouver tes résultats par des chiffres</td><td>Rapport d'évaluation complet</td></tr>
+          <tr><td class="w">5</td><td>05 · 06</td><td>Exposer le moteur en service et le rendre utilisable</td><td>API et interface fonctionnelles</td></tr>
+          <tr><td class="w">6</td><td>07 · 08</td><td>Défendre ton code et ouvrir sur des perspectives</td><td>Dépôt propre, rapport, soutenance blanche</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="note">
+      <span class="t">Si tu as moins de temps</span>
+      <p>Comprime les modules 00, 06 et 07 et garde intacts les modules 02 et 04. Ce sont les deux seuls sur lesquels un jury peut réellement te mettre en difficulté — et les deux qui font la valeur du projet.</p>
+    </div>
+  </section>
+
+  <!-- ================= SOUTENANCE ================= -->
+  <section id="soutenance">
+    <div class="mhead">
+      <span class="mnum">Contrôle final</span>
+      <h2 class="mtitle">Douze questions qu'on va te poser</h2>
+    </div>
+    <p class="lede">Si tu réponds à ces douze questions sans hésiter, tu maîtrises ton projet. Chaque réponse tient en une phrase — mais tu dois pouvoir la développer trois minutes si on te le demande.</p>
+
+    <dl class="qa">
+      <div><dt>Pourquoi 384 nombres, et pas 10 ni 10 000 ?</dt><dd>C'est la dimension du modèle choisi : assez pour distinguer des milliers de nuances de sens, assez peu pour rester rapide sur un processeur ordinaire.</dd></div>
+      <div><dt>Pourquoi normaliser les vecteurs ?</dt><dd>Pour comparer des directions et non des longueurs : sans cela, un texte long obtiendrait mécaniquement de meilleurs scores.</dd></div>
+      <div><dt>Pourquoi le produit scalaire donne-t-il le cosinus ici ?</dt><dd>Parce que les vecteurs sont normalisés à une longueur de 1 — c'est précisément le cas particulier où les deux formules coïncident.</dd></div>
+      <div><dt>À quoi servent les préfixes <code>query:</code> et <code>passage:</code> ?</dt><dd>Le modèle E5 a été entraîné avec eux ; il distingue ainsi une question d'un document, deux rôles qui n'ont pas la même géométrie dans l'espace.</dd></div>
+      <div><dt>Que se passe-t-il si on indexe avec un modèle et qu'on cherche avec un autre ?</dt><dd>Les deux ensembles de vecteurs vivent dans des espaces différents : les résultats deviennent du hasard, sans aucun message d'erreur.</dd></div>
+      <div><dt>Pourquoi découper les documents en passages ?</dt><dd>Parce que le modèle tronque au-delà de 512 tokens, et parce qu'un texte trop long produit un vecteur moyen qui ne représente plus rien de précis.</dd></div>
+      <div><dt>Pourquoi le titre n'est-il pas indexé ?</dt><dd>Parce que l'évaluation utilise les titres comme requêtes : les indexer offrirait à BM25 une correspondance exacte gratuite et fausserait toute la comparaison.</dd></div>
+      <div><dt>Flat ou IVF : comment choisis-tu ?</dt><dd>Par la mesure. En dessous du million de vecteurs, l'index exact répond en une milliseconde et l'approximation ne fait perdre du rappel pour rien.</dd></div>
+      <div><dt>Que contrôle <code>nprobe</code> ?</dt><dd>Le nombre de quartiers fouillés à chaque recherche : plus il est élevé, plus on est exhaustif et plus on est lent.</dd></div>
+      <div><dt>Pourquoi BM25 échoue-t-il sur une requête française dans un corpus anglais ?</dt><dd>Il ne compare que des mots. Sans recouvrement lexical, son score est nul — ce n'est pas un défaut de réglage mais une impossibilité structurelle.</dd></div>
+      <div><dt>Pourquoi le MRR plutôt que la précision ?</dt><dd>Parce qu'il n'y a qu'un seul bon document par requête, et que sa <em>position</em> est ce qui compte pour l'utilisateur.</dd></div>
+      <div><dt>Pourquoi une API si l'interface pourrait appeler le moteur directement ?</dt><dd>Pour charger l'index une seule fois, et pour que l'affichage ne dépende plus du moteur — on peut remplacer l'un sans toucher à l'autre.</dd></div>
+      <div><dt>BM25 obtient de meilleurs scores que ton moteur sur les requêtes anglaises. Pourquoi garder le sémantique ?</dt><dd>Parce que sur les vingt requêtes arabes, BM25 ne renvoie rien du tout. Le sémantique n'est pas meilleur partout : il est le seul à fonctionner là où les mots ne se recouvrent pas.</dd></div>
+      <div><dt>Ton protocole d'évaluation automatique teste-t-il réellement le sens ?</dt><dd>Non, et c'est mesuré : même son tiers le plus difficile partage encore 65 % de son vocabulaire avec le bon document. Seuls les protocoles multilingues atteignent le régime où le lexical ne peut plus rien.</dd></div>
+    </dl>
+
+    <div class="note">
+      <span class="t">La bonne posture en soutenance</span>
+      <p>Un jury fait davantage confiance à quelqu'un qui dit « BM25 me bat de 0,016 sur ce protocole, et voici pourquoi c'est attendu » qu'à quelqu'un qui n'annonce que des victoires. Les deux résultats négatifs de ce projet — BM25 devant en monolingue, et le moteur sémantique plus fragile sur requête dégradée — sont tes meilleurs arguments de crédibilité. Prépare-les, ne les cache pas.</p>
+    </div>
+  </section>
+
+  <footer>
+    Plan d'apprentissage du projet « Moteur de recherche sémantique multilingue ». Toutes les ressources citées sont gratuites et accessibles sans compte payant.
+  </footer>
+
+  </main>
+</div>
+</div>
+
+<script>
+(function(){
+  var cases = Array.prototype.slice.call(document.querySelectorAll('.task input'));
+  var fait = document.getElementById('fait');
+  var total = document.getElementById('total');
+  var jauge = document.getElementById('jauge');
+  var CLE = 'plan-moteur-semantique';
+
+  total.textContent = cases.length;
+
+  var etat = [];
+  try {
+    var brut = window.localStorage.getItem(CLE);
+    if (brut) { etat = JSON.parse(brut); }
+  } catch (e) { etat = []; }
+
+  cases.forEach(function(c, i){
+    if (etat[i]) { c.checked = true; }
+    c.addEventListener('change', mettreAJour);
+  });
+
+  function mettreAJour(){
+    var n = 0;
+    var sauvegarde = [];
+    cases.forEach(function(c, i){
+      sauvegarde[i] = c.checked;
+      if (c.checked) { n++; }
+    });
+    fait.textContent = n;
+    jauge.style.width = cases.length ? (100 * n / cases.length) + '%' : '0%';
+    try { window.localStorage.setItem(CLE, JSON.stringify(sauvegarde)); } catch (e) {}
+  }
+
+  mettreAJour();
+})();
+</script>
