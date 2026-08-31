@@ -19,5 +19,8 @@ uvicorn>=0.30.0
 streamlit>=1.38.0
 requests>=2.32.0
 
+# Export PDF de la documentation (scripts/5_exporter_pdf.py)
+markdown>=3.5
+
 # Tests
 pytest>=8.0.0

@@ -1,16 +1,16 @@
 {
-  "nb_documents": 8520,
-  "nb_passages": 10832,
-  "duree_preparation_s": 0.52,
-  "duree_encodage_s": 729.99,
+  "nb_documents": 8569,
+  "nb_passages": 10897,
+  "duree_preparation_s": 1.81,
+  "duree_encodage_s": 3233.14,
   "dimension": 384,
-  "duree_construction_index_s": 0.14,
+  "duree_construction_index_s": 0.48,
   "type_index": "flat",
-  "taille_index_mo": 15.87,
+  "taille_index_mo": 15.96,
   "bm25": {
-    "nb_passages": 10832,
-    "duree_construction_index_s": 0.97
+    "nb_passages": 10897,
+    "duree_construction_index_s": 1.72
   },
-  "duree_totale_s": 732.35,
+  "duree_totale_s": 3238.38,
   "modele": "intfloat/multilingual-e5-small"
 }

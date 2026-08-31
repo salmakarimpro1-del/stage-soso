@@ -30,6 +30,7 @@ d'évaluation.
 | [plan_apprentissage.html](plan_apprentissage.html) | plan d'apprentissage en 9 modules pour maîtriser les technologies employées |
 | [resultats/rapport_evaluation.md](resultats/rapport_evaluation.md) | tous les tableaux de mesures, régénérables |
 | `export/*.pdf` | les mêmes documents en PDF (`python scripts/5_exporter_pdf.py`) |
+| `lancer.bat` | installe et démarre tout le projet d'un double-clic (Windows) |
 
 ---
 
@@ -98,6 +99,20 @@ d'erreur : c'est le piège numéro un du domaine.
 ## 2. Installation
 
 Prérequis : Python 3.10 ou plus récent. Aucune carte graphique nécessaire.
+
+### La voie courte : `lancer.bat`
+
+Sous Windows, un double-clic sur **`lancer.bat`** suffit. Le script enchaîne
+tout ce que décrivent les sections 2 et 3 : environnement virtuel, dépendances,
+corpus, index, puis l'API et l'interface. Chaque étape déjà faite est sautée,
+donc le premier lancement est long (de vingt minutes à une heure et demie, le
+temps d'encoder le corpus) et les suivants prennent une vingtaine de secondes.
+
+L'environnement virtuel est créé dans `%USERPROFILE%\.venvs\soso-stage`,
+volontairement hors du dossier du projet : PyTorch pèse plusieurs Go, et un
+projet rangé dans un dossier synchronisé y perdrait un temps considérable.
+
+### La voie manuelle
 
 ```bash
 python -m pip install -r requirements.txt
@@ -196,6 +211,7 @@ streamlit run ui/app.py
 ├── README.md                  installation, usage, résultats
 ├── GUIDE_DU_CODE.md           le code expliqué fichier par fichier
 ├── plan_apprentissage.html    plan d'apprentissage en 9 modules
+├── lancer.bat                 lancement complet en un clic (Windows)
 │
 ├── src/                       le cœur du moteur
 │   ├── collecte.py            téléchargement depuis l'API arXiv

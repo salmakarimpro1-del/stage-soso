@@ -3,156 +3,156 @@
     "modele": "intfloat/multilingual-e5-small",
     "dimension": 384,
     "type_index": "flat",
-    "nb_documents": 8520,
-    "nb_passages": 10832,
+    "nb_documents": 8569,
+    "nb_passages": 10897,
     "k": 10
   },
   "titre_vers_resume": {
     "semantique": {
-      "recall@1": 0.914,
-      "recall@5": 0.954,
-      "recall@10": 0.966,
-      "mrr@10": 0.9305,
-      "ndcg@10": 0.9391,
+      "recall@1": 0.896,
+      "recall@5": 0.956,
+      "recall@10": 0.964,
+      "mrr@10": 0.9218,
+      "ndcg@10": 0.9323,
       "nb_requetes": 500,
-      "duree_totale_s": 18.64,
-      "ms_par_requete": 37.27,
-      "taux_echec": 0.034
+      "duree_totale_s": 157.73,
+      "ms_par_requete": 315.45,
+      "taux_echec": 0.036
     },
     "bm25": {
-      "recall@1": 0.922,
-      "recall@5": 0.98,
-      "recall@10": 0.988,
-      "mrr@10": 0.9459,
-      "ndcg@10": 0.9563,
+      "recall@1": 0.93,
+      "recall@5": 0.984,
+      "recall@10": 0.99,
+      "mrr@10": 0.9531,
+      "ndcg@10": 0.9622,
       "nb_requetes": 500,
-      "duree_totale_s": 20.68,
-      "ms_par_requete": 41.37,
-      "taux_echec": 0.012
+      "duree_totale_s": 54.84,
+      "ms_par_requete": 109.68,
+      "taux_echec": 0.01
     }
   },
   "stratification_lexicale": [
     {
       "groupe": "faible recouvrement",
       "nb_requetes": 166,
-      "recouvrement_moyen": 0.645,
-      "recouvrement_min": 0.286,
-      "recouvrement_max": 0.75,
+      "recouvrement_moyen": 0.627,
+      "recouvrement_min": 0.143,
+      "recouvrement_max": 0.769,
       "semantique": {
-        "recall@1": 0.8072,
-        "recall@5": 0.8976,
-        "recall@10": 0.9277,
-        "mrr@10": 0.8427,
-        "ndcg@10": 0.8631,
+        "recall@1": 0.7831,
+        "recall@5": 0.8916,
+        "recall@10": 0.8976,
+        "mrr@10": 0.8268,
+        "ndcg@10": 0.8444,
         "nb_requetes": 166,
-        "duree_totale_s": 1.0,
-        "ms_par_requete": 6.02,
-        "taux_echec": 0.0723
+        "duree_totale_s": 6.99,
+        "ms_par_requete": 42.09,
+        "taux_echec": 0.1024
       },
       "bm25": {
-        "recall@1": 0.8133,
-        "recall@5": 0.9398,
-        "recall@10": 0.9639,
-        "mrr@10": 0.8637,
-        "ndcg@10": 0.8881,
+        "recall@1": 0.8253,
+        "recall@5": 0.9518,
+        "recall@10": 0.9699,
+        "mrr@10": 0.8767,
+        "ndcg@10": 0.8995,
         "nb_requetes": 166,
-        "duree_totale_s": 6.65,
-        "ms_par_requete": 40.07,
-        "taux_echec": 0.0361
+        "duree_totale_s": 22.09,
+        "ms_par_requete": 133.06,
+        "taux_echec": 0.0301
       }
     },
     {
       "groupe": "recouvrement moyen",
       "nb_requetes": 166,
-      "recouvrement_moyen": 0.831,
-      "recouvrement_min": 0.75,
-      "recouvrement_max": 0.9,
+      "recouvrement_moyen": 0.833,
+      "recouvrement_min": 0.769,
+      "recouvrement_max": 0.889,
       "semantique": {
-        "recall@1": 0.9578,
+        "recall@1": 0.9398,
         "recall@5": 0.9819,
-        "recall@10": 0.988,
-        "mrr@10": 0.9691,
-        "ndcg@10": 0.9737,
+        "recall@10": 0.994,
+        "mrr@10": 0.9598,
+        "ndcg@10": 0.9681,
         "nb_requetes": 166,
-        "duree_totale_s": 1.1,
-        "ms_par_requete": 6.64,
-        "taux_echec": 0.012
+        "duree_totale_s": 7.69,
+        "ms_par_requete": 46.34,
+        "taux_echec": 0.006
       },
       "bm25": {
-        "recall@1": 0.9699,
+        "recall@1": 0.9759,
         "recall@5": 1.0,
         "recall@10": 1.0,
-        "mrr@10": 0.9834,
-        "ndcg@10": 0.9877,
+        "mrr@10": 0.988,
+        "ndcg@10": 0.9911,
         "nb_requetes": 166,
-        "duree_totale_s": 6.8,
-        "ms_par_requete": 40.99,
+        "duree_totale_s": 30.11,
+        "ms_par_requete": 181.38,
         "taux_echec": 0.0
       }
     },
     {
       "groupe": "fort recouvrement",
       "nb_requetes": 168,
-      "recouvrement_moyen": 0.965,
-      "recouvrement_min": 0.9,
+      "recouvrement_moyen": 0.961,
+      "recouvrement_min": 0.889,
       "recouvrement_max": 1.0,
       "semantique": {
-        "recall@1": 0.9762,
-        "recall@5": 0.9821,
-        "recall@10": 0.9821,
-        "mrr@10": 0.9792,
-        "ndcg@10": 0.9799,
+        "recall@1": 0.9643,
+        "recall@5": 0.994,
+        "recall@10": 1.0,
+        "mrr@10": 0.9783,
+        "ndcg@10": 0.9837,
         "nb_requetes": 168,
-        "duree_totale_s": 0.96,
-        "ms_par_requete": 5.74,
-        "taux_echec": 0.0179
+        "duree_totale_s": 5.39,
+        "ms_par_requete": 32.06,
+        "taux_echec": 0.0
       },
       "bm25": {
-        "recall@1": 0.9821,
+        "recall@1": 0.9881,
         "recall@5": 1.0,
         "recall@10": 1.0,
-        "mrr@10": 0.9901,
-        "ndcg@10": 0.9926,
+        "mrr@10": 0.994,
+        "ndcg@10": 0.9956,
         "nb_requetes": 168,
-        "duree_totale_s": 7.02,
-        "ms_par_requete": 41.76,
+        "duree_totale_s": 27.58,
+        "ms_par_requete": 164.16,
         "taux_echec": 0.0
       }
     }
   ],
   "requetes_appauvries": {
     "nb_mots_retires": 3,
-    "exemple_avant": "Discovering Conceptual Metaphors Across Topics and Media Types",
-    "exemple_apres": "conceptual across and media types",
+    "exemple_avant": "VectraYX-Vision-1B: A Sub-2B Spanish/LATAM Cybersecurity Vision-Language Model with Structured Visual Reasoning and Native Tool Use",
+    "exemple_apres": "vision 1b a sub 2b cybersecurity vision language model with structured visual reasoning and native tool use",
     "semantique": {
-      "recall@1": 0.502,
-      "recall@5": 0.674,
-      "recall@10": 0.742,
-      "mrr@10": 0.5775,
-      "ndcg@10": 0.6169,
+      "recall@1": 0.498,
+      "recall@5": 0.648,
+      "recall@10": 0.716,
+      "mrr@10": 0.5644,
+      "ndcg@10": 0.6004,
       "nb_requetes": 500,
-      "duree_totale_s": 1.76,
-      "ms_par_requete": 3.52,
-      "taux_echec": 0.258
+      "duree_totale_s": 35.12,
+      "ms_par_requete": 70.24,
+      "taux_echec": 0.284
     },
     "bm25": {
-      "recall@1": 0.6,
-      "recall@5": 0.776,
-      "recall@10": 0.822,
-      "mrr@10": 0.6772,
-      "ndcg@10": 0.7124,
+      "recall@1": 0.576,
+      "recall@5": 0.746,
+      "recall@10": 0.8,
+      "mrr@10": 0.6453,
+      "ndcg@10": 0.6824,
       "nb_requetes": 500,
-      "duree_totale_s": 16.71,
-      "ms_par_requete": 33.41,
-      "taux_echec": 0.178
+      "duree_totale_s": 63.94,
+      "ms_par_requete": 127.88,
+      "taux_echec": 0.2
     }
   },
   "coherence_multilingue": {
     "semantique": {
       "nb_triplets": 20,
-      "recouvrement_moyen_fr_en": 0.45,
+      "recouvrement_moyen_fr_en": 0.445,
       "recouvrement_moyen_ar_en": 0.13,
-      "recouvrement_moyen_fr_ar": 0.195,
+      "recouvrement_moyen_fr_ar": 0.205,
       "requetes_sans_resultat_fr": 0,
       "requetes_sans_resultat_ar": 0,
       "detail": [
@@ -193,7 +193,7 @@
           "en": "deep learning for medical image diagnosis",
           "recouvrement_fr_en": 0.3,
           "recouvrement_ar_en": 0.4,
-          "recouvrement_fr_ar": 0.4,
+          "recouvrement_fr_ar": 0.5,
           "nb_resultats_fr": 10,
           "nb_resultats_ar": 10,
           "nb_resultats_en": 10,
@@ -213,7 +213,7 @@
           "nb_resultats_ar": 10,
           "nb_resultats_en": 10,
           "titre_premier_fr": "Mask What Matters: Saliency-Guided Video Self-Supervised Learning for Autonomous Driving",
-          "titre_premier_en": "CMU-Drive and V2V-VLA: Cooperative Multi-agent Unified Driving with Reasoning Benchmark and Vehicle-to-Vehicle Vision-Language-Action Models",
+          "titre_premier_en": "Mask What Matters: Saliency-Guided Video Self-Supervised Learning for Autonomous Driving",
           "titre_premier_ar": "EVADE: Evidence-Verified Agentic Diagnosis with Escape"
         },
         {
@@ -252,7 +252,7 @@
           "ar": "قدرات الاستدلال في نماذج اللغة الكبيرة",
           "en": "reasoning abilities of large language models",
           "recouvrement_fr_en": 0.1,
-          "recouvrement_ar_en": 0.2,
+          "recouvrement_ar_en": 0.1,
           "recouvrement_fr_ar": 0.4,
           "nb_resultats_fr": 10,
           "nb_resultats_ar": 10,
@@ -289,7 +289,7 @@
           "nb_resultats_en": 10,
           "titre_premier_fr": "Candidate-Fate Accounting for Transparent Sensor Diagnostic Pipeline Search",
           "titre_premier_en": "Deepfake News Detection: A Multimodal Framework Integrating LipNet, DeepSpeech and ResNET for Enhanced Audio-Visual Analysis",
-          "titre_premier_ar": "Security and Privacy in Agentic AI: Grand Challenges and Future Directions"
+          "titre_premier_ar": "Predicting, Evaluating, and Explaining Top Misinformation Spreaders via Archetypal User Behavior"
         },
         {
           "theme": "reconnaissance vocale",
@@ -302,7 +302,7 @@
           "nb_resultats_fr": 10,
           "nb_resultats_ar": 10,
           "nb_resultats_en": 10,
-          "titre_premier_fr": "Easper: An Accessible ASR Pipeline for Language Documentation",
+          "titre_premier_fr": "A Speech Corpus for Mizo Automatic Speech Recognition: Whisper and SraVaani 1.0 Fine-Tuning with Morphology-Aware Evaluation",
           "titre_premier_en": "Analyzing Speech Condition Effects in Dysarthric ASR: A Layer-wise Probing Study",
           "titre_premier_ar": "Aslema at NADI 2026: Augmentation through Fewshot for SLU"
         },
@@ -311,8 +311,8 @@
           "fr": "apprentissage par renforcement pour les jeux",
           "ar": "التعلم المعزز في الألعاب",
           "en": "reinforcement learning for games",
-          "recouvrement_fr_en": 0.1,
-          "recouvrement_ar_en": 0.2,
+          "recouvrement_fr_en": 0.2,
+          "recouvrement_ar_en": 0.3,
           "recouvrement_fr_ar": 0.4,
           "nb_resultats_fr": 10,
           "nb_resultats_ar": 10,
@@ -356,9 +356,9 @@
           "fr": "génération d'images par modèles de diffusion",
           "ar": "توليد الصور باستخدام نماذج الانتشار",
           "en": "image generation with diffusion models",
-          "recouvrement_fr_en": 0.6,
+          "recouvrement_fr_en": 0.5,
           "recouvrement_ar_en": 0.2,
-          "recouvrement_fr_ar": 0.1,
+          "recouvrement_fr_ar": 0.2,
           "nb_resultats_fr": 10,
           "nb_resultats_ar": 10,
           "nb_resultats_en": 10,
@@ -401,7 +401,7 @@
           "fr": "prévision de séries temporelles",
           "ar": "التنبؤ بالسلاسل الزمنية",
           "en": "time series forecasting",
-          "recouvrement_fr_en": 0.6,
+          "recouvrement_fr_en": 0.5,
           "recouvrement_ar_en": 0.0,
           "recouvrement_fr_ar": 0.2,
           "nb_resultats_fr": 10,
@@ -460,7 +460,7 @@
     },
     "bm25": {
       "nb_triplets": 20,
-      "recouvrement_moyen_fr_en": 0.03,
+      "recouvrement_moyen_fr_en": 0.035,
       "recouvrement_moyen_ar_en": 0.0,
       "recouvrement_moyen_fr_ar": 0.0,
       "requetes_sans_resultat_fr": 1,
@@ -508,7 +508,7 @@
           "nb_resultats_ar": 0,
           "nb_resultats_en": 10,
           "titre_premier_fr": "D ACCI: A Dual-Loop Diagnostic Protocol for Evidence-Preserving Agent Memory",
-          "titre_premier_en": "Energy and Performance Benchmarking of Deep Learning Models for Breast Cancer Detection",
+          "titre_premier_en": "UniMod: Enhancing Multi-Modal Medical Diagnosis through Cross-Modality and Within-Modality Alignment",
           "titre_premier_ar": ""
         },
         {
@@ -516,14 +516,14 @@
           "fr": "perception visuelle pour la conduite autonome",
           "ar": "الإدراك البصري للقيادة الذاتية",
           "en": "visual perception for autonomous driving",
-          "recouvrement_fr_en": 0.1,
+          "recouvrement_fr_en": 0.0,
           "recouvrement_ar_en": 0.0,
           "recouvrement_fr_ar": 0.0,
           "nb_resultats_fr": 10,
           "nb_resultats_ar": 0,
           "nb_resultats_en": 10,
           "titre_premier_fr": "Link-adaptive digital twin for robust physical-layer modeling in hybrid-amplified ultra-wideband optical networks",
-          "titre_premier_en": "CMU-Drive and V2V-VLA: Cooperative Multi-agent Unified Driving with Reasoning Benchmark and Vehicle-to-Vehicle Vision-Language-Action Models",
+          "titre_premier_en": "SceneGTMM: A Conformal Mapping-based Scene-Aware Transferable GNN-Transformer Dual-Graph Interaction Framework for Map Matching",
           "titre_premier_ar": ""
         },
         {
@@ -741,7 +741,7 @@
           "fr": "segmentation sémantique d'images",
           "ar": "التجزئة الدلالية للصور",
           "en": "semantic image segmentation",
-          "recouvrement_fr_en": 0.0,
+          "recouvrement_fr_en": 0.2,
           "recouvrement_ar_en": 0.0,
           "recouvrement_fr_ar": 0.0,
           "nb_resultats_fr": 10,
@@ -772,17 +772,17 @@
   "latences": {
     "semantique": {
       "nb_mesures": 100,
-      "latence_moyenne_ms": 18.03,
-      "latence_mediane_ms": 17.2,
-      "latence_p95_ms": 22.28,
-      "latence_max_ms": 37.36
+      "latence_moyenne_ms": 90.62,
+      "latence_mediane_ms": 83.35,
+      "latence_p95_ms": 107.24,
+      "latence_max_ms": 516.41
     },
     "bm25": {
       "nb_mesures": 100,
-      "latence_moyenne_ms": 39.37,
-      "latence_mediane_ms": 36.99,
-      "latence_p95_ms": 67.18,
-      "latence_max_ms": 94.6
+      "latence_moyenne_ms": 161.59,
+      "latence_mediane_ms": 116.68,
+      "latence_p95_ms": 235.99,
+      "latence_max_ms": 2713.55
     }
   },
   "comparaison_index": [
@@ -790,36 +790,36 @@
       "index": "flat (exact)",
       "nprobe": "-",
       "construction_s": 0.01,
-      "ms_par_requete": 0.108,
+      "ms_par_requete": 1.311,
       "rappel_vs_exact": 1.0
     },
     {
       "index": "ivf (approché)",
       "nprobe": 1,
-      "construction_s": 0.11,
-      "ms_par_requete": 0.007,
-      "rappel_vs_exact": 0.309
+      "construction_s": 0.42,
+      "ms_par_requete": 0.126,
+      "rappel_vs_exact": 0.3245
     },
     {
       "index": "ivf (approché)",
       "nprobe": 5,
-      "construction_s": 0.09,
-      "ms_par_requete": 0.008,
-      "rappel_vs_exact": 0.6045
+      "construction_s": 0.43,
+      "ms_par_requete": 0.074,
+      "rappel_vs_exact": 0.6225
     },
     {
       "index": "ivf (approché)",
       "nprobe": 10,
-      "construction_s": 0.08,
-      "ms_par_requete": 0.013,
-      "rappel_vs_exact": 0.738
+      "construction_s": 0.33,
+      "ms_par_requete": 0.124,
+      "rappel_vs_exact": 0.761
     },
     {
       "index": "ivf (approché)",
       "nprobe": 20,
-      "construction_s": 0.08,
-      "ms_par_requete": 0.022,
-      "rappel_vs_exact": 0.859
+      "construction_s": 0.77,
+      "ms_par_requete": 0.449,
+      "rappel_vs_exact": 0.8615
     }
   ]
 }
