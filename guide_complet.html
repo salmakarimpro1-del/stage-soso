@@ -1,0 +1,2687 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Comprendre le projet — guide complet FR / AR</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;600&family=Noto+Naskh+Arabic:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+/* ===========================================================================
+   Guide complet — français / العربية
+   ---------------------------------------------------------------------------
+   Fond clair, volontairement : ce document se lit longtemps et s'imprime.
+   Le support de soutenance, lui, est sombre — il se projette.
+
+   Trois modes de lecture, bouton en haut :
+     Français  ·  العربية  ·  Les deux (côte à côte)
+   =========================================================================== */
+
+:root {
+  --papier: #ffffff;
+  --papier-doux: #f7f8fb;
+  --encre: #131722;
+  --encre-douce: #48516a;
+  --encre-faible: #78829c;
+  --trait: #e3e7f0;
+  --trait-fort: #cdd4e3;
+  --semantique: #7c3aed;
+  --semantique-clair: #f3efff;
+  --lexical: #c2740a;
+  --lexical-clair: #fdf5e6;
+  --hybride: #047857;
+  --hybride-clair: #ecfdf5;
+  --alerte: #be123c;
+  --alerte-clair: #fff1f4;
+  --latine: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  --arabe: 'Noto Naskh Arabic', 'Traditional Arabic', 'Segoe UI', serif;
+  --mono: 'JetBrains Mono', Consolas, monospace;
+}
+
+* { box-sizing: border-box; }
+html { scroll-behavior: smooth; scroll-padding-top: 5rem; }
+body {
+  margin: 0; background: var(--papier); color: var(--encre);
+  font-family: var(--latine); font-size: 16px; line-height: 1.68;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* --- barre supérieure ---------------------------------------------------- */
+
+#barre {
+  position: sticky; top: 0; z-index: 50;
+  background: rgba(255,255,255,0.94); backdrop-filter: blur(8px);
+  border-bottom: 1px solid var(--trait);
+  display: flex; align-items: center; gap: 1rem;
+  padding: 0.65rem clamp(1rem, 4vw, 3rem);
+}
+#barre .marque { font-weight: 700; font-size: 0.95rem; letter-spacing: -0.01em; }
+#barre .marque span { color: var(--semantique); }
+#barre .espace { flex: 1; }
+
+.commutateur { display: flex; gap: 0.25rem; background: var(--papier-doux);
+  border: 1px solid var(--trait); border-radius: 9px; padding: 0.2rem; }
+.commutateur button {
+  border: 0; background: transparent; cursor: pointer;
+  font-family: var(--latine); font-size: 0.82rem; font-weight: 550;
+  color: var(--encre-douce); padding: 0.34rem 0.8rem; border-radius: 7px;
+  transition: all 0.14s ease;
+}
+.commutateur button:hover { color: var(--encre); }
+.commutateur button.actif { background: var(--semantique); color: #fff; }
+.commutateur button[data-langue="ar"] { font-family: var(--arabe); font-size: 0.92rem; }
+
+#bouton-menu {
+  border: 1px solid var(--trait); background: var(--papier-doux); cursor: pointer;
+  border-radius: 8px; padding: 0.34rem 0.7rem; font-size: 0.82rem;
+  font-family: var(--latine); color: var(--encre-douce);
+}
+
+/* --- mise en page -------------------------------------------------------- */
+
+.enveloppe { display: flex; gap: 2rem; max-width: 1500px; margin: 0 auto;
+  padding: 0 clamp(1rem, 4vw, 3rem); }
+
+#sommaire {
+  width: 270px; flex-shrink: 0; position: sticky; top: 4.2rem;
+  align-self: flex-start; max-height: calc(100vh - 5.5rem);
+  overflow-y: auto; padding: 1.6rem 0 3rem;
+}
+#sommaire .titre-sommaire {
+  font-size: 0.7rem; text-transform: uppercase; letter-spacing: 0.1em;
+  color: var(--encre-faible); font-weight: 700; margin-bottom: 0.8rem;
+}
+#sommaire a {
+  display: block; padding: 0.34rem 0.6rem; border-radius: 7px;
+  color: var(--encre-douce); text-decoration: none; font-size: 0.85rem;
+  line-height: 1.4; margin-bottom: 0.1rem;
+}
+#sommaire a:hover { background: var(--papier-doux); color: var(--encre); }
+#sommaire a.courant { background: var(--semantique-clair); color: var(--semantique); font-weight: 600; }
+#sommaire a .num { font-family: var(--mono); font-size: 0.72rem; opacity: 0.6; margin-right: 0.4rem; }
+
+main { flex: 1; min-width: 0; padding: 1.6rem 0 6rem; max-width: 980px; }
+
+/* --- titres -------------------------------------------------------------- */
+
+h1 { font-size: clamp(1.9rem, 4vw, 2.6rem); font-weight: 800; letter-spacing: -0.03em;
+  line-height: 1.12; margin: 0 0 0.7rem; }
+h2 {
+  font-size: clamp(1.35rem, 2.4vw, 1.75rem); font-weight: 750; letter-spacing: -0.022em;
+  margin: 3.4rem 0 1rem; padding-top: 1.6rem; border-top: 1px solid var(--trait);
+  line-height: 1.25;
+}
+h2:first-of-type { border-top: 0; padding-top: 0; margin-top: 1.6rem; }
+h2 .num {
+  font-family: var(--mono); font-size: 0.62em; color: var(--semantique);
+  display: block; margin-bottom: 0.3rem; font-weight: 600; letter-spacing: 0.04em;
+}
+h3 { font-size: 1.12rem; font-weight: 680; margin: 2rem 0 0.6rem; letter-spacing: -0.012em; }
+h4 { font-size: 0.98rem; font-weight: 650; margin: 1.3rem 0 0.4rem; color: var(--encre); }
+
+p { margin: 0 0 0.9rem; }
+ul, ol { margin: 0 0 1rem; padding-inline-start: 1.3rem; }
+li { margin-bottom: 0.42rem; }
+strong { font-weight: 650; }
+a { color: var(--semantique); }
+
+code {
+  font-family: var(--mono); font-size: 0.86em;
+  background: var(--papier-doux); border: 1px solid var(--trait);
+  border-radius: 5px; padding: 0.08em 0.36em;
+}
+pre {
+  font-family: var(--mono); font-size: 0.82rem; line-height: 1.6;
+  background: var(--papier-doux); border: 1px solid var(--trait);
+  border-radius: 10px; padding: 0.9rem 1.1rem; overflow-x: auto; margin: 0 0 1rem;
+}
+pre code { background: none; border: 0; padding: 0; font-size: 1em; }
+
+/* --- le cœur : les blocs bilingues --------------------------------------- */
+
+.duo { margin-bottom: 1.1rem; }
+.fr, .ar { min-width: 0; }
+.ar {
+  direction: rtl; text-align: right;
+  font-family: var(--arabe); font-size: 1.06rem; line-height: 1.95;
+}
+.ar code, .ar .mono { direction: ltr; unicode-bidi: embed; font-family: var(--mono); }
+.ar ul, .ar ol { padding-inline-start: 1.4rem; }
+
+/* mode « les deux » : deux colonnes séparées par un filet */
+body[data-langue="duo"] .duo {
+  display: grid; grid-template-columns: 1fr 1fr; gap: 1.6rem;
+  align-items: start;
+}
+body[data-langue="duo"] .duo > .ar {
+  border-inline-start: 1px solid var(--trait); padding-inline-start: 1.6rem;
+}
+body[data-langue="fr"] .ar { display: none; }
+body[data-langue="ar"] .fr { display: none; }
+body[data-langue="ar"] main { direction: rtl; }
+body[data-langue="ar"] h2 .num { direction: ltr; text-align: right; }
+
+/* --- encadrés ------------------------------------------------------------ */
+
+.note {
+  border: 1px solid var(--trait); border-radius: 12px;
+  padding: 1rem 1.2rem; margin: 1.3rem 0; background: var(--papier-doux);
+}
+.note > .etiquette {
+  display: block; font-size: 0.68rem; text-transform: uppercase;
+  letter-spacing: 0.09em; font-weight: 700; color: var(--encre-faible);
+  margin-bottom: 0.5rem; font-family: var(--latine);
+}
+.note p:last-child, .note ul:last-child, .note ol:last-child { margin-bottom: 0; }
+
+.note.cle { background: var(--semantique-clair); border-color: #ddd0ff; }
+.note.cle > .etiquette { color: var(--semantique); }
+.note.piege { background: var(--alerte-clair); border-color: #fbd0da; }
+.note.piege > .etiquette { color: var(--alerte); }
+.note.jury { background: var(--hybride-clair); border-color: #b9ecd6; }
+.note.jury > .etiquette { color: var(--hybride); }
+.note.exemple { background: var(--lexical-clair); border-color: #f5e2bd; }
+.note.exemple > .etiquette { color: var(--lexical); }
+
+/* --- tableaux ------------------------------------------------------------ */
+
+.tableau { overflow-x: auto; margin: 0 0 1.2rem; }
+table { width: 100%; border-collapse: collapse; font-size: 0.9rem; }
+th, td { padding: 0.55rem 0.7rem; text-align: left; border-bottom: 1px solid var(--trait);
+  vertical-align: top; }
+th { font-size: 0.72rem; text-transform: uppercase; letter-spacing: 0.06em;
+  color: var(--encre-faible); font-weight: 700; border-bottom: 1px solid var(--trait-fort); }
+td.mono, th.mono { font-family: var(--mono); font-size: 0.84em; }
+td.num { text-align: right; font-family: var(--mono); font-variant-numeric: tabular-nums; }
+tbody tr:hover { background: var(--papier-doux); }
+.ar table { text-align: right; }
+.ar th, .ar td { text-align: right; }
+
+/* --- glossaire ----------------------------------------------------------- */
+
+.glossaire { display: grid; gap: 0.7rem; margin-bottom: 1.4rem; }
+.terme {
+  border: 1px solid var(--trait); border-radius: 11px; padding: 0.85rem 1rem;
+  display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; align-items: start;
+}
+.terme .cote-fr .mot { font-weight: 680; font-size: 0.98rem; }
+.terme .cote-fr .def { font-size: 0.87rem; color: var(--encre-douce); margin-top: 0.2rem; }
+.terme .cote-ar { direction: rtl; text-align: right; font-family: var(--arabe);
+  border-inline-start: 1px solid var(--trait); padding-inline-start: 1rem; }
+.terme .cote-ar .mot { font-weight: 700; font-size: 1.05rem; }
+.terme .cote-ar .def { font-size: 0.98rem; color: var(--encre-douce); margin-top: 0.2rem; line-height: 1.8; }
+.terme .prononce { font-family: var(--mono); font-size: 0.74rem; color: var(--encre-faible); margin-top: 0.25rem; }
+
+/* --- fiches de révision -------------------------------------------------- */
+
+.fiche {
+  border: 1px solid var(--trait-fort); border-radius: 13px; overflow: hidden;
+  margin: 1.2rem 0;
+}
+.fiche .entete-fiche {
+  background: var(--papier-doux); padding: 0.6rem 1rem;
+  font-weight: 680; font-size: 0.95rem; border-bottom: 1px solid var(--trait);
+}
+.fiche .corps-fiche { padding: 1rem 1.1rem; }
+
+/* --- question / réponse -------------------------------------------------- */
+
+.qr { border: 1px solid var(--trait); border-radius: 12px; margin-bottom: 0.8rem; overflow: hidden; }
+.qr > summary {
+  cursor: pointer; padding: 0.75rem 1rem; font-weight: 620; font-size: 0.95rem;
+  background: var(--papier-doux); list-style: none; display: flex; gap: 0.6rem;
+  align-items: flex-start;
+}
+.qr > summary::-webkit-details-marker { display: none; }
+.qr > summary::before { content: "▸"; color: var(--semantique); flex-shrink: 0; }
+.qr[open] > summary::before { content: "▾"; }
+.qr > summary:hover { background: #eef1f7; }
+.qr .reponse { padding: 1rem 1.1rem; border-top: 1px solid var(--trait); }
+.qr .reponse p:last-child { margin-bottom: 0; }
+
+/* --- divers -------------------------------------------------------------- */
+
+.chapeau { font-size: 1.08rem; color: var(--encre-douce); margin-bottom: 1.6rem; }
+.mot-cle { background: var(--semantique-clair); color: var(--semantique);
+  padding: 0.05em 0.35em; border-radius: 4px; font-weight: 600; }
+.etape-num {
+  display: inline-flex; align-items: center; justify-content: center;
+  width: 1.55rem; height: 1.55rem; border-radius: 50%;
+  background: var(--semantique); color: #fff; font-size: 0.8rem; font-weight: 700;
+  font-family: var(--mono); margin-inline-end: 0.5rem; flex-shrink: 0;
+}
+.schema {
+  font-family: var(--mono); font-size: 0.8rem; line-height: 1.75;
+  background: var(--papier-doux); border: 1px solid var(--trait);
+  border-radius: 10px; padding: 1rem 1.2rem; overflow-x: auto;
+  margin: 0 0 1.2rem; white-space: pre; direction: ltr; text-align: left;
+}
+
+.repere { display: flex; align-items: center; gap: 0.5rem; font-size: 0.85rem;
+  color: var(--encre-douce); margin-bottom: 0.4rem; }
+.pastille { width: 9px; height: 9px; border-radius: 50%; flex-shrink: 0; }
+.p-sem { background: var(--semantique); }
+.p-lex { background: var(--lexical); }
+.p-hyb { background: var(--hybride); }
+
+/* --- impression ---------------------------------------------------------- */
+
+@media print {
+  @page { size: A4; margin: 16mm 14mm; }
+  #barre, #sommaire, #bouton-menu { display: none !important; }
+  .enveloppe { display: block; padding: 0; max-width: none; }
+  main { max-width: none; padding: 0; }
+  body { font-size: 10.5pt; }
+
+  /* À l'impression, les deux langues sont toujours présentes, quel que soit
+     le mode choisi à l'écran. Ces règles ne dépendent donc PAS de
+     l'attribut data-langue — sinon imprimer depuis le mode « Français »
+     produirait un document amputé de sa moitié arabe. */
+  body .fr, body .ar { display: block !important; }
+
+  /* Empilées plutôt que côte à côte : sur une page A4, deux colonnes de
+     8 cm seraient trop étroites pour du texte suivi. Un filet sépare les
+     deux langues. */
+  body .duo { display: block !important; }
+  body .duo > .ar {
+    border-inline-start: 0 !important; padding-inline-start: 0 !important;
+    border-top: 1px solid var(--trait); padding-top: 0.6rem; margin-top: 0.6rem;
+  }
+  .terme { grid-template-columns: 1fr !important; }
+  .terme .cote-ar {
+    border-inline-start: 0 !important; padding-inline-start: 0 !important;
+    border-top: 1px solid var(--trait); padding-top: 0.5rem; margin-top: 0.5rem;
+  }
+
+  h2 { page-break-before: auto; page-break-after: avoid; }
+  h3, h4 { page-break-after: avoid; }
+  .note, .fiche, .terme, table, .schema { page-break-inside: avoid; }
+  .qr { border: 1px solid #ccc; page-break-inside: avoid; }
+  .qr > summary { background: #f4f5f8; }
+  /* Sur papier, le chevron de repli n'a plus de sens : tout est déjà ouvert.
+     La règle vise aussi [open], sinon celle de l'affichage écran l'emporte. */
+  .qr > summary::before, .qr[open] > summary::before { content: "" !important; }
+  a { color: inherit; text-decoration: none; }
+}
+
+/* --- écrans étroits ------------------------------------------------------ */
+
+@media (max-width: 1080px) {
+  #sommaire { display: none; }
+  #sommaire.ouvert {
+    display: block; position: fixed; top: 3.4rem; left: 0; bottom: 0;
+    width: 280px; background: var(--papier); border-right: 1px solid var(--trait);
+    padding: 1.2rem; z-index: 45; box-shadow: 0 10px 40px rgba(0,0,0,0.12);
+  }
+}
+@media (min-width: 1081px) { #bouton-menu { display: none; } }
+@media (max-width: 760px) {
+  body[data-langue="duo"] .duo { grid-template-columns: 1fr; }
+  body[data-langue="duo"] .duo > .ar {
+    border-inline-start: 0; padding-inline-start: 0;
+    border-top: 1px solid var(--trait); padding-top: 0.9rem;
+  }
+  .terme { grid-template-columns: 1fr; }
+  .terme .cote-ar { border-inline-start: 0; padding-inline-start: 0;
+    border-top: 1px solid var(--trait); padding-top: 0.6rem; }
+}
+</style>
+</head>
+<body data-langue="duo">
+
+<div id="barre">
+  <button id="bouton-menu">☰</button>
+  <div class="marque">Comprendre le projet · <span>دليل شامل</span></div>
+  <div class="espace"></div>
+  <div class="commutateur">
+    <button data-langue="fr">Français</button>
+    <button data-langue="ar">العربية</button>
+    <button data-langue="duo" class="actif">Les deux</button>
+  </div>
+</div>
+
+<div class="enveloppe">
+
+<nav id="sommaire">
+  <div class="titre-sommaire">Sommaire · الفهرس</div>
+  <a href="#s0"><span class="num">00</span>Comment utiliser ce guide</a>
+  <a href="#s1"><span class="num">01</span>Le projet en une page</a>
+  <a href="#s2"><span class="num">02</span>Glossaire bilingue</a>
+  <a href="#s3"><span class="num">03</span>Le problème à résoudre</a>
+  <a href="#s4"><span class="num">04</span>Les embeddings, sans maths</a>
+  <a href="#s5"><span class="num">05</span>Le corpus et sa préparation</a>
+  <a href="#s6"><span class="num">06</span>BM25, la baseline</a>
+  <a href="#s7"><span class="num">07</span>FAISS et l'index vectoriel</a>
+  <a href="#s8"><span class="num">08</span>La fusion hybride</a>
+  <a href="#s9"><span class="num">09</span>L'application</a>
+  <a href="#s10"><span class="num">10</span>Les métriques, calculées à la main</a>
+  <a href="#s11"><span class="num">11</span>Les résultats, un par un</a>
+  <a href="#s12"><span class="num">12</span>Le code, fichier par fichier</a>
+  <a href="#s13"><span class="num">13</span>Les questions du jury</a>
+  <a href="#s14"><span class="num">14</span>Fiche de révision</a>
+  <a href="#s15"><span class="num">15</span>Le jour de la soutenance</a>
+</nav>
+
+<main>
+
+<h1>Comprendre le projet<br>de bout en bout</h1>
+<p class="chapeau">
+  Moteur de recherche sémantique basé sur le NLP — guide complet, français et arabe.
+  <br><span style="font-family: var(--arabe); font-size:1.05rem">محرك بحث دلالي قائم على معالجة اللغة الطبيعية — دليل شامل بالفرنسية والعربية.</span>
+</p>
+
+<!-- ====================================================================== -->
+<h2 id="s0"><span class="num">00</span>Comment utiliser ce guide</h2>
+
+<div class="duo">
+<div class="fr">
+<p>Ce document a un seul but : que tu comprennes <strong>vraiment</strong> ton projet,
+au point de pouvoir en parler sans réciter. Pas de survol, pas de formules à
+apprendre par cœur — des explications, des exemples, et les phrases exactes à
+dire devant un jury.</p>
+
+<p>Il est écrit dans les deux langues. Le bouton en haut à droite change le mode
+de lecture :</p>
+
+<ul>
+  <li><strong>Français</strong> — la langue de la soutenance. C'est ce que tu diras.</li>
+  <li><strong>العربية</strong> — la langue qui te fait comprendre. Lis-la d'abord si un passage résiste.</li>
+  <li><strong>Les deux</strong> — côte à côte, pour faire le lien entre les deux.</li>
+</ul>
+
+<p>Ma recommandation : <strong>lis en arabe pour comprendre, révise en français pour
+dire</strong>. Le jury t'écoutera en français, mais ce qu'il évalue, c'est que tu aies
+compris. Les deux vont ensemble.</p>
+</div>
+
+<div class="ar">
+<p>لهذا الدليل هدف واحد: أن تفهمي مشروعك <strong>فهماً حقيقياً</strong>، إلى درجة تستطيعين
+معها الحديث عنه دون استظهار. لا سرد سطحي، ولا صيغ تُحفظ عن ظهر قلب — بل شروح وأمثلة،
+والعبارات الدقيقة التي ستقولينها أمام اللجنة.</p>
+
+<p>الدليل مكتوب باللغتين. والزر في الأعلى يغيّر وضع القراءة:</p>
+
+<ul>
+  <li><strong>الفرنسية</strong> — لغة المناقشة. هي ما ستنطقين به.</li>
+  <li><strong>العربية</strong> — اللغة التي تجعلك تفهمين. ابدئي بها كلما استعصى مقطع.</li>
+  <li><strong>الاثنتان معاً</strong> — جنباً إلى جنب، للربط بينهما.</li>
+</ul>
+
+<p>نصيحتي: <strong>اقرئي بالعربية لتفهمي، وراجعي بالفرنسية لتقولي</strong>. اللجنة ستستمع
+إليك بالفرنسية، لكن ما تقيّمه هو أنك فهمت. والأمران متلازمان.</p>
+</div>
+</div>
+
+<div class="note cle">
+<span class="etiquette">Le conseil le plus utile · أهم نصيحة</span>
+<div class="duo">
+<div class="fr">
+<p>Un jury ne cherche pas à savoir si tu connais des mots compliqués. Il cherche
+à savoir si tu comprends <strong>pourquoi</strong> tu as fait chaque choix, et si tu
+sais dire honnêtement ce qui n'a pas marché.</p>
+<p>La force de ce projet est là : il ne prétend pas que la recherche sémantique
+gagne partout. Il montre <strong>où</strong> chacune des deux approches gagne. C'est plus
+solide, et c'est plus difficile à attaquer.</p>
+</div>
+<div class="ar">
+<p>اللجنة لا تبحث عمّا إذا كنتِ تعرفين مصطلحات معقّدة. إنها تبحث عمّا إذا كنتِ تفهمين
+<strong>لماذا</strong> اتخذتِ كل اختيار، وهل تستطيعين قول ما لم ينجح بصدق.</p>
+<p>وقوة هذا المشروع هنا تحديداً: فهو لا يدّعي أن البحث الدلالي يتفوّق في كل الحالات، بل
+يبيّن <strong>أين</strong> يتفوّق كلٌّ من المنهجين. وهذا أمتن، وأصعب على النقد.</p>
+</div>
+</div>
+</div>
+
+<!-- ====================================================================== -->
+<h2 id="s1"><span class="num">01</span>Le projet en une page</h2>
+
+<div class="duo">
+<div class="fr">
+<p>Tu as construit un <strong>moteur de recherche</strong> qui retrouve des articles
+scientifiques à partir d'une question posée en langage naturel — en français, en
+arabe ou en anglais — dans une base de 8 569 articles <strong>tous rédigés en
+anglais</strong>.</p>
+
+<p>Ce qui le distingue d'un moteur classique : il ne cherche pas les mots de la
+question, il cherche le <strong>sens</strong>. Il peut donc trouver un article qui ne
+partage pas un seul mot avec la question — pas même le même alphabet.</p>
+</div>
+
+<div class="ar">
+<p>لقد أنجزتِ <strong>محرّك بحث</strong> يعثر على مقالات علمية انطلاقاً من سؤال يُطرح بلغة
+طبيعية — بالفرنسية أو العربية أو الإنجليزية — داخل قاعدة تضمّ 8569 مقالاً
+<strong>جميعها مكتوبة بالإنجليزية</strong>.</p>
+
+<p>وما يميّزه عن محرّك تقليدي أنه لا يبحث عن كلمات السؤال، بل عن <strong>المعنى</strong>.
+لذلك يستطيع العثور على مقال لا يشترك مع السؤال في كلمة واحدة — ولا حتى في الأبجدية
+نفسها.</p>
+</div>
+</div>
+
+<div class="note exemple">
+<span class="etiquette">L'exemple qui résume tout · المثال الذي يلخّص كل شيء</span>
+<div class="duo">
+<div class="fr">
+<p><strong>Question posée :</strong> كشف الاحتيال المصرفي باستخدام التعلم الآلي<br>
+<em>(« détection de la fraude bancaire par apprentissage automatique »)</em></p>
+<p><strong>Premier article renvoyé</strong> (score 0,837) :<br>
+<em>Shapley Value-Guided Adaptive Ensemble Learning for Explainable Financial
+Fraud Detection…</em></p>
+<p>Zéro caractère en commun. Le moteur classique par mots-clés, lui, ne renvoie
+<strong>rien du tout</strong>.</p>
+</div>
+<div class="ar">
+<p><strong>السؤال المطروح:</strong> كشف الاحتيال المصرفي باستخدام التعلم الآلي</p>
+<p><strong>أول مقال يعيده المحرّك</strong> (بدرجة 0,837):<br>
+<em>Shapley Value-Guided Adaptive Ensemble Learning for Explainable Financial
+Fraud Detection…</em></p>
+<p>لا حرف واحد مشترك. أما المحرّك التقليدي القائم على الكلمات المفتاحية فلا يعيد
+<strong>أي نتيجة على الإطلاق</strong>.</p>
+</div>
+</div>
+</div>
+
+<h3>Les trois moteurs du projet · محرّكات المشروع الثلاثة</h3>
+
+<div class="duo">
+<div class="fr">
+<p>Le projet ne contient pas un moteur mais <strong>trois</strong>, qui partagent le même
+index et les mêmes documents. Seule la manière de classer change — c'est la
+condition pour que la comparaison entre eux ait un sens.</p>
+</div>
+<div class="ar">
+<p>لا يحتوي المشروع على محرّك واحد بل على <strong>ثلاثة</strong>، تتقاسم الفهرس نفسه
+والوثائق نفسها. ما يتغيّر هو طريقة الترتيب فحسب — وهذا شرط لكي تكون المقارنة بينها
+ذات معنى.</p>
+</div>
+</div>
+
+<div class="tableau">
+<table>
+<thead><tr><th>Moteur</th><th>Ce qu'il compare</th><th>Sa force</th><th>Sa limite</th></tr></thead>
+<tbody>
+<tr>
+  <td><span class="repere"><span class="pastille p-sem"></span><strong>Sémantique</strong></span></td>
+  <td>le sens, sous forme de vecteurs</td>
+  <td>trouve sans mot commun, dans toutes les langues</td>
+  <td>opaque, et plus lent</td>
+</tr>
+<tr>
+  <td><span class="repere"><span class="pastille p-lex"></span><strong>Lexical (BM25)</strong></span></td>
+  <td>les mots, pondérés par leur rareté</td>
+  <td>rapide, gratuit, explicable</td>
+  <td>renvoie <strong>zéro résultat</strong> si aucun mot ne correspond</td>
+</tr>
+<tr>
+  <td><span class="repere"><span class="pastille p-hyb"></span><strong>Hybride</strong></span></td>
+  <td>les <em>rangs</em> des deux précédents</td>
+  <td>meilleur que chacun séparément</td>
+  <td>paie la latence des deux additionnée</td>
+</tr>
+</tbody>
+</table>
+</div>
+
+<div class="note jury">
+<span class="etiquette">À savoir dire en 30 secondes · ما يجب قوله في 30 ثانية</span>
+<div class="duo">
+<div class="fr">
+<p>« J'ai développé un moteur de recherche sémantique sur un corpus de 8 569
+articles arXiv. Il transforme chaque texte en un vecteur de 384 nombres à l'aide
+d'un modèle Sentence-BERT multilingue, puis cherche les vecteurs les plus proches
+avec FAISS. Je l'ai comparé à une baseline BM25 sur trois protocoles
+d'évaluation, et j'ai ajouté une fusion hybride des deux. »</p>
+</div>
+<div class="ar">
+<p>«طوّرتُ محرّك بحث دلالياً على متن يضمّ 8569 مقالاً من arXiv. يحوّل كل نصّ إلى متجه
+من 384 عدداً بواسطة نموذج Sentence-BERT متعدّد اللغات، ثم يبحث عن أقرب المتجهات
+باستخدام FAISS. وقد قارنتُه بخطّ أساس BM25 عبر ثلاثة بروتوكولات تقييم، وأضفتُ دمجاً
+هجيناً بينهما.»</p>
+</div>
+</div>
+</div>
+
+<!-- ====================================================================== -->
+<h2 id="s2"><span class="num">02</span>Glossaire bilingue — les mots à maîtriser</h2>
+
+<div class="duo">
+<div class="fr">
+<p>Commence par là. Si ces trente mots te sont familiers, tout le reste du guide
+se lit sans effort. Chacun est donné en français, en arabe, avec une définition
+simple.</p>
+</div>
+<div class="ar">
+<p>ابدئي من هنا. إذا صارت هذه الكلمات الثلاثون مألوفة لديك، فسيُقرأ باقي الدليل دون
+عناء. كل مصطلح مذكور بالفرنسية والعربية مع تعريف مبسّط.</p>
+</div>
+</div>
+
+<h3>Les fondamentaux · الأساسيات</h3>
+
+<div class="glossaire">
+
+<div class="terme">
+  <div class="cote-fr"><div class="mot">Corpus</div>
+    <div class="def">L'ensemble des documents dans lesquels on cherche. Ici : 8 569 résumés d'articles arXiv.</div></div>
+  <div class="cote-ar"><div class="mot">المتن / مجموعة الوثائق</div>
+    <div class="def">مجموع الوثائق التي نبحث داخلها. هنا: 8569 ملخّص مقال من arXiv.</div></div>
+</div>
+
+<div class="terme">
+  <div class="cote-fr"><div class="mot">Document</div>
+    <div class="def">Une unité du corpus. Ici, un article : son identifiant, son titre, son résumé, ses auteurs.</div></div>
+  <div class="cote-ar"><div class="mot">الوثيقة / المستند</div>
+    <div class="def">وحدة من المتن. هنا مقال واحد: معرّفه، وعنوانه، وملخّصه، ومؤلّفوه.</div></div>
+</div>
+
+<div class="terme">
+  <div class="cote-fr"><div class="mot">Passage</div>
+    <div class="def">Un morceau de document. On découpe les longs textes, car un modèle ne peut en traiter qu'une longueur limitée.</div></div>
+  <div class="cote-ar"><div class="mot">المقطع</div>
+    <div class="def">جزء من وثيقة. نقطّع النصوص الطويلة لأن النموذج لا يعالج إلا طولاً محدوداً.</div></div>
+</div>
+
+<div class="terme">
+  <div class="cote-fr"><div class="mot">Requête</div>
+    <div class="def">La question posée par l'utilisateur. En anglais : <em>query</em>.</div></div>
+  <div class="cote-ar"><div class="mot">الاستعلام / السؤال</div>
+    <div class="def">السؤال الذي يطرحه المستخدم.</div></div>
+</div>
+
+<div class="terme">
+  <div class="cote-fr"><div class="mot">Indexation</div>
+    <div class="def">La phase où l'on prépare le corpus <em>à l'avance</em>, une seule fois, pour que la recherche soit ensuite instantanée.</div></div>
+  <div class="cote-ar"><div class="mot">الفهرسة</div>
+    <div class="def">المرحلة التي نُعدّ فيها المتن <em>مسبقاً</em>، مرة واحدة، لكي يصير البحث بعدها فورياً.</div></div>
+</div>
+
+<div class="terme">
+  <div class="cote-fr"><div class="mot">Index</div>
+    <div class="def">La structure produite par l'indexation. C'est ce qu'on interroge, pas les documents bruts.</div></div>
+  <div class="cote-ar"><div class="mot">الفهرس</div>
+    <div class="def">البنية الناتجة عن الفهرسة. هي ما نستعلم عنه، لا الوثائق الخام.</div></div>
+</div>
+
+<div class="terme">
+  <div class="cote-fr"><div class="mot">Classement / <em>ranking</em></div>
+    <div class="def">L'ordre dans lequel les résultats sont renvoyés, du plus pertinent au moins pertinent.</div></div>
+  <div class="cote-ar"><div class="mot">الترتيب</div>
+    <div class="def">الترتيب الذي تُعاد به النتائج، من الأكثر ملاءمة إلى الأقل.</div></div>
+</div>
+
+<div class="terme">
+  <div class="cote-fr"><div class="mot">Top-K</div>
+    <div class="def">Les K meilleurs résultats. Si K = 10, le moteur renvoie les dix articles les plus proches.</div></div>
+  <div class="cote-ar"><div class="mot">أفضل K نتيجة</div>
+    <div class="def">أفضل K من النتائج. إذا كان K = 10 يعيد المحرّك المقالات العشرة الأقرب.</div></div>
+</div>
+
+</div>
+
+<h3>Le vocabulaire du NLP · مصطلحات معالجة اللغة</h3>
+
+<div class="glossaire">
+
+<div class="terme">
+  <div class="cote-fr"><div class="mot">NLP — traitement automatique du langage</div>
+    <div class="def">La discipline qui apprend aux machines à traiter le langage humain.</div>
+    <div class="prononce">Natural Language Processing</div></div>
+  <div class="cote-ar"><div class="mot">معالجة اللغة الطبيعية</div>
+    <div class="def">الحقل الذي يُعلّم الآلات معالجة لغة البشر.</div></div>
+</div>
+
+<div class="terme">
+  <div class="cote-fr"><div class="mot">Tokenisation</div>
+    <div class="def">Découper un texte en unités (mots, morceaux de mots). Première étape de presque tout pipeline NLP.</div></div>
+  <div class="cote-ar"><div class="mot">التقطيع إلى رموز</div>
+    <div class="def">تقطيع النصّ إلى وحدات (كلمات أو أجزاء كلمات). أول خطوة في معظم مسارات المعالجة.</div></div>
+</div>
+
+<div class="terme">
+  <div class="cote-fr"><div class="mot">Mots vides / <em>stop words</em></div>
+    <div class="def">Les mots très fréquents et peu informatifs : « le », « de », « the ». On les retire parfois — pas dans ce projet, et c'est justifié plus loin.</div></div>
+  <div class="cote-ar"><div class="mot">الكلمات الوظيفية / كلمات التوقف</div>
+    <div class="def">الكلمات الشائعة قليلة الدلالة: «في»، «من»، «the». تُحذف أحياناً — لكن ليس في هذا المشروع، والسبب مشروح لاحقاً.</div></div>
+</div>
+
+<div class="terme">
+  <div class="cote-fr"><div class="mot">Lemmatisation</div>
+    <div class="def">Ramener un mot à sa forme de base : « allaient » → « aller ». Utile en recherche lexicale classique.</div></div>
+  <div class="cote-ar"><div class="mot">التجذيع / الردّ إلى الأصل</div>
+    <div class="def">إرجاع الكلمة إلى صيغتها الأساسية: «ذاهبون» ← «ذهب». مفيد في البحث المعجمي التقليدي.</div></div>
+</div>
+
+<div class="terme">
+  <div class="cote-fr"><div class="mot">Embedding / plongement vectoriel</div>
+    <div class="def"><strong>Le mot le plus important du projet.</strong> La transformation d'un texte en une liste de nombres qui encode son sens. Ici : 384 nombres par texte.</div></div>
+  <div class="cote-ar"><div class="mot">التضمين / المتجه الدلالي</div>
+    <div class="def"><strong>أهم مصطلح في المشروع.</strong> تحويل النصّ إلى قائمة أعداد تُرمّز معناه. هنا: 384 عدداً لكل نصّ.</div></div>
+</div>
+
+<div class="terme">
+  <div class="cote-fr"><div class="mot">Vecteur</div>
+    <div class="def">Une liste ordonnée de nombres. On peut le voir comme un point dans un espace à plusieurs dimensions.</div></div>
+  <div class="cote-ar"><div class="mot">المتجه</div>
+    <div class="def">قائمة مرتّبة من الأعداد. يمكن تصوّره نقطة في فضاء متعدّد الأبعاد.</div></div>
+</div>
+
+<div class="terme">
+  <div class="cote-fr"><div class="mot">Dimension</div>
+    <div class="def">Le nombre de valeurs d'un vecteur. Ici 384 : chaque texte est décrit par 384 nombres.</div></div>
+  <div class="cote-ar"><div class="mot">البُعد</div>
+    <div class="def">عدد القيم في المتجه. هنا 384: كل نصّ يوصَف بـ384 عدداً.</div></div>
+</div>
+
+<div class="terme">
+  <div class="cote-fr"><div class="mot">Similarité cosinus</div>
+    <div class="def">Une mesure de proximité entre deux vecteurs, entre −1 et 1. Elle compare des <em>directions</em>, donc des sens, pas des longueurs.</div></div>
+  <div class="cote-ar"><div class="mot">التشابه الجيبي (جيب التمام)</div>
+    <div class="def">مقياس للقرب بين متجهين، بين −1 و1. يقارن <em>الاتجاهات</em>، أي المعاني، لا الأطوال.</div></div>
+</div>
+
+<div class="terme">
+  <div class="cote-fr"><div class="mot">BERT / Sentence-BERT</div>
+    <div class="def">Des modèles de langue. BERT comprend le texte ; Sentence-BERT est sa variante spécialisée dans la production d'un vecteur par phrase.</div></div>
+  <div class="cote-ar"><div class="mot">بيرت / سِنتِنس-بيرت</div>
+    <div class="def">نماذج لغوية. يفهم BERT النصّ، وSentence-BERT نسخته المتخصّصة في إنتاج متجه واحد لكل جملة.</div></div>
+</div>
+
+<div class="terme">
+  <div class="cote-fr"><div class="mot">Modèle multilingue</div>
+    <div class="def">Un modèle entraîné sur plusieurs langues à la fois, qui les projette dans un <strong>espace commun</strong>. C'est ce qui rend possible la recherche translingue.</div></div>
+  <div class="cote-ar"><div class="mot">نموذج متعدّد اللغات</div>
+    <div class="def">نموذج دُرِّب على عدّة لغات معاً، فيُسقطها في <strong>فضاء مشترك</strong>. وهذا ما يجعل البحث عبر اللغات ممكناً.</div></div>
+</div>
+
+</div>
+
+<h3>La recherche d'information · استرجاع المعلومات</h3>
+
+<div class="glossaire">
+
+<div class="terme">
+  <div class="cote-fr"><div class="mot">Recherche lexicale</div>
+    <div class="def">Chercher par correspondance de <strong>mots</strong>. Si le mot n'est pas là, le score est zéro.</div></div>
+  <div class="cote-ar"><div class="mot">البحث المعجمي</div>
+    <div class="def">البحث بمطابقة <strong>الكلمات</strong>. إن غابت الكلمة كانت الدرجة صفراً.</div></div>
+</div>
+
+<div class="terme">
+  <div class="cote-fr"><div class="mot">Recherche sémantique</div>
+    <div class="def">Chercher par proximité de <strong>sens</strong>, via les vecteurs. Elle trouve les synonymes, les reformulations et les traductions.</div></div>
+  <div class="cote-ar"><div class="mot">البحث الدلالي</div>
+    <div class="def">البحث بقرب <strong>المعنى</strong> عبر المتجهات. يعثر على المرادفات وإعادات الصياغة والترجمات.</div></div>
+</div>
+
+<div class="terme">
+  <div class="cote-fr"><div class="mot">TF-IDF</div>
+    <div class="def">Une pondération classique : un mot compte d'autant plus qu'il est fréquent dans le document et <strong>rare</strong> dans le corpus.</div></div>
+  <div class="cote-ar"><div class="mot">TF-IDF</div>
+    <div class="def">ترجيح تقليدي: تزداد أهمية الكلمة كلما تكرّرت في الوثيقة و<strong>ندرت</strong> في المتن.</div></div>
+</div>
+
+<div class="terme">
+  <div class="cote-fr"><div class="mot">BM25</div>
+    <div class="def">L'amélioration de TF-IDF utilisée partout en production. Elle ajoute une saturation et une correction par la longueur du document.</div></div>
+  <div class="cote-ar"><div class="mot">BM25</div>
+    <div class="def">تحسين لـTF-IDF مستخدَم في الإنتاج على نطاق واسع. يضيف تشبّعاً وتصحيحاً بحسب طول الوثيقة.</div></div>
+</div>
+
+<div class="terme">
+  <div class="cote-fr"><div class="mot">Baseline / ligne de base</div>
+    <div class="def">La méthode de référence à laquelle on se compare. Sans baseline, dire « mes résultats sont bons » n'a aucune valeur.</div></div>
+  <div class="cote-ar"><div class="mot">خطّ الأساس / المرجع</div>
+    <div class="def">الطريقة المرجعية التي نقارن بها. من دونها لا قيمة لقول «نتائجي جيدة».</div></div>
+</div>
+
+<div class="terme">
+  <div class="cote-fr"><div class="mot">FAISS</div>
+    <div class="def">Une bibliothèque qui trouve très vite les vecteurs les plus proches d'un vecteur donné. Développée par Meta.</div>
+    <div class="prononce">Facebook AI Similarity Search</div></div>
+  <div class="cote-ar"><div class="mot">فايس (FAISS)</div>
+    <div class="def">مكتبة تعثر بسرعة كبيرة على أقرب المتجهات إلى متجه معطى. طوّرتها ميتا.</div></div>
+</div>
+
+<div class="terme">
+  <div class="cote-fr"><div class="mot">Recherche hybride</div>
+    <div class="def">Combiner un moteur lexical et un moteur sémantique en un seul classement. Devenue le standard en production.</div></div>
+  <div class="cote-ar"><div class="mot">البحث الهجين</div>
+    <div class="def">الجمع بين محرّك معجمي ومحرّك دلالي في ترتيب واحد. صار المعيار في الإنتاج.</div></div>
+</div>
+
+<div class="terme">
+  <div class="cote-fr"><div class="mot">RRF — fusion par rang réciproque</div>
+    <div class="def">La méthode qui fusionne deux classements en n'utilisant que les <strong>positions</strong>, jamais les scores.</div>
+    <div class="prononce">Reciprocal Rank Fusion</div></div>
+  <div class="cote-ar"><div class="mot">الدمج بمقلوب الرتبة (RRF)</div>
+    <div class="def">طريقة تدمج ترتيبين باستعمال <strong>المواقع</strong> فقط، لا الدرجات.</div></div>
+</div>
+
+</div>
+
+<h3>L'évaluation · التقييم</h3>
+
+<div class="glossaire">
+
+<div class="terme">
+  <div class="cote-fr"><div class="mot">Vérité terrain</div>
+    <div class="def">La bonne réponse, connue d'avance, qui permet de noter le moteur.</div>
+    <div class="prononce">ground truth</div></div>
+  <div class="cote-ar"><div class="mot">الحقيقة المرجعية</div>
+    <div class="def">الجواب الصحيح المعروف سلفاً، والذي يتيح تنقيط المحرّك.</div></div>
+</div>
+
+<div class="terme">
+  <div class="cote-fr"><div class="mot">Recall@K — rappel</div>
+    <div class="def">« Le bon document figure-t-il dans les K premiers résultats ? » Oui = 1, non = 0. On fait la moyenne sur toutes les requêtes.</div></div>
+  <div class="cote-ar"><div class="mot">الاسترجاع عند K</div>
+    <div class="def">«هل الوثيقة الصحيحة ضمن أول K نتيجة؟» نعم = 1، لا = 0. ثم نأخذ المتوسّط على كل الاستعلامات.</div></div>
+</div>
+
+<div class="terme">
+  <div class="cote-fr"><div class="mot">Precision@K — précision</div>
+    <div class="def">La part de résultats pertinents parmi les K renvoyés. Avec un seul bon document par requête, elle se confond avec le rappel.</div></div>
+  <div class="cote-ar"><div class="mot">الدقة عند K</div>
+    <div class="def">نسبة النتائج الملائمة ضمن K المُعادة. وحين تكون هناك وثيقة صحيحة واحدة فقط تتطابق مع الاسترجاع.</div></div>
+</div>
+
+<div class="terme">
+  <div class="cote-fr"><div class="mot">MRR — rang réciproque moyen</div>
+    <div class="def">1 divisé par la position du bon document. 1<sup>re</sup> place = 1 ; 2<sup>e</sup> = 0,5 ; 4<sup>e</sup> = 0,25. Récompense le fait d'être <em>haut</em>.</div>
+    <div class="prononce">Mean Reciprocal Rank</div></div>
+  <div class="cote-ar"><div class="mot">متوسّط مقلوب الرتبة</div>
+    <div class="def">واحد مقسوماً على موقع الوثيقة الصحيحة. المرتبة الأولى = 1، والثانية = 0,5، والرابعة = 0,25. يكافئ العلوّ في الترتيب.</div></div>
+</div>
+
+<div class="terme">
+  <div class="cote-fr"><div class="mot">nDCG</div>
+    <div class="def">Comme le MRR, mais la décroissance est logarithmique : plus douce. Standard en recherche d'information.</div></div>
+  <div class="cote-ar"><div class="mot">nDCG</div>
+    <div class="def">شبيه بـMRR لكن التناقص لوغاريتمي، أي أهدأ. معيار شائع في استرجاع المعلومات.</div></div>
+</div>
+
+<div class="terme">
+  <div class="cote-fr"><div class="mot">Fuite de données</div>
+    <div class="def">Quand la réponse est accidentellement présente dans les données d'entrée. Cela gonfle les scores et invalide l'évaluation. <strong>Ce projet en évite une, volontairement.</strong></div>
+    <div class="prononce">data leakage</div></div>
+  <div class="cote-ar"><div class="mot">تسرّب البيانات</div>
+    <div class="def">حين يوجد الجواب سهواً داخل بيانات الدخل. يضخّم الدرجات ويُبطل التقييم. <strong>وهذا المشروع يتجنّب حالة منه عن قصد.</strong></div></div>
+</div>
+
+<div class="terme">
+  <div class="cote-fr"><div class="mot">Latence</div>
+    <div class="def">Le temps de réponse à une requête. On donne la médiane et le 95<sup>e</sup> centile, pas seulement la moyenne.</div></div>
+  <div class="cote-ar"><div class="mot">زمن الاستجابة</div>
+    <div class="def">الزمن اللازم للردّ على استعلام. نذكر الوسيط والمئين الخامس والتسعين، لا المتوسّط وحده.</div></div>
+</div>
+
+<div class="terme">
+  <div class="cote-fr"><div class="mot">Médiane et 95<sup>e</sup> centile</div>
+    <div class="def">La médiane : la valeur du milieu. Le p95 : la valeur que 95 % des requêtes ne dépassent pas. Il révèle les cas lents que la moyenne cache.</div></div>
+  <div class="cote-ar"><div class="mot">الوسيط والمئين 95</div>
+    <div class="def">الوسيط هو القيمة الوسطى. أما p95 فهي القيمة التي لا تتجاوزها 95% من الاستعلامات، وتكشف الحالات البطيئة التي يُخفيها المتوسّط.</div></div>
+</div>
+
+</div>
+
+<h3>L'architecture logicielle · بنية البرمجية</h3>
+
+<div class="glossaire">
+
+<div class="terme">
+  <div class="cote-fr"><div class="mot">API</div>
+    <div class="def">Une porte d'entrée qui expose le moteur sous forme de service web, interrogeable par n'importe quelle application.</div></div>
+  <div class="cote-ar"><div class="mot">واجهة برمجة التطبيقات</div>
+    <div class="def">بوّابة تعرض المحرّك كخدمة ويب، يمكن لأي تطبيق أن يستعلم منها.</div></div>
+</div>
+
+<div class="terme">
+  <div class="cote-fr"><div class="mot">FastAPI</div>
+    <div class="def">Le cadriciel Python utilisé pour construire cette API. Il génère aussi sa documentation interactive tout seul.</div></div>
+  <div class="cote-ar"><div class="mot">FastAPI</div>
+    <div class="def">إطار عمل بلغة بايثون استُعمل لبناء هذه الواجهة. ويولّد توثيقه التفاعلي تلقائياً.</div></div>
+</div>
+
+<div class="terme">
+  <div class="cote-fr"><div class="mot">Streamlit</div>
+    <div class="def">La bibliothèque Python qui construit l'interface graphique. Elle ne connaît rien du moteur : elle appelle l'API.</div></div>
+  <div class="cote-ar"><div class="mot">Streamlit</div>
+    <div class="def">مكتبة بايثون التي تبني الواجهة الرسومية. لا تعرف شيئاً عن المحرّك، بل تنادي الواجهة البرمجية.</div></div>
+</div>
+
+<div class="terme">
+  <div class="cote-fr"><div class="mot">Découplage</div>
+    <div class="def">Le fait que deux parties d'un programme s'ignorent mutuellement. Ici : on peut changer le moteur sans toucher à l'affichage.</div></div>
+  <div class="cote-ar"><div class="mot">فكّ الارتباط</div>
+    <div class="def">أن يجهل جزءان من البرنامج أحدهما الآخر. هنا: يمكن تغيير المحرّك دون المساس بالعرض.</div></div>
+</div>
+
+</div>
+
+<!-- ====================================================================== -->
+<h2 id="s3"><span class="num">03</span>Le problème à résoudre</h2>
+
+<div class="duo">
+<div class="fr">
+<p>Pour comprendre ce que fait ton projet, il faut d'abord comprendre ce qui
+<strong>ne marche pas</strong> dans un moteur de recherche ordinaire.</p>
+
+<h4>Comment fonctionne un moteur classique</h4>
+<p>Un moteur par mots-clés fait quelque chose de très simple : il regarde quels
+mots de ta question apparaissent dans chaque document, et il compte. Un document
+qui contient beaucoup de tes mots remonte en haut.</p>
+<p>Il ajoute deux raffinements intelligents :</p>
+<ul>
+  <li>un mot <strong>rare</strong> compte plus qu'un mot fréquent — « transformer »
+  discrimine, « the » non ;</li>
+  <li>un document <strong>long</strong> est pénalisé, sinon il gagnerait juste parce
+  qu'il contient plus de mots.</li>
+</ul>
+<p>C'est BM25, et c'est excellent. Rapide, gratuit, sans modèle à entraîner. Cela
+fait tourner Google, Elasticsearch et la plupart des moteurs du monde.</p>
+</div>
+
+<div class="ar">
+<p>لفهم ما يفعله مشروعك، لا بدّ أولاً من فهم ما <strong>لا ينجح</strong> في محرّك بحث
+عادي.</p>
+
+<h4>كيف يشتغل محرّك تقليدي</h4>
+<p>يفعل المحرّك القائم على الكلمات المفتاحية أمراً بسيطاً جداً: ينظر أيّ كلمات سؤالك
+ترد في كل وثيقة، ثم يَعُدّ. والوثيقة التي تحوي كثيراً من كلماتك تصعد إلى الأعلى.</p>
+<p>ويضيف تحسينين ذكيّين:</p>
+<ul>
+  <li>الكلمة <strong>النادرة</strong> تزن أكثر من الشائعة — فكلمة «transformer» تميّز،
+  أما «the» فلا؛</li>
+  <li>الوثيقة <strong>الطويلة</strong> تُعاقَب، وإلا لفازت لمجرّد احتوائها كلمات أكثر.</li>
+</ul>
+<p>هذا هو BM25، وهو ممتاز: سريع، مجاني، بلا نموذج يُدرَّب. وعليه تقوم Google
+وElasticsearch ومعظم محرّكات العالم.</p>
+</div>
+</div>
+
+<div class="note piege">
+<span class="etiquette">Sa limite, et elle est structurelle · حدّه، وهو حدّ بنيوي</span>
+<div class="duo">
+<div class="fr">
+<p>Si la question et le document ne partagent <strong>aucun mot</strong>, le score est
+zéro. Pas « faible » : <strong>zéro</strong>.</p>
+<p>Et ce n'est pas réglable. Aucun paramètre, aucune optimisation n'y changera
+quoi que ce soit — il n'y a littéralement rien à compter.</p>
+<p>Cela arrive tout le temps :</p>
+<ul>
+  <li>tu écris « voiture », le document dit « automobile » ;</li>
+  <li>tu poses une question, le document est un exposé ;</li>
+  <li>tu écris en français, le document est en anglais.</li>
+</ul>
+</div>
+<div class="ar">
+<p>إذا لم يتقاسم السؤال والوثيقة <strong>أيّ كلمة</strong>، كانت الدرجة صفراً. ليست
+«ضعيفة» بل <strong>صفراً</strong>.</p>
+<p>وهذا غير قابل للضبط. لا معامل ولا تحسين يغيّر شيئاً — إذ لا يوجد حرفياً ما يُعَدّ.</p>
+<p>وهذا يقع باستمرار:</p>
+<ul>
+  <li>تكتبين «سيارة» والوثيقة تقول «مركبة»؛</li>
+  <li>تطرحين سؤالاً والوثيقة عرضٌ تقريري؛</li>
+  <li>تكتبين بالفرنسية والوثيقة بالإنجليزية.</li>
+</ul>
+</div>
+</div>
+</div>
+
+<div class="duo">
+<div class="fr">
+<h4>Le cas extrême, celui de ton projet</h4>
+<p>Quand la question est en arabe et le corpus en anglais, il n'y a pas seulement
+un vocabulaire différent : il n'y a pas <strong>un seul caractère en commun</strong>.
+Les deux textes ne partagent même pas l'alphabet.</p>
+<p>C'est le cas de test parfait, parce qu'il ne laisse aucune place au doute. Sur
+les vingt questions arabes du jeu d'évaluation, BM25 renvoie zéro résultat
+<strong>vingt fois sur vingt</strong>.</p>
+</div>
+<div class="ar">
+<h4>الحالة القصوى، وهي حالة مشروعك</h4>
+<p>حين يكون السؤال بالعربية والمتن بالإنجليزية، فالأمر ليس اختلافاً في المفردات فحسب:
+لا يوجد <strong>حرف واحد مشترك</strong>. النصّان لا يتقاسمان حتى الأبجدية.</p>
+<p>إنها حالة الاختبار المثالية لأنها لا تترك مجالاً للشكّ. ففي الأسئلة العربية العشرين
+في مجموعة التقييم، يعيد BM25 صفر نتيجة <strong>عشرين مرة من عشرين</strong>.</p>
+</div>
+</div>
+
+<!-- ====================================================================== -->
+<h2 id="s4"><span class="num">04</span>Les embeddings, expliqués sans mathématiques</h2>
+
+<div class="duo">
+<div class="fr">
+<p>C'est le cœur du projet. Si tu ne dois comprendre qu'une seule chose en
+profondeur, c'est celle-ci.</p>
+
+<h4>L'analogie des villes</h4>
+<p>Prends une carte. Chaque ville y a deux nombres : sa latitude et sa longitude.
+Ces deux nombres <strong>encodent sa position</strong>. Et ils ont une propriété
+précieuse : deux villes proches sur le terrain ont des nombres proches.</p>
+<p>Casablanca et Rabat ont des coordonnées voisines. Casablanca et Tokyo, non.
+Tu peux donc calculer une distance <em>sans jamais regarder la carte</em> — juste
+avec les nombres.</p>
+</div>
+
+<div class="ar">
+<p>هذا هو قلب المشروع. وإن كان عليك أن تفهمي شيئاً واحداً فهماً عميقاً، فهو هذا.</p>
+
+<h4>تشبيه المدن</h4>
+<p>خذي خريطة. لكل مدينة فيها عددان: خط العرض وخط الطول. وهذان العددان
+<strong>يُرمّزان موقعها</strong>. ولهما خاصية ثمينة: المدينتان المتجاورتان على الأرض
+لهما عددان متقاربان.</p>
+<p>الدار البيضاء والرباط لهما إحداثيّتان متجاورتان، أما الدار البيضاء وطوكيو فلا.
+وبذلك تستطيعين حساب المسافة <em>دون النظر إلى الخريطة أصلاً</em> — بالأعداد وحدها.</p>
+</div>
+</div>
+
+<div class="duo">
+<div class="fr">
+<h4>Le même principe, appliqué au sens</h4>
+<p>Un modèle d'embeddings fait exactement cela, mais avec le <strong>sens</strong> au
+lieu de la position géographique. Il transforme chaque texte en 384 nombres, dans
+un espace où :</p>
+<ul>
+  <li>deux textes qui veulent dire la même chose se retrouvent <strong>au même
+  endroit</strong> ;</li>
+  <li>deux textes sans rapport se retrouvent loin l'un de l'autre.</li>
+</ul>
+<p>Et voilà le point crucial : cela reste vrai <strong>même s'ils n'ont aucun mot en
+commun</strong>, et même s'ils sont dans des langues différentes.</p>
+<p>Chercher devient alors une opération purement géométrique : « quels points sont
+les plus proches de celui-ci ? »</p>
+</div>
+
+<div class="ar">
+<h4>المبدأ نفسه، مطبَّقاً على المعنى</h4>
+<p>يفعل نموذج التضمين هذا بالضبط، لكن مع <strong>المعنى</strong> بدل الموقع الجغرافي.
+فيحوّل كل نصّ إلى 384 عدداً، في فضاء تكون فيه:</p>
+<ul>
+  <li>النصوص المتقاربة في المعنى <strong>في المكان نفسه</strong>؛</li>
+  <li>النصوص التي لا صلة بينها متباعدة.</li>
+</ul>
+<p>وهنا النقطة الحاسمة: يظلّ ذلك صحيحاً <strong>ولو لم تشترك في كلمة واحدة</strong>،
+وحتى لو كانت بلغات مختلفة.</p>
+<p>وعندئذ يصير البحث عملية هندسية محضة: «أيّ النقاط أقرب إلى هذه النقطة؟»</p>
+</div>
+</div>
+
+<div class="note cle">
+<span class="etiquette">Pourquoi les langues se rejoignent · لماذا تلتقي اللغات</span>
+<div class="duo">
+<div class="fr">
+<p>Le modèle utilisé, <code>multilingual-e5-small</code>, a été entraîné sur des
+<strong>paires de phrases traduites</strong> dans une centaine de langues. Pendant
+l'entraînement, on lui a appris que « fraud detection », « détection de fraude »
+et « كشف الاحتيال » doivent produire le <strong>même vecteur</strong>.</p>
+<p>Ce n'est donc pas de la traduction : il n'y a aucune étape de traduction dans
+le projet. C'est un <strong>espace partagé</strong>, où les trois formulations
+tombent naturellement au même endroit.</p>
+<p><strong>C'est la phrase à retenir pour la soutenance.</strong></p>
+</div>
+<div class="ar">
+<p>النموذج المستعمل، <code>multilingual-e5-small</code>، دُرِّب على
+<strong>أزواج من الجمل المترجَمة</strong> في نحو مئة لغة. وأثناء التدريب تعلّم أن
+«fraud detection» و«détection de fraude» و«كشف الاحتيال» يجب أن تُنتج
+<strong>المتجه نفسه</strong>.</p>
+<p>فالأمر إذن ليس ترجمة: لا توجد خطوة ترجمة في المشروع إطلاقاً. بل هو
+<strong>فضاء مشترك</strong> تسقط فيه الصياغات الثلاث في المكان نفسه بشكل طبيعي.</p>
+<p><strong>هذه هي الجملة التي يجب حفظها للمناقشة.</strong></p>
+</div>
+</div>
+</div>
+
+<div class="duo">
+<div class="fr">
+<h4>Les préfixes <code>query:</code> et <code>passage:</code></h4>
+<p>Un détail technique qui compte, et sur lequel un jury peut t'interroger.</p>
+<p>La famille de modèles E5 a été entraînée avec deux étiquettes : on met
+<code>query:</code> devant une question et <code>passage:</code> devant un
+document. Le modèle a appris à les traiter différemment — une question et un
+document ne jouent pas le même rôle.</p>
+<p>Si on oublie ces préfixes, la qualité chute nettement… <strong>sans aucun message
+d'erreur</strong>. C'est un bug invisible, et c'est exactement le genre de détail
+qui distingue un projet fait sérieusement.</p>
+</div>
+<div class="ar">
+<h4>البادئتان <code>query:</code> و<code>passage:</code></h4>
+<p>تفصيل تقني مهم، وقد تسألك عنه اللجنة.</p>
+<p>دُرِّبت عائلة نماذج E5 بوسمين اثنين: نضع <code>query:</code> أمام السؤال
+و<code>passage:</code> أمام الوثيقة. وقد تعلّم النموذج معالجتهما معالجة مختلفة — فالسؤال
+والوثيقة لا يؤدّيان الدور نفسه.</p>
+<p>وإن أُغفلت هاتان البادئتان تراجعت الجودة تراجعاً واضحاً… <strong>دون أي رسالة
+خطأ</strong>. إنه خلل غير مرئي، وهو تحديداً نوع التفاصيل التي تميّز مشروعاً مُنجَزاً
+بجدّية.</p>
+</div>
+</div>
+
+<div class="note exemple">
+<span class="etiquette">Question de jury probable · سؤال محتمل من اللجنة</span>
+<div class="duo">
+<div class="fr">
+<p><strong>« Pourquoi 384 dimensions ? »</strong></p>
+<p>Réponse : « Ce n'est pas un choix de ma part, c'est la dimension de sortie du
+modèle <code>e5-small</code>. Sa variante <code>e5-base</code> en produit 768,
+pour environ trois fois plus de calcul. J'ai choisi la petite version parce
+qu'elle tourne sur un processeur ordinaire, sans carte graphique. »</p>
+</div>
+<div class="ar">
+<p><strong>«لماذا 384 بُعداً؟»</strong></p>
+<p>الجواب: «ليس هذا اختياراً منّي، بل هو بُعد الخرج في نموذج <code>e5-small</code>.
+أما نسخته <code>e5-base</code> فتنتج 768 بُعداً بكلفة حسابية أكبر بنحو ثلاث مرات.
+واخترتُ النسخة الصغيرة لأنها تشتغل على معالج عادي دون بطاقة رسومية.»</p>
+</div>
+</div>
+</div>
+
+<!-- ====================================================================== -->
+<h2 id="s5"><span class="num">05</span>Le corpus et sa préparation</h2>
+
+<div class="duo">
+<div class="fr">
+<h4>D'où viennent les données</h4>
+<p>Les 8 569 articles viennent de l'<strong>API publique d'arXiv</strong>, la grande
+archive ouverte d'articles scientifiques. Huit catégories d'informatique et de
+statistiques : apprentissage automatique, traitement du langage, vision,
+sécurité, recherche d'information, réseaux de neurones, IA, statistiques.</p>
+<p>Chaque article apporte : un identifiant, un titre, un résumé, des auteurs, une
+date, ses catégories.</p>
+</div>
+<div class="ar">
+<h4>من أين تأتي البيانات</h4>
+<p>المقالات الـ8569 مأخوذة من <strong>الواجهة العمومية لـarXiv</strong>، الأرشيف
+المفتوح الكبير للمقالات العلمية. ثماني فئات في المعلوميات والإحصاء: التعلّم الآلي،
+ومعالجة اللغة، والرؤية الحاسوبية، والأمن، واسترجاع المعلومات، والشبكات العصبية،
+والذكاء الاصطناعي، والإحصاء.</p>
+<p>ويحمل كل مقال: معرّفاً، وعنواناً، وملخّصاً، ومؤلّفين، وتاريخاً، وفئاته.</p>
+</div>
+</div>
+
+<h4>Pourquoi ce corpus, et pas un autre</h4>
+
+<div class="tableau">
+<table>
+<thead><tr><th>Raison</th><th>Français</th><th>العربية</th></tr></thead>
+<tbody>
+<tr><td><strong>Réel</strong></td>
+  <td>Des résumés scientifiques denses, pas un jeu de données jouet.</td>
+  <td class="ar">ملخّصات علمية كثيفة، لا مجموعة بيانات تدريبية مبسّطة.</td></tr>
+<tr><td><strong>Difficile pour toi</strong></td>
+  <td>Beaucoup de termes techniques rares — le terrain le plus favorable à BM25. La comparaison est donc honnête.</td>
+  <td class="ar">كثرة المصطلحات التقنية النادرة — وهي أنسب أرضية لـBM25. فالمقارنة إذن نزيهة.</td></tr>
+<tr><td><strong>100 % anglais</strong></td>
+  <td>C'est ce qui donne son sens à la démonstration multilingue.</td>
+  <td class="ar">وهذا ما يمنح البرهنة متعدّدة اللغات معناها.</td></tr>
+<tr><td><strong>Reconstructible</strong></td>
+  <td>Un script le retélécharge à l'identique, en respectant le délai imposé par l'API.</td>
+  <td class="ar">نصّ برمجي يعيد تنزيله كما هو، مع احترام المهلة التي تفرضها الواجهة.</td></tr>
+</tbody>
+</table>
+</div>
+
+<div class="duo">
+<div class="fr">
+<h4>Le prétraitement, et pourquoi il est léger</h4>
+<p>Le pipeline fait quatre choses :</p>
+<ol>
+  <li><strong>Simplifier le LaTeX</strong> — les résumés arXiv contiennent des
+  formules ; on les remplace par un espace.</li>
+  <li><strong>Normaliser les espaces</strong> — un texte d'un seul tenant.</li>
+  <li><strong>Découper en passages</strong> de 220 mots, avec un chevauchement de
+  40 mots pour ne pas couper une idée en deux.</li>
+  <li><strong>Regrouper par article</strong> à l'affichage : si trois passages du
+  même article remontent, l'article n'apparaît qu'une fois, à son meilleur score.</li>
+</ol>
+</div>
+<div class="ar">
+<h4>المعالجة الأولية، ولماذا هي خفيفة</h4>
+<p>يقوم المسار بأربعة أمور:</p>
+<ol>
+  <li><strong>تبسيط LaTeX</strong> — تحتوي ملخّصات arXiv على صيغ رياضية، فنستبدل بها
+  فراغاً.</li>
+  <li><strong>توحيد الفراغات</strong> — نصّ متّصل واحد.</li>
+  <li><strong>التقطيع إلى مقاطع</strong> من 220 كلمة، مع تداخل بـ40 كلمة كي لا تُقطع
+  فكرة في منتصفها.</li>
+  <li><strong>التجميع حسب المقال</strong> عند العرض: إذا صعدت ثلاثة مقاطع من المقال
+  نفسه، ظهر المقال مرة واحدة بأفضل درجاته.</li>
+</ol>
+</div>
+</div>
+
+<div class="note cle">
+<span class="etiquette">Ce que le pipeline ne fait PAS · ما لا يفعله المسار</span>
+<div class="duo">
+<div class="fr">
+<p>Ni suppression des mots vides, ni lemmatisation avant l'encodage. C'est
+volontaire, et un jury peut te le demander.</p>
+<p><strong>La raison :</strong> Sentence-BERT a été entraîné sur du texte naturel,
+complet, avec ses articles et ses prépositions. Le mutiler avant de le lui donner
+dégraderait sa représentation. Ces opérations restent pertinentes pour un
+pipeline TF-IDF classique — elles ne le sont pas ici.</p>
+</div>
+<div class="ar">
+<p>لا حذف للكلمات الوظيفية ولا ردّ إلى الجذور قبل الترميز. وهذا مقصود، وقد تسألك عنه
+اللجنة.</p>
+<p><strong>السبب:</strong> دُرِّب Sentence-BERT على نصّ طبيعي كامل بأدواته وحروف جرّه.
+وبتر النصّ قبل تقديمه إليه يُفسد تمثيله. وتبقى هذه العمليات وجيهة في مسار TF-IDF
+تقليدي — لكنها ليست كذلك هنا.</p>
+</div>
+</div>
+</div>
+
+<div class="note piege">
+<span class="etiquette">La décision la plus importante du projet · أهم قرار في المشروع</span>
+<div class="duo">
+<div class="fr">
+<p><strong>Le titre des articles n'est pas indexé.</strong> Seul le résumé l'est.</p>
+<p>Pourquoi ? Parce que l'évaluation automatique utilise <em>le titre comme
+requête</em>. Si ce titre figurait aussi dans le texte indexé, BM25 le retrouverait
+par simple correspondance exacte — il chercherait une phrase qu'il contient déjà.
+Ses scores seraient artificiellement parfaits, et la comparaison entre les deux
+moteurs n'aurait plus <strong>aucune valeur</strong>.</p>
+<p>C'est une <strong>fuite de données</strong>. L'éviter fait partie du travail
+scientifique, et cela coûte au moteur sémantique autant qu'à BM25 — donc c'est
+équitable.</p>
+<p>Dans le code, c'est un paramètre explicite :
+<code>INCLURE_TITRE_DANS_INDEX = False</code></p>
+</div>
+<div class="ar">
+<p><strong>عناوين المقالات غير مفهرسة.</strong> المفهرَس هو الملخّص وحده.</p>
+<p>لماذا؟ لأن التقييم الآلي يستعمل <em>العنوان استعلاماً</em>. فلو كان هذا العنوان
+موجوداً أيضاً في النصّ المفهرَس، لعثر عليه BM25 بمطابقة حرفية بسيطة — إذ سيبحث عن جملة
+يحتويها أصلاً. فتصير درجاته مثالية اصطناعياً، ولا تعود للمقارنة بين المحرّكين
+<strong>أي قيمة</strong>.</p>
+<p>هذا هو <strong>تسرّب البيانات</strong>. وتجنّبه جزء من العمل العلمي، وهو يكلّف المحرّك
+الدلالي بقدر ما يكلّف BM25 — أي أنه عادل.</p>
+<p>وفي الشيفرة هو معامل صريح: <code>INCLURE_TITRE_DANS_INDEX = False</code></p>
+</div>
+</div>
+</div>
+
+<!-- ====================================================================== -->
+<h2 id="s6"><span class="num">06</span>BM25, la baseline — et pourquoi elle existe</h2>
+
+<div class="duo">
+<div class="fr">
+<h4>Pourquoi implémenter un moteur « à l'ancienne » ?</h4>
+<p>C'est la question qu'on te posera. La réponse est courte et forte :</p>
+<p><strong>Sans point de comparaison, la phrase « mon moteur donne de bons
+résultats » n'a aucune valeur scientifique.</strong> Bons par rapport à quoi ?</p>
+<p>BM25 est la référence du domaine depuis les années 1990. Elle fait tourner
+Elasticsearch, Lucene, Solr. Si ton moteur sémantique ne se compare pas à elle,
+il ne se compare à rien.</p>
+</div>
+<div class="ar">
+<h4>لماذا نُنجز محرّكاً «بالطريقة القديمة»؟</h4>
+<p>هذا هو السؤال الذي سيُطرح عليك. والجواب قصير وقوي:</p>
+<p><strong>من دون مرجع للمقارنة، لا قيمة علمية لقول «محرّكي يعطي نتائج جيدة».</strong>
+جيدة بالنسبة إلى ماذا؟</p>
+<p>وBM25 هو مرجع هذا الحقل منذ تسعينيات القرن الماضي. وعليه تقوم Elasticsearch
+وLucene وSolr. فإن لم يُقارَن محرّكك الدلالي به، فهو لا يُقارَن بشيء.</p>
+</div>
+</div>
+
+<div class="duo">
+<div class="fr">
+<h4>Son principe, en quatre règles</h4>
+<ol>
+  <li>Un document qui contient <strong>plusieurs fois</strong> le mot cherché est
+  plus pertinent…</li>
+  <li>…mais avec un <strong>rendement décroissant</strong> : dix occurrences ne
+  valent pas dix fois une occurrence. C'est la « saturation ».</li>
+  <li>Un mot <strong>rare</strong> dans le corpus est plus informatif qu'un mot
+  fréquent.</li>
+  <li>Un document <strong>long</strong> est pénalisé, sinon il gagnerait par simple
+  accumulation.</li>
+</ol>
+<p>La différence avec TF-IDF tient aux points 2 et 4 : TF-IDF ne sature pas et ne
+corrige pas la longueur. BM25 est donc son successeur direct.</p>
+</div>
+<div class="ar">
+<h4>مبدؤه في أربع قواعد</h4>
+<ol>
+  <li>الوثيقة التي تحوي الكلمة المطلوبة <strong>عدّة مرات</strong> أكثر ملاءمة…</li>
+  <li>…لكن بـ<strong>مردود متناقص</strong>: عشر ورودات لا تساوي عشرة أضعاف ورود واحد.
+  وهذا هو «التشبّع».</li>
+  <li>الكلمة <strong>النادرة</strong> في المتن أكثر إفادة من الشائعة.</li>
+  <li>الوثيقة <strong>الطويلة</strong> تُعاقَب، وإلا لفازت بمجرّد التراكم.</li>
+</ol>
+<p>والفارق عن TF-IDF في النقطتين 2 و4: فـTF-IDF لا يُشبِع ولا يصحّح الطول. وBM25 إذن
+خَلَفُه المباشر.</p>
+</div>
+</div>
+
+<div class="note jury">
+<span class="etiquette">Si on te demande : « pourquoi pas TF-IDF ? » · إن سُئلتِ: «لماذا لا TF-IDF؟»</span>
+<div class="duo">
+<div class="fr">
+<p>« Le cahier des charges laissait le choix entre TF-IDF et BM25. J'ai pris BM25
+parce que c'est l'amélioration directe de TF-IDF et la référence en production.
+Choisir TF-IDF aurait affaibli volontairement ma baseline — et une comparaison
+contre un adversaire affaibli ne prouve rien. »</p>
+</div>
+<div class="ar">
+<p>«كان دفتر التحمّلات يتيح الاختيار بين TF-IDF وBM25. واخترتُ BM25 لأنه التحسين
+المباشر لـTF-IDF وهو المرجع في الإنتاج. فاختيار TF-IDF كان سيُضعف خطّ الأساس عمداً —
+والمقارنة بخصم مُضعَف لا تُثبت شيئاً.»</p>
+</div>
+</div>
+</div>
+
+<!-- ====================================================================== -->
+<h2 id="s7"><span class="num">07</span>FAISS et l'index vectoriel</h2>
+
+<div class="duo">
+<div class="fr">
+<h4>Le problème que FAISS résout</h4>
+<p>Une fois tous les documents transformés en vecteurs, chercher revient à
+demander : « parmi ces 10 897 vecteurs, lesquels ressemblent le plus à
+celui-ci ? »</p>
+<p>On pourrait le faire en Python avec une simple boucle. Mais cela prendrait
+plusieurs secondes par requête. FAISS le fait en <strong>une milliseconde</strong>,
+parce qu'il est écrit en C++ et optimisé pour cette unique opération.</p>
+</div>
+<div class="ar">
+<h4>المشكلة التي يحلّها FAISS</h4>
+<p>بعد تحويل كل الوثائق إلى متجهات، يصير البحث سؤالاً واحداً: «من بين هذه المتجهات
+الـ10897، أيّها أشبه بهذا المتجه؟»</p>
+<p>يمكن فعل ذلك ببايثون عبر حلقة بسيطة، لكنه سيستغرق عدّة ثوانٍ لكل استعلام. أما FAISS
+فينجزه في <strong>ميلي ثانية واحدة</strong>، لأنه مكتوب بلغة C++ ومُحسَّن لهذه العملية
+وحدها.</p>
+</div>
+</div>
+
+<div class="note cle">
+<span class="etiquette">Le détail qui rend la mesure juste · التفصيل الذي يجعل القياس عادلاً</span>
+<div class="duo">
+<div class="fr">
+<p>Tous les vecteurs sont <strong>normalisés à une longueur de 1</strong> avant d'être
+rangés dans l'index.</p>
+<p>Pourquoi ? Parce qu'une fois normalisés, le produit scalaire de deux vecteurs
+vaut <em>exactement</em> leur similarité cosinus. On peut donc utiliser l'index le
+plus rapide de FAISS tout en mesurant un <strong>angle</strong>.</p>
+<p>Et pourquoi un angle ? Parce que l'angle mesure la <strong>direction</strong> —
+donc le sens — alors que la longueur d'un vecteur reflète surtout la taille du
+texte. Un résumé long et un résumé court sur le même sujet doivent être proches ;
+comparer des longueurs les éloignerait.</p>
+</div>
+<div class="ar">
+<p>تُنظَّم كل المتجهات إلى <strong>طول يساوي 1</strong> قبل إدراجها في الفهرس.</p>
+<p>لماذا؟ لأنها بعد التنظيم يصير الجداء السلّمي لمتجهين مساوياً <em>تماماً</em> لتشابههما
+الجيبي. فنستطيع استعمال أسرع فهارس FAISS مع قياس <strong>زاوية</strong> في الوقت نفسه.</p>
+<p>ولماذا الزاوية؟ لأنها تقيس <strong>الاتجاه</strong>، أي المعنى، بينما يعكس طول المتجه
+حجم النصّ أساساً. فملخّص طويل وآخر قصير في الموضوع نفسه يجب أن يكونا متقاربين، ومقارنة
+الأطوال كانت ستُبعدهما.</p>
+</div>
+</div>
+</div>
+
+<div class="duo">
+<div class="fr">
+<h4>Index exact ou index approximatif ?</h4>
+<p>FAISS propose deux structures, et le projet implémente les deux.</p>
+<ul>
+  <li><strong>Exact</strong> (<code>IndexFlatIP</code>) : compare la requête à
+  absolument tous les vecteurs. Résultat parfait, aucune approximation.</li>
+  <li><strong>Approximatif</strong> (<code>IndexIVFFlat</code>) : regroupe d'abord
+  les vecteurs en « quartiers », puis ne fouille que les quartiers les plus
+  prometteurs. Plus rapide, mais un bon voisin situé dans un quartier non visité
+  est <em>manqué</em>.</li>
+</ul>
+<p>C'est le compromis central de la recherche vectorielle à grande échelle. Et ce
+projet ne se contente pas de le citer : <strong>il le mesure</strong>.</p>
+</div>
+<div class="ar">
+<h4>فهرس دقيق أم تقريبي؟</h4>
+<p>يقترح FAISS بنيتين، والمشروع يُنجز كلتيهما.</p>
+<ul>
+  <li><strong>الدقيق</strong> (<code>IndexFlatIP</code>): يقارن الاستعلام بكل
+  المتجهات دون استثناء. نتيجة كاملة بلا تقريب.</li>
+  <li><strong>التقريبي</strong> (<code>IndexIVFFlat</code>): يجمّع المتجهات أولاً في
+  «أحياء»، ثم لا يفتّش إلا الأحياء الأكثر وعداً. أسرع، لكن الجار الجيّد الواقع في
+  حيّ لم يُزَر يضيع.</li>
+</ul>
+<p>هذه هي المفاضلة الجوهرية في البحث المتجهي واسع النطاق. وهذا المشروع لا يكتفي بذكرها
+بل <strong>يقيسها</strong>.</p>
+</div>
+</div>
+
+<div class="note exemple">
+<span class="etiquette">Le résultat, et il est contre-intuitif · النتيجة، وهي مخالفة للحدس</span>
+<div class="duo">
+<div class="fr">
+<p>À 10 897 vecteurs, l'index approximatif fait perdre <strong>14 % de rappel</strong>
+pour économiser <strong>moins d'une milliseconde</strong> sur une requête qui en
+prend 83.</p>
+<p>Conclusion : <strong>l'approximation ne se justifie pas à cette échelle.</strong>
+Elle reste implémentée pour le jour où le corpus atteindrait le million de
+documents.</p>
+<p>C'est un excellent moment de soutenance : tu montres que tu as testé une
+optimisation et que <strong>tu as conclu qu'il ne fallait pas l'utiliser</strong>.
+C'est plus mûr que de l'activer parce que ça fait moderne.</p>
+</div>
+<div class="ar">
+<p>عند 10897 متجهاً، يُفقد الفهرس التقريبي <strong>14% من الاسترجاع</strong> مقابل توفير
+<strong>أقل من ميلي ثانية</strong> في استعلام يستغرق 83.</p>
+<p>الخلاصة: <strong>التقريب لا مبرّر له عند هذا الحجم.</strong> ويظلّ منجزاً استعداداً
+ليوم يبلغ فيه المتن مليون وثيقة.</p>
+<p>وهذه لحظة ممتازة في المناقشة: تُظهرين أنك اختبرتِ تحسيناً و<strong>خلصتِ إلى وجوب عدم
+استعماله</strong>. وهذا أنضج من تفعيله لمجرّد أنه يبدو عصرياً.</p>
+</div>
+</div>
+</div>
+
+<!-- ====================================================================== -->
+<h2 id="s8"><span class="num">08</span>La fusion hybride</h2>
+
+<div class="duo">
+<div class="fr">
+<h4>D'où vient l'idée</h4>
+<p>Elle ne vient pas d'une envie d'ajouter une fonctionnalité. Elle vient
+<strong>directement des résultats de l'évaluation</strong>.</p>
+<p>Les mesures montrent que chacun des deux moteurs gagne sur un terrain
+différent : BM25 quand les mots se recouvrent, le sémantique quand ils ne se
+recouvrent pas. Aucun ne domine partout.</p>
+<p>La conséquence logique n'est donc pas de choisir : c'est de <strong>combiner</strong>.
+Et c'est exactement ce que font Elasticsearch, Vespa et Weaviate en production.</p>
+</div>
+<div class="ar">
+<h4>من أين جاءت الفكرة</h4>
+<p>لم تأتِ من رغبة في إضافة ميزة، بل جاءت <strong>مباشرة من نتائج التقييم</strong>.</p>
+<p>تُظهر القياسات أن كلاً من المحرّكين يتفوّق في أرض مختلفة: BM25 حين تتقاطع الكلمات،
+والدلالي حين لا تتقاطع. ولا أحد منهما يسود في كل الحالات.</p>
+<p>والنتيجة المنطقية ليست الاختيار إذن، بل <strong>الجمع</strong>. وهذا بالضبط ما تفعله
+Elasticsearch وVespa وWeaviate في الإنتاج.</p>
+</div>
+</div>
+
+<div class="duo">
+<div class="fr">
+<h4>Le problème : on ne peut pas additionner les scores</h4>
+<p>Un score BM25 vaut typiquement entre 0 et 40, sans borne supérieure, et il
+dépend du corpus. Un cosinus vaut entre −1 et 1.</p>
+<p>Les additionner reviendrait à laisser BM25 décider seul : son échelle
+écraserait l'autre.</p>
+<p>On pourrait normaliser les scores (min-max, z-score). Mais la normalisation
+dépendrait alors du <em>lot de résultats renvoyé</em>, donc de la requête — et deux
+requêtes ne seraient plus comparables entre elles.</p>
+</div>
+<div class="ar">
+<h4>المشكلة: لا يمكن جمع الدرجات</h4>
+<p>درجة BM25 تتراوح عادة بين 0 و40، بلا حدّ أعلى، وتتوقّف على المتن. أما الجيب التمامي
+فيتراوح بين −1 و1.</p>
+<p>وجمعهما يعني ترك BM25 يقرّر وحده: إذ سيسحق سلّمُه السلّمَ الآخر.</p>
+<p>ويمكن تنظيم الدرجات (min-max أو z-score)، لكن التنظيم سيتوقّف عندئذ على
+<em>مجموعة النتائج المُعادة</em>، أي على الاستعلام — فلا تعود الاستعلامات قابلة
+للمقارنة.</p>
+</div>
+</div>
+
+<div class="note cle">
+<span class="etiquette">La solution : fusionner les rangs · الحلّ: دمج الرتب</span>
+<div class="duo">
+<div class="fr">
+<p>La <em>Reciprocal Rank Fusion</em> n'utilise que les <strong>positions</strong>,
+jamais les scores. Or une position est une position : 1<sup>re</sup> place chez
+BM25 et 1<sup>re</sup> place chez le sémantique sont dans la même unité, par
+construction.</p>
+<div class="schema">score(document) = Σ   1 / (60 + rang)
+                sur chaque moteur</div>
+<p>La constante 60 amortit le sommet du classement. Sans elle, la 1<sup>re</sup>
+place vaudrait deux fois la 2<sup>e</sup>, ce qui donnerait à un seul moteur un
+<strong>droit de veto</strong> sur la fusion.</p>
+</div>
+<div class="ar">
+<p>لا يستعمل <em>الدمج بمقلوب الرتبة</em> إلا <strong>المواقع</strong>، لا الدرجات
+أبداً. والموقع هو الموقع: فالمرتبة الأولى عند BM25 والمرتبة الأولى عند الدلالي في
+الوحدة نفسها، بحكم البناء.</p>
+<div class="schema">درجة(الوثيقة) = مجموع   1 / (60 + الرتبة)
+                  على كل محرّك</div>
+<p>والثابت 60 يخفّف من قمّة الترتيب. فبدونه تساوي المرتبة الأولى ضعف الثانية، مما يمنح
+محرّكاً واحداً <strong>حقّ النقض</strong> على الدمج.</p>
+</div>
+</div>
+</div>
+
+<div class="note exemple">
+<span class="etiquette">Un exemple chiffré, à comprendre une fois · مثال رقمي يُفهم مرّة واحدة</span>
+<div class="duo">
+<div class="fr">
+<p>Trois documents. Voici leurs positions chez chaque moteur :</p>
+<div class="tableau">
+<table>
+<thead><tr><th>Doc</th><th>rang sémantique</th><th>rang BM25</th><th>calcul RRF</th><th>score</th></tr></thead>
+<tbody>
+<tr><td>A</td><td>1</td><td>absent</td><td>1/61</td><td class="num">0,01639</td></tr>
+<tr><td>B</td><td>2</td><td>2</td><td>1/62 + 1/62</td><td class="num">0,03226</td></tr>
+<tr><td>C</td><td>absent</td><td>1</td><td>1/61</td><td class="num">0,01639</td></tr>
+</tbody>
+</table>
+</div>
+<p><strong>B passe premier</strong>, alors qu'il n'était premier nulle part.</p>
+<p>C'est exactement le comportement voulu : l'accord entre deux méthodes
+<em>indépendantes</em> est un signal de pertinence plus fort qu'un avis unique et
+isolé.</p>
+</div>
+<div class="ar">
+<p>ثلاث وثائق. وهذه مواقعها عند كل محرّك:</p>
+<div class="tableau">
+<table>
+<thead><tr><th>الوثيقة</th><th>رتبة الدلالي</th><th>رتبة BM25</th><th>حساب RRF</th><th>الدرجة</th></tr></thead>
+<tbody>
+<tr><td>A</td><td>1</td><td>غائبة</td><td>1/61</td><td class="num">0,01639</td></tr>
+<tr><td>B</td><td>2</td><td>2</td><td>1/62 + 1/62</td><td class="num">0,03226</td></tr>
+<tr><td>C</td><td>غائبة</td><td>1</td><td>1/61</td><td class="num">0,01639</td></tr>
+</tbody>
+</table>
+</div>
+<p><strong>تتصدّر B</strong> رغم أنها لم تكن أولى في أيّ مكان.</p>
+<p>وهذا هو السلوك المقصود تماماً: فاتّفاق منهجين <em>مستقلّين</em> إشارةُ ملاءمة أقوى من
+رأي واحد منفرد.</p>
+</div>
+</div>
+</div>
+
+<div class="duo">
+<div class="fr">
+<h4>Le cas limite, déjà traité</h4>
+<p>Que se passe-t-il quand BM25 ne renvoie rien — c'est-à-dire sur toutes les
+requêtes arabes ?</p>
+<p>La somme se réduit à un seul terme, et la fusion rend le classement sémantique
+<strong>inchangé</strong>. Aucun traitement particulier n'a été nécessaire : une
+somme sur un seul terme reste une somme valide. C'est un signe de bonne
+conception.</p>
+</div>
+<div class="ar">
+<h4>الحالة الحدّية، وهي معالَجة سلفاً</h4>
+<p>ماذا يحدث حين لا يعيد BM25 شيئاً — أي في كل الاستعلامات العربية؟</p>
+<p>يختزل المجموع إلى حدّ واحد، فيُعيد الدمجُ الترتيبَ الدلاليَّ <strong>كما هو</strong>.
+ولم يلزم أي معالجة خاصة: فالمجموع على حدّ واحد يبقى مجموعاً صحيحاً. وهذه علامة تصميم
+جيّد.</p>
+</div>
+</div>
+
+<!-- ====================================================================== -->
+<h2 id="s9"><span class="num">09</span>L'application : API et interface</h2>
+
+<div class="duo">
+<div class="fr">
+<h4>Pourquoi une API et pas juste un script</h4>
+<p>Le moteur est une bibliothèque Python : utile, mais utilisable seulement
+depuis Python. FastAPI le transforme en <strong>service web</strong>, interrogeable
+par n'importe quelle application.</p>
+<p>Trois bénéfices concrets, tous vérifiables :</p>
+<ol>
+  <li>L'index et le modèle sont chargés <strong>une seule fois</strong> au démarrage
+  et restent en mémoire. Chaque requête ne paie plus que le coût de la recherche.</li>
+  <li>L'interface ignore tout du fonctionnement interne : on peut changer de
+  modèle sans toucher une ligne d'affichage.</li>
+  <li>FastAPI génère seul une <strong>documentation interactive</strong> à l'adresse
+  <code>/docs</code>, où chaque route se teste depuis le navigateur.</li>
+</ol>
+</div>
+<div class="ar">
+<h4>لماذا واجهة برمجية لا مجرّد نصّ برمجي</h4>
+<p>المحرّك مكتبة بايثون: مفيدة، لكنها لا تُستعمل إلا من بايثون. وFastAPI يحوّله إلى
+<strong>خدمة ويب</strong> يمكن لأي تطبيق أن يستعلم منها.</p>
+<p>ثلاث فوائد ملموسة، وكلها قابلة للتحقّق:</p>
+<ol>
+  <li>يُحمَّل الفهرس والنموذج <strong>مرة واحدة</strong> عند الإقلاع ويبقيان في
+  الذاكرة. فلا يدفع كل استعلام بعدها إلا كلفة البحث.</li>
+  <li>الواجهة تجهل كل شيء عن الاشتغال الداخلي: يمكن تغيير النموذج دون المساس بسطر
+  واحد من العرض.</li>
+  <li>يولّد FastAPI وحده <strong>توثيقاً تفاعلياً</strong> على العنوان
+  <code>/docs</code>، حيث يُختبر كل مسار من المتصفّح.</li>
+</ol>
+</div>
+</div>
+
+<div class="note piege">
+<span class="etiquette">Le préchauffage — un détail mesuré · التسخين المسبق — تفصيل مقيس</span>
+<div class="duo">
+<div class="fr">
+<p>Le modèle se charge <em>paresseusement</em>, à la première utilisation. C'est le
+bon comportement pour un script, mais pas pour un service : sans préchauffage,
+le tout premier utilisateur attendrait <strong>quinze secondes</strong>, et lui
+seul.</p>
+<p>Le code force donc un encodage à vide au démarrage. C'est un problème
+<strong>mesuré puis corrigé</strong> — exactement ce qu'un jury aime entendre.</p>
+</div>
+<div class="ar">
+<p>يُحمَّل النموذج <em>بتكاسل</em>، عند أول استعمال. وهذا سلوك سليم لنصّ برمجي، لا لخدمة:
+فبدون تسخين مسبق سينتظر أول مستخدم <strong>خمس عشرة ثانية</strong>، هو وحده.</p>
+<p>لذلك تفرض الشيفرة ترميزاً فارغاً عند الإقلاع. إنها مشكلة <strong>قيست ثم
+صُحّحت</strong> — وهو تحديداً ما تحبّ اللجنة سماعه.</p>
+</div>
+</div>
+</div>
+
+<h4>Les routes de l'API · مسارات الواجهة</h4>
+
+<div class="tableau">
+<table>
+<thead><tr><th class="mono">Route</th><th>Français</th><th>العربية</th></tr></thead>
+<tbody>
+<tr><td class="mono">/recherche</td>
+  <td>un moteur, K résultats, filtres, explications</td>
+  <td class="ar">محرّك واحد، K نتيجة، مرشّحات، تفسيرات</td></tr>
+<tr><td class="mono">/comparer</td>
+  <td>plusieurs moteurs <strong>+ l'analyse de leurs écarts</strong></td>
+  <td class="ar">عدّة محرّكات <strong>مع تحليل الفوارق بينها</strong></td></tr>
+<tr><td class="mono">/facettes</td>
+  <td>catégories et années réellement présentes dans l'index</td>
+  <td class="ar">الفئات والسنوات الموجودة فعلاً في الفهرس</td></tr>
+<tr><td class="mono">/metriques</td>
+  <td>les résultats de l'évaluation, servis tels quels</td>
+  <td class="ar">نتائج التقييم، تُقدَّم كما هي</td></tr>
+<tr><td class="mono">/sante</td>
+  <td>état des trois moteurs</td>
+  <td class="ar">حالة المحرّكات الثلاثة</td></tr>
+</tbody>
+</table>
+</div>
+
+<div class="duo">
+<div class="fr">
+<h4>L'interface : cinq vues</h4>
+<p>Elle suit l'ordre d'une soutenance, et c'est délibéré.</p>
+<ol>
+  <li><strong>Recherche</strong> — l'usage normal : poser une question, choisir le
+  moteur, filtrer, lire les résultats justifiés.</li>
+  <li><strong>Duel</strong> — la même question aux deux moteurs, et surtout ce que
+  chacun est <em>seul</em> à trouver.</li>
+  <li><strong>Démonstration</strong> — le scénario multilingue déroulé
+  automatiquement en français, arabe et anglais.</li>
+  <li><strong>Évaluation</strong> — les mesures du protocole, en graphiques.</li>
+  <li><strong>Architecture</strong> — les deux chaînes de traitement.</li>
+</ol>
+<p>Détail d'ergonomie : la barre de recherche est <em>au-dessus</em> des onglets. On
+tape la question une fois et on change de point de vue sans la retaper — c'est ce
+qui rend la comparaison immédiate en démonstration.</p>
+</div>
+<div class="ar">
+<h4>الواجهة: خمس شاشات</h4>
+<p>تتبع ترتيب المناقشة، وهذا مقصود.</p>
+<ol>
+  <li><strong>البحث</strong> — الاستعمال العادي: طرح سؤال، اختيار المحرّك، الترشيح،
+  قراءة النتائج مع تبريرها.</li>
+  <li><strong>المبارزة</strong> — السؤال نفسه للمحرّكين، وخصوصاً ما ينفرد كلٌّ منهما
+  بإيجاده.</li>
+  <li><strong>العرض التوضيحي</strong> — السيناريو متعدّد اللغات يجري تلقائياً
+  بالفرنسية والعربية والإنجليزية.</li>
+  <li><strong>التقييم</strong> — قياسات البروتوكول في رسوم بيانية.</li>
+  <li><strong>البنية</strong> — سلسلتا المعالجة.</li>
+</ol>
+<p>تفصيل في سهولة الاستعمال: شريط البحث <em>فوق</em> التبويبات. فتُكتب المسألة مرة واحدة
+ويُنتقل بين الرؤى دون إعادة كتابتها — وهذا ما يجعل المقارنة فورية أثناء العرض.</p>
+</div>
+</div>
+
+<div class="note cle">
+<span class="etiquette">Expliquer un résultat — la fonctionnalité qui impressionne · تفسير النتيجة — الميزة التي تُبهر</span>
+<div class="duo">
+<div class="fr">
+<p>Un score de 0,84 affiché seul demande qu'on lui fasse confiance. L'interface
+affiche donc <strong>pourquoi</strong> chaque document est là, de deux manières :</p>
+<ul>
+  <li><strong>Les mots partagés</strong> sont surlignés. C'est la justification du
+  moteur lexical, et elle ne coûte rien.</li>
+  <li><strong>La phrase la plus proche</strong> du résumé est mise en évidence. Le
+  passage est redécoupé en phrases, chacune est encodée, et l'on montre celle dont
+  le vecteur est le plus proche de la question. <em>Le modèle désigne lui-même ce
+  qui a déclenché le rapprochement.</em></li>
+</ul>
+<p>Et quand il n'y a <strong>aucun</strong> mot en commun, l'interface l'affiche
+d'elle-même. C'est la condition de validation n° 7 du cahier des charges,
+détectée automatiquement au lieu d'être cherchée à la main devant le jury.</p>
+</div>
+<div class="ar">
+<p>درجة 0,84 معروضة وحدها تطلب منّا أن نثق بها. لذلك تعرض الواجهة
+<strong>لماذا</strong> وردت كل وثيقة، بطريقتين:</p>
+<ul>
+  <li><strong>الكلمات المشتركة</strong> تُظلَّل. وهذا تبرير المحرّك المعجمي، ولا يكلّف
+  شيئاً.</li>
+  <li><strong>أقرب جملة</strong> في الملخّص تُبرَز. إذ يُعاد تقطيع المقطع إلى جمل،
+  وتُرمَّز كل جملة، ثم تُعرض تلك التي متجهها أقرب إلى السؤال. <em>فالنموذج نفسه يدلّ على
+  ما أثار التقارب.</em></li>
+</ul>
+<p>وحين لا توجد <strong>أي</strong> كلمة مشتركة، تعلن الواجهة ذلك من تلقاء نفسها. وهذا شرط
+المصادقة رقم 7 في دفتر التحمّلات، يُكتشَف آلياً بدل البحث عنه يدوياً أمام اللجنة.</p>
+</div>
+</div>
+</div>
+
+<!-- ====================================================================== -->
+<h2 id="s10"><span class="num">10</span>Les métriques, calculées à la main</h2>
+
+<div class="duo">
+<div class="fr">
+<p>Beaucoup d'étudiants citent « Recall@10 » et « MRR » sans savoir les calculer.
+C'est la faille la plus facile à exploiter pour un jury. Voici de quoi ne jamais
+y tomber.</p>
+<p>Prenons une situation simple : <strong>une requête, un seul bon document</strong>,
+et le moteur renvoie dix résultats.</p>
+</div>
+<div class="ar">
+<p>يستشهد كثير من الطلبة بـ«Recall@10» و«MRR» دون معرفة كيفية حسابهما. وهذه أسهل ثغرة
+تستغلّها اللجنة. وإليك ما يجنّبك الوقوع فيها.</p>
+<p>لنأخذ وضعاً بسيطاً: <strong>استعلام واحد، ووثيقة صحيحة واحدة</strong>، والمحرّك يعيد
+عشر نتائج.</p>
+</div>
+</div>
+
+<div class="note exemple">
+<span class="etiquette">Recall@K — le rappel · الاسترجاع عند K</span>
+<div class="duo">
+<div class="fr">
+<p><strong>La question :</strong> le bon document est-il dans les K premiers ?</p>
+<p>Réponse binaire : oui = 1, non = 0. Puis on fait la <strong>moyenne</strong> sur
+toutes les requêtes du jeu de test.</p>
+<div class="tableau">
+<table>
+<thead><tr><th>Le bon document est en position…</th><th>Recall@1</th><th>Recall@5</th><th>Recall@10</th></tr></thead>
+<tbody>
+<tr><td>1<sup>re</sup></td><td class="num">1</td><td class="num">1</td><td class="num">1</td></tr>
+<tr><td>3<sup>e</sup></td><td class="num">0</td><td class="num">1</td><td class="num">1</td></tr>
+<tr><td>8<sup>e</sup></td><td class="num">0</td><td class="num">0</td><td class="num">1</td></tr>
+<tr><td>absent du top 10</td><td class="num">0</td><td class="num">0</td><td class="num">0</td></tr>
+</tbody>
+</table>
+</div>
+<p>Sur ces quatre requêtes : Recall@10 = 3/4 = <strong>0,75</strong>.</p>
+</div>
+<div class="ar">
+<p><strong>السؤال:</strong> هل الوثيقة الصحيحة ضمن أول K نتيجة؟</p>
+<p>جواب ثنائي: نعم = 1، لا = 0. ثم نأخذ <strong>المتوسّط</strong> على كل استعلامات
+مجموعة الاختبار.</p>
+<div class="tableau">
+<table>
+<thead><tr><th>الوثيقة الصحيحة في المرتبة…</th><th>Recall@1</th><th>Recall@5</th><th>Recall@10</th></tr></thead>
+<tbody>
+<tr><td>الأولى</td><td class="num">1</td><td class="num">1</td><td class="num">1</td></tr>
+<tr><td>الثالثة</td><td class="num">0</td><td class="num">1</td><td class="num">1</td></tr>
+<tr><td>الثامنة</td><td class="num">0</td><td class="num">0</td><td class="num">1</td></tr>
+<tr><td>خارج العشرة الأوائل</td><td class="num">0</td><td class="num">0</td><td class="num">0</td></tr>
+</tbody>
+</table>
+</div>
+<p>على هذه الاستعلامات الأربعة: Recall@10 = 3/4 = <strong>0,75</strong>.</p>
+</div>
+</div>
+</div>
+
+<div class="note exemple">
+<span class="etiquette">MRR — le rang réciproque moyen · متوسّط مقلوب الرتبة</span>
+<div class="duo">
+<div class="fr">
+<p><strong>La formule :</strong> 1 divisé par la position du bon document.</p>
+<div class="schema">1re place → 1/1 = 1,000
+2e  place → 1/2 = 0,500
+3e  place → 1/3 = 0,333
+4e  place → 1/4 = 0,250
+absent    → 0</div>
+<p>Sur les quatre requêtes de l'exemple précédent :</p>
+<div class="schema">(1,000 + 0,333 + 0,125 + 0) / 4 = 0,365</div>
+<p><strong>Ce qu'elle mesure :</strong> pas seulement « a-t-il trouvé ? » mais
+« l'a-t-il mis <em>en haut</em> ? ». Un utilisateur regarde surtout les premiers
+résultats — le MRR traduit cette réalité.</p>
+</div>
+<div class="ar">
+<p><strong>الصيغة:</strong> واحد مقسوماً على موقع الوثيقة الصحيحة.</p>
+<div class="schema">المرتبة 1 ← 1/1 = 1,000
+المرتبة 2 ← 1/2 = 0,500
+المرتبة 3 ← 1/3 = 0,333
+المرتبة 4 ← 1/4 = 0,250
+غائبة      ← 0</div>
+<p>وعلى الاستعلامات الأربعة في المثال السابق:</p>
+<div class="schema">(1,000 + 0,333 + 0,125 + 0) / 4 = 0,365</div>
+<p><strong>ما تقيسه:</strong> ليس «هل وجد؟» فحسب، بل «هل وضعه <em>في الأعلى</em>؟».
+فالمستخدم ينظر أساساً إلى النتائج الأولى، وMRR يترجم هذا الواقع.</p>
+</div>
+</div>
+</div>
+
+<div class="note exemple">
+<span class="etiquette">nDCG — le gain cumulé actualisé · الكسب التراكمي المخصوم</span>
+<div class="duo">
+<div class="fr">
+<p>Même idée que le MRR, mais la décroissance est <strong>logarithmique</strong> donc
+plus douce :</p>
+<div class="schema">nDCG = 1 / log₂(rang + 1)
+
+1re place → 1 / log₂(2) = 1,000
+2e  place → 1 / log₂(3) = 0,631
+3e  place → 1 / log₂(4) = 0,500</div>
+<p>Compare avec le MRR : en 2<sup>e</sup> position, le MRR donne 0,50 alors que le
+nDCG donne 0,63. Le nDCG punit donc <strong>moins durement</strong> le fait de ne pas
+être premier.</p>
+<p>C'est le standard en recherche d'information, notamment parce qu'il se
+généralise à plusieurs documents pertinents par requête.</p>
+</div>
+<div class="ar">
+<p>الفكرة نفسها كـMRR، لكن التناقص <strong>لوغاريتمي</strong> أي أهدأ:</p>
+<div class="schema">nDCG = 1 / log₂(الرتبة + 1)
+
+المرتبة 1 ← 1 / log₂(2) = 1,000
+المرتبة 2 ← 1 / log₂(3) = 0,631
+المرتبة 3 ← 1 / log₂(4) = 0,500</div>
+<p>قارني بـMRR: في المرتبة الثانية يعطي MRR القيمة 0,50 بينما يعطي nDCG القيمة 0,63.
+أي أن nDCG يعاقب <strong>بقسوة أقل</strong> على عدم التصدّر.</p>
+<p>وهو المعيار في استرجاع المعلومات، خصوصاً لأنه يتعمّم على حالة وجود عدّة وثائق ملائمة
+للاستعلام الواحد.</p>
+</div>
+</div>
+</div>
+
+<div class="note jury">
+<span class="etiquette">« Et la précision ? » · «وماذا عن الدقة؟»</span>
+<div class="duo">
+<div class="fr">
+<p>Question fréquente. La réponse est nette :</p>
+<p>« Le cahier des charges demande Precision@K et Recall@K. Dans mon protocole,
+chaque requête n'a <strong>qu'un seul document pertinent</strong> — l'article dont le
+titre a servi de requête. Dans ce cas particulier, la précision et le rappel se
+confondent : si le bon document est dans les K premiers, les deux valent 1 ; sinon
+les deux valent 0. J'ai donc rapporté le rappel, et j'ai ajouté le MRR et le nDCG
+qui, eux, tiennent compte de la <em>position</em> — ce que ni la précision ni le
+rappel ne font. »</p>
+</div>
+<div class="ar">
+<p>سؤال متكرّر. والجواب واضح:</p>
+<p>«يطلب دفتر التحمّلات Precision@K وRecall@K. وفي بروتوكولي، لكل استعلام
+<strong>وثيقة ملائمة واحدة فقط</strong> — وهي المقال الذي استُعمل عنوانه استعلاماً. وفي
+هذه الحالة الخاصة تتطابق الدقة مع الاسترجاع: فإن كانت الوثيقة الصحيحة ضمن K الأوائل
+ساوى كلاهما 1، وإلا ساوى كلاهما 0. لذلك أوردتُ الاسترجاع، وأضفتُ MRR وnDCG اللذين
+يأخذان <em>الموقع</em> بالحسبان — وهو ما لا تفعله الدقة ولا الاسترجاع.»</p>
+</div>
+</div>
+</div>
+
+<!-- ====================================================================== -->
+<h2 id="s11"><span class="num">11</span>Les résultats, un par un</h2>
+
+<div class="duo">
+<div class="fr">
+<p>C'est la partie qui pèse le plus lourd dans la note — 20 % du barème. Et
+c'est aussi celle où ton projet est le plus fort, parce qu'il ne cache rien.</p>
+<p>Une démonstration réussie peut toujours être une coïncidence. C'est pourquoi
+il y a <strong>trois protocoles</strong>, sur des centaines de requêtes, et aucune
+annotation manuelle.</p>
+</div>
+<div class="ar">
+<p>هذا هو الجزء الأثقل وزناً في النقطة — 20% من السلّم. وهو أيضاً الجزء الذي يكون فيه
+مشروعك أقوى، لأنه لا يُخفي شيئاً.</p>
+<p>العرض الناجح قد يكون مصادفة دائماً. ولهذا وُضعت <strong>ثلاثة بروتوكولات</strong>،
+على مئات الاستعلامات، وبلا أي توسيم يدوي.</p>
+</div>
+</div>
+
+<h3>Résultat 1 — BM25 gagne, et c'est normal</h3>
+
+<div class="tableau">
+<table>
+<thead><tr><th>Moteur</th><th>Recall@1</th><th>Recall@10</th><th>MRR@10</th><th>nDCG@10</th></tr></thead>
+<tbody>
+<tr><td><span class="repere"><span class="pastille p-sem"></span>Sémantique</span></td>
+  <td class="num">0,896</td><td class="num">0,964</td><td class="num">0,922</td><td class="num">0,932</td></tr>
+<tr><td><span class="repere"><span class="pastille p-lex"></span><strong>BM25</strong></span></td>
+  <td class="num"><strong>0,930</strong></td><td class="num"><strong>0,990</strong></td><td class="num"><strong>0,953</strong></td><td class="num"><strong>0,962</strong></td></tr>
+</tbody>
+</table>
+</div>
+
+<div class="duo">
+<div class="fr">
+<p><strong>Le protocole :</strong> on tire 500 articles au hasard, on prend leur
+titre comme requête, et le bon résultat est l'article lui-même. Cela produit 500
+requêtes annotées <em>sans le moindre travail manuel</em>.</p>
+<p><strong>Le résultat :</strong> BM25 devance le moteur sémantique sur les cinq
+métriques.</p>
+<p><strong>L'explication :</strong> ce n'est pas un défaut d'implémentation, c'est
+le terrain de jeu naturel de BM25. Un titre partage avec son résumé des termes
+techniques <em>rares</em> — un nom de méthode, un acronyme — et faire correspondre
+des termes rares est précisément ce que BM25 fait le mieux.</p>
+</div>
+<div class="ar">
+<p><strong>البروتوكول:</strong> نسحب 500 مقال عشوائياً، ونأخذ عناوينها استعلامات،
+والنتيجة الصحيحة هي المقال نفسه. وهذا يُنتج 500 استعلام موسوم <em>دون أي عمل يدوي</em>.</p>
+<p><strong>النتيجة:</strong> يتقدّم BM25 على المحرّك الدلالي في المقاييس الخمسة.</p>
+<p><strong>التفسير:</strong> ليس هذا خللاً في الإنجاز، بل هي أرض BM25 الطبيعية. فالعنوان
+يتقاسم مع ملخّصه مصطلحات تقنية <em>نادرة</em> — اسم طريقة أو اختصاراً — ومطابقة
+المصطلحات النادرة هي بالضبط ما يجيده BM25 أكثر من غيره.</p>
+</div>
+</div>
+
+<div class="note jury">
+<span class="etiquette">Comment présenter ce résultat · كيف تعرضين هذه النتيجة</span>
+<div class="duo">
+<div class="fr">
+<p><strong>Ne le cache pas. Présente-le en premier.</strong></p>
+<p>« Je commence par le résultat qui ne m'arrange pas : sur ce protocole, BM25
+gagne. Voici pourquoi c'est attendu, et voici pourquoi ce protocole ne mesure pas
+ce qu'on croit. »</p>
+<p>Un jury qui découvre lui-même une faiblesse que tu as cachée devient méfiant
+sur tout le reste. Un jury à qui tu montres la faiblesse <em>et</em> son analyse te
+fait confiance.</p>
+</div>
+<div class="ar">
+<p><strong>لا تُخفيها. اعرضيها أولاً.</strong></p>
+<p>«أبدأ بالنتيجة التي ليست في صالحي: في هذا البروتوكول يتفوّق BM25. وإليكم لماذا كان
+ذلك متوقّعاً، ولماذا لا يقيس هذا البروتوكول ما نظنّه يقيسه.»</p>
+<p>فاللجنة التي تكتشف بنفسها ضعفاً أخفيتِه تصير مرتابة في كل ما تبقّى. أما اللجنة التي
+تُريها الضعف <em>مع</em> تحليله فتمنحك ثقتها.</p>
+</div>
+</div>
+</div>
+
+<h3>Résultat 2 — la critique de ton propre protocole</h3>
+
+<div class="duo">
+<div class="fr">
+<p>C'est la partie la plus mûre du travail. Tu as réparti les 500 mêmes requêtes
+en trois groupes, selon la part des mots de la requête réellement présents dans
+le bon document — la quantité dont BM25 dépend entièrement.</p>
+<div class="tableau">
+<table>
+<thead><tr><th>Groupe</th><th>mots communs</th><th>Sémantique</th><th>BM25</th></tr></thead>
+<tbody>
+<tr><td>faible recouvrement</td><td class="num">63 %</td><td class="num">0,827</td><td class="num">0,877</td></tr>
+<tr><td>recouvrement moyen</td><td class="num">83 %</td><td class="num">0,960</td><td class="num">0,988</td></tr>
+<tr><td>fort recouvrement</td><td class="num">96 %</td><td class="num">0,978</td><td class="num">0,994</td></tr>
+</tbody>
+</table>
+</div>
+<p><strong>L'observation décisive :</strong> même le tiers <em>le plus difficile</em>
+partage encore 63 % de son vocabulaire avec le bon document.</p>
+<p>Autrement dit : ce protocole <strong>ne descend jamais</strong> dans le régime où
+la correspondance de mots cesse de fonctionner. Il mesure du lexical, pas du
+sens. Le reconnaître vaut mieux que de présenter les chiffres du protocole 1
+comme une validation du moteur sémantique.</p>
+</div>
+<div class="ar">
+<p>هذا أنضج أجزاء العمل. فقد وزّعتِ الاستعلامات الخمسمئة نفسها على ثلاث مجموعات، بحسب
+نسبة كلمات الاستعلام الموجودة فعلاً في الوثيقة الصحيحة — وهي الكمية التي يعتمد عليها
+BM25 اعتماداً كلياً.</p>
+<div class="tableau">
+<table>
+<thead><tr><th>المجموعة</th><th>كلمات مشتركة</th><th>الدلالي</th><th>BM25</th></tr></thead>
+<tbody>
+<tr><td>تقاطع ضعيف</td><td class="num">63 %</td><td class="num">0,827</td><td class="num">0,877</td></tr>
+<tr><td>تقاطع متوسّط</td><td class="num">83 %</td><td class="num">0,960</td><td class="num">0,988</td></tr>
+<tr><td>تقاطع قوي</td><td class="num">96 %</td><td class="num">0,978</td><td class="num">0,994</td></tr>
+</tbody>
+</table>
+</div>
+<p><strong>الملاحظة الحاسمة:</strong> حتى الثلث <em>الأصعب</em> ما زال يتقاسم 63% من
+مفرداته مع الوثيقة الصحيحة.</p>
+<p>بعبارة أخرى: هذا البروتوكول <strong>لا ينزل أبداً</strong> إلى المجال الذي تتوقّف فيه
+مطابقة الكلمات عن العمل. إنه يقيس المعجمي لا المعنى. والاعتراف بذلك خير من تقديم أرقام
+البروتوكول الأول على أنها تصديق للمحرّك الدلالي.</p>
+</div>
+</div>
+
+<h3>Résultat 3 — un résultat contraire à l'hypothèse</h3>
+
+<div class="duo">
+<div class="fr">
+<p>Pour atteindre ce régime, on retire les <strong>trois mots les plus rares</strong>
+de chaque titre.</p>
+<p>L'hypothèse de départ était que BM25, privé de sa signature lexicale,
+chuterait davantage. <strong>C'est l'inverse qui se produit.</strong></p>
+<div class="tableau">
+<table>
+<thead><tr><th>Moteur</th><th>MRR normal</th><th>MRR appauvri</th><th>variation</th></tr></thead>
+<tbody>
+<tr><td>Sémantique</td><td class="num">0,922</td><td class="num">0,564</td><td class="num"><strong>−0,357</strong></td></tr>
+<tr><td>BM25</td><td class="num">0,953</td><td class="num">0,645</td><td class="num">−0,308</td></tr>
+</tbody>
+</table>
+</div>
+<p><strong>L'explication :</strong> les mots rares n'étaient pas seulement
+discriminants, ils <em>portaient le sujet</em>. Leur retrait dégrade le sens autant
+que le lexique. Et un modèle dense y est plus sensible, parce qu'il compresse la
+requête entière — mots vides compris — dans un vecteur unique. BM25, lui, ignore
+simplement les termes qui ne correspondent à rien.</p>
+</div>
+<div class="ar">
+<p>للوصول إلى ذلك المجال، تُحذَف <strong>الكلمات الثلاث الأندر</strong> من كل عنوان.</p>
+<p>وكانت الفرضية الأولية أن BM25، محروماً من بصمته المعجمية، سيهوي أكثر.
+<strong>لكن العكس هو ما حدث.</strong></p>
+<div class="tableau">
+<table>
+<thead><tr><th>المحرّك</th><th>MRR عادي</th><th>MRR مُفقَر</th><th>التغيّر</th></tr></thead>
+<tbody>
+<tr><td>الدلالي</td><td class="num">0,922</td><td class="num">0,564</td><td class="num"><strong>−0,357</strong></td></tr>
+<tr><td>BM25</td><td class="num">0,953</td><td class="num">0,645</td><td class="num">−0,308</td></tr>
+</tbody>
+</table>
+</div>
+<p><strong>التفسير:</strong> لم تكن الكلمات النادرة مميِّزة فحسب، بل كانت
+<em>تحمل الموضوع</em>. فحذفها يُفسد المعنى بقدر ما يُفسد المعجم. والنموذج الكثيف أشدّ
+حساسية لذلك، لأنه يضغط الاستعلام كله — بما فيه الكلمات الوظيفية — في متجه واحد. أما
+BM25 فيتجاهل ببساطة المصطلحات التي لا تقابلها نظائر.</p>
+</div>
+</div>
+
+<div class="note cle">
+<span class="etiquette">Pourquoi ce résultat te sert · لماذا تخدمك هذه النتيجة</span>
+<div class="duo">
+<div class="fr">
+<p>Parce qu'il prouve que tu n'as pas construit l'évaluation pour te donner
+raison. Tu as posé une hypothèse, tu l'as testée, elle était fausse, et tu le
+dis. C'est exactement ce qu'on attend d'un travail scientifique.</p>
+</div>
+<div class="ar">
+<p>لأنها تُثبت أنك لم تبني التقييم كي يمنحك الحقّ. فقد وضعتِ فرضية واختبرتِها فتبيّن
+خطؤها، وقلتِ ذلك. وهذا بالضبط ما يُنتظر من عمل علمي.</p>
+</div>
+</div>
+</div>
+
+<h3>Résultat 4 — le résultat qui justifie le projet</h3>
+
+<div class="tableau">
+<table>
+<thead><tr><th>Moteur</th><th>fr ↔ en</th><th>ar ↔ en</th><th>fr ↔ ar</th><th>requêtes arabes sans résultat</th></tr></thead>
+<tbody>
+<tr><td><span class="repere"><span class="pastille p-sem"></span>Sémantique</span></td>
+  <td class="num">0,445</td><td class="num">0,130</td><td class="num">0,205</td><td class="num">0 / 20</td></tr>
+<tr><td><span class="repere"><span class="pastille p-lex"></span>BM25</span></td>
+  <td class="num">0,035</td><td class="num">0,000</td><td class="num">0,000</td><td class="num"><strong>20 / 20</strong></td></tr>
+</tbody>
+</table>
+</div>
+
+<div class="duo">
+<div class="fr">
+<p><strong>Le protocole :</strong> vingt questions posées en français, en arabe et
+en anglais. Si l'espace vectoriel est réellement indépendant de la langue, les
+trois formulations doivent renvoyer approximativement les mêmes articles. On
+mesure la part d'articles communs entre deux langues. <em>Aucune annotation
+manuelle n'est nécessaire.</em></p>
+<p><strong>Le chiffre à retenir</strong> est celui de droite : BM25 ne renvoie
+strictement rien sur les vingt requêtes arabes. Zéro résultat, vingt fois sur
+vingt.</p>
+<p>Ce n'est pas un mauvais réglage : aucun mot arabe n'existe dans un corpus
+anglophone, donc aucun score n'est calculable. Sur ce terrain, les deux approches
+ne se comparent pas — <strong>une seule fonctionne</strong>.</p>
+</div>
+<div class="ar">
+<p><strong>البروتوكول:</strong> عشرون سؤالاً تُطرح بالفرنسية والعربية والإنجليزية. فإن
+كان الفضاء المتجهي مستقلاً فعلاً عن اللغة، وجب أن تعيد الصياغات الثلاث المقالات نفسها
+تقريباً. ونقيس نسبة المقالات المشتركة بين لغتين. <em>ولا حاجة إلى أي توسيم يدوي.</em></p>
+<p><strong>والرقم الذي يجب حفظه</strong> هو الذي على اليمين: لا يعيد BM25 شيئاً على
+الإطلاق في الاستعلامات العربية العشرين. صفر نتيجة، عشرين مرة من عشرين.</p>
+<p>وليس هذا سوء ضبط: فلا توجد كلمة عربية واحدة في متن إنجليزي، ومن ثمّ لا يمكن حساب أي
+درجة. وفي هذه الأرض لا يتقارن المنهجان — <strong>بل ينجح واحد فقط</strong>.</p>
+</div>
+</div>
+
+<div class="note piege">
+<span class="etiquette">Les deux nuances honnêtes à énoncer · فارقان يجب ذكرهما بصدق</span>
+<div class="duo">
+<div class="fr">
+<ol>
+  <li><strong>Le 0,445 en français se lit avec prudence.</strong> Sur un corpus
+  aussi dense en sujets voisins, deux formulations peuvent renvoyer des articles
+  <em>différents et tous deux pertinents</em>. Un recouvrement de 45 % n'est donc pas
+  un échec de 55 %.</li>
+  <li><strong>Le 0,130 en arabe est nettement plus faible que le français.</strong>
+  La qualité multilingue de <code>e5-small</code> n'est pas uniforme entre les
+  langues. C'est une limite réelle — et un levier à tester avec
+  <code>e5-base</code>.</li>
+</ol>
+<p>Énoncer ces deux nuances toi-même te protège : le jury ne pourra pas te les
+opposer, puisque tu les auras déjà posées.</p>
+</div>
+<div class="ar">
+<ol>
+  <li><strong>القيمة 0,445 بالفرنسية تُقرأ بحذر.</strong> ففي متن بهذه الكثافة من
+  المواضيع المتقاربة، قد تعيد صياغتان مقالات <em>مختلفة وكلها ملائمة</em>. فتقاطع بنسبة
+  45% ليس إخفاقاً بنسبة 55%.</li>
+  <li><strong>القيمة 0,130 بالعربية أضعف بوضوح من الفرنسية.</strong> فجودة
+  <code>e5-small</code> متعدّدة اللغات ليست متجانسة بين اللغات. وهذا حدّ حقيقي — ورافعة
+  تستحقّ الاختبار بـ<code>e5-base</code>.</li>
+</ol>
+<p>وذكرك أنت لهذين الفارقين يحميك: فلن تستطيع اللجنة الاحتجاج بهما عليك ما دمتِ قد
+طرحتِهما سلفاً.</p>
+</div>
+</div>
+</div>
+
+<h3>Résultat 5 — la fusion hybride</h3>
+
+<div class="duo">
+<div class="fr">
+<p>Mesurée sur les mêmes protocoles, la fusion est <strong>meilleure que chacun des
+deux moteurs pris séparément</strong> sur les trois protocoles de qualité, et elle
+conserve la couverture multilingue : zéro requête arabe sans résultat.</p>
+<p>Son coût : la latence. Elle interroge les deux moteurs, donc elle paie la
+<em>somme</em> de leurs temps. C'est le seul prix réel de l'opération, et il se lit
+directement dans le tableau des latences.</p>
+<p><strong>Précision à donner :</strong> ces chiffres viennent d'une exécution de
+contrôle sur un corpus réduit. L'ordre entre les moteurs est net et reproductible,
+mais les valeurs absolues sont à régénérer sur le corpus complet.</p>
+</div>
+<div class="ar">
+<p>مقيساً على البروتوكولات نفسها، يكون الدمج <strong>أفضل من كلا المحرّكين منفردين</strong>
+في بروتوكولات الجودة الثلاثة، ويحافظ على التغطية متعدّدة اللغات: صفر استعلام عربي بلا
+نتيجة.</p>
+<p>أما كلفته فهي زمن الاستجابة. إذ يستعلم من المحرّكين معاً، فيدفع <em>مجموع</em>
+زمنيهما. وهذا هو الثمن الحقيقي الوحيد للعملية، ويُقرأ مباشرة في جدول الأزمنة.</p>
+<p><strong>توضيح يجب ذكره:</strong> هذه الأرقام من تشغيل تحقّق على متن مصغّر. والترتيب
+بين المحرّكات واضح وقابل للتكرار، لكن القيم المطلقة تحتاج إعادة توليد على المتن الكامل.</p>
+</div>
+</div>
+
+<h3>La conclusion à défendre</h3>
+
+<div class="note cle">
+<span class="etiquette">La thèse du projet · أطروحة المشروع</span>
+<div class="duo">
+<div class="fr">
+<p style="font-size:1.05rem"><strong>Là où les mots se recouvrent</strong>, BM25
+reste légèrement meilleur, gratuit et instantané. <strong>Là où ils ne se
+recouvrent pas</strong> — autre langue, autre vocabulaire — le moteur sémantique
+est le seul à fonctionner, tandis que BM25 ne renvoie rien.</p>
+<p>Ce n'est pas « le sémantique bat le lexical ». C'est plus nuancé, plus solide,
+et beaucoup plus difficile à attaquer. Et cela explique pourquoi la recherche
+hybride est devenue le standard en production : elle n'est pas un bonus du
+projet, elle en est la <strong>conclusion logique</strong>.</p>
+</div>
+<div class="ar">
+<p style="font-size:1.02rem"><strong>حيث تتقاطع الكلمات</strong>، يظلّ BM25 أفضل قليلاً،
+ومجانياً، وفورياً. <strong>وحيث لا تتقاطع</strong> — لغة أخرى، مفردات أخرى — يكون
+المحرّك الدلالي وحده هو الذي يعمل، بينما لا يعيد BM25 شيئاً.</p>
+<p>وليست الأطروحة «الدلالي يتفوّق على المعجمي»، بل هي أدقّ وأمتن وأصعب على النقد بكثير.
+وهي تفسّر لماذا صار البحث الهجين معياراً في الإنتاج: فهو ليس إضافة تجميلية للمشروع، بل
+<strong>نتيجته المنطقية</strong>.</p>
+</div>
+</div>
+</div>
+
+<!-- ====================================================================== -->
+<h2 id="s12"><span class="num">12</span>Le code, fichier par fichier</h2>
+
+<div class="duo">
+<div class="fr">
+<p>Un jury peut ouvrir n'importe quel fichier et te demander « à quoi sert
+celui-là ? ». Voici la carte complète. La règle du projet : <strong>chaque fichier
+fait une seule chose et ignore comment les autres fonctionnent</strong>.</p>
+</div>
+<div class="ar">
+<p>قد تفتح اللجنة أيّ ملف وتسألك «ما وظيفة هذا؟». وإليك الخريطة الكاملة. وقاعدة المشروع
+هي: <strong>كل ملف يؤدّي وظيفة واحدة ويجهل كيف تشتغل بقية الملفات</strong>.</p>
+</div>
+</div>
+
+<div class="schema">API arXiv
+   │  src/collecte.py         télécharge et écrit du JSONL
+   ▼
+data/brut/corpus_arxiv.jsonl
+   │  src/pretraitement.py    nettoie et découpe en passages
+   ▼
+liste de passages
+   │  src/embeddings.py       chaque passage → 384 nombres
+   ▼
+tableau de vecteurs
+   │  src/index_faiss.py      range les vecteurs pour la recherche rapide
+   ▼
+data/index/index.faiss             ← fin de la phase HORS LIGNE
+┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄
+question de l'utilisateur          ← début de la phase EN LIGNE
+   │  src/embeddings.py       le MÊME modèle, préfixe différent
+   ▼
+un vecteur
+   │  src/index_faiss.py      trouve les plus proches voisins
+   ▼
+identifiants de passages
+   │  src/resultats.py        regroupe les passages par article
+   ▼
+liste d'articles classés
+   │  src/surlignage.py       ajoute la phrase clé et les mots partagés
+   ▼
+   │  api/main.py             expose le tout en service web
+   ▼
+ui/                           affiche</div>
+
+<div class="tableau">
+<table>
+<thead><tr><th>Fichier</th><th>Son unique rôle</th><th>دوره الوحيد</th></tr></thead>
+<tbody>
+<tr><td class="mono">config.py</td><td>tous les réglages, le seul fichier à modifier</td><td class="ar">كل الإعدادات، وهو الملف الوحيد الذي يُعدَّل</td></tr>
+<tr><td class="mono">src/collecte.py</td><td>télécharger depuis arXiv</td><td class="ar">التنزيل من arXiv</td></tr>
+<tr><td class="mono">src/pretraitement.py</td><td>nettoyer et découper en passages</td><td class="ar">التنظيف والتقطيع إلى مقاطع</td></tr>
+<tr><td class="mono">src/embeddings.py</td><td>le SEUL module qui sait qu'un modèle existe</td><td class="ar">الوحدة الوحيدة التي تعلم بوجود نموذج</td></tr>
+<tr><td class="mono">src/index_faiss.py</td><td>le SEUL module qui connaît FAISS</td><td class="ar">الوحدة الوحيدة التي تعرف FAISS</td></tr>
+<tr><td class="mono">src/moteur.py</td><td>assemble tout : <code>indexer()</code> et <code>chercher()</code></td><td class="ar">تجمع كل شيء: الفهرسة والبحث</td></tr>
+<tr><td class="mono">src/baseline_bm25.py</td><td>le moteur lexical de comparaison</td><td class="ar">المحرّك المعجمي للمقارنة</td></tr>
+<tr><td class="mono">src/hybride.py</td><td>fusionne les deux classements (RRF)</td><td class="ar">يدمج الترتيبين (RRF)</td></tr>
+<tr><td class="mono">src/filtres.py</td><td>filtrer par catégorie, année, auteur</td><td class="ar">الترشيح حسب الفئة والسنة والمؤلّف</td></tr>
+<tr><td class="mono">src/surlignage.py</td><td>expliquer pourquoi un résultat est là</td><td class="ar">تفسير سبب ورود نتيجة ما</td></tr>
+<tr><td class="mono">src/comparaison.py</td><td>ce qu'un moteur est seul à trouver</td><td class="ar">ما ينفرد محرّك بإيجاده</td></tr>
+<tr><td class="mono">src/resultats.py</td><td>regrouper les passages par article</td><td class="ar">تجميع المقاطع حسب المقال</td></tr>
+<tr><td class="mono">src/evaluation.py</td><td>les métriques et les protocoles</td><td class="ar">المقاييس والبروتوكولات</td></tr>
+<tr><td class="mono">api/main.py</td><td>exposer le moteur en service web</td><td class="ar">عرض المحرّك كخدمة ويب</td></tr>
+<tr><td class="mono">ui/theme.py</td><td>le SEUL endroit qui contient une couleur</td><td class="ar">الموضع الوحيد الذي يحوي لوناً</td></tr>
+<tr><td class="mono">ui/client.py</td><td>le SEUL fichier qui fait un appel réseau</td><td class="ar">الملف الوحيد الذي ينادي الشبكة</td></tr>
+</tbody>
+</table>
+</div>
+
+<div class="duo">
+<div class="fr">
+<h4>Les cinq scripts, dans l'ordre</h4>
+<p>Ils sont numérotés parce qu'ils s'exécutent dans cet ordre. C'est volontaire :
+un nouvel arrivant sait par où commencer.</p>
+<ol>
+  <li><code>1_collecter.py</code> — télécharge le corpus (~5 min)</li>
+  <li><code>2_indexer.py</code> — construit les index (~12 min)</li>
+  <li><code>3_chercher.py</code> — cherche depuis le terminal</li>
+  <li><code>4_evaluer.py</code> — produit tous les chiffres</li>
+  <li><code>5_exporter_pdf.py</code> — la documentation en PDF</li>
+</ol>
+</div>
+<div class="ar">
+<h4>النصوص البرمجية الخمسة، بالترتيب</h4>
+<p>هي مرقّمة لأنها تُنفَّذ بهذا الترتيب. وهذا مقصود: فالقادم الجديد يعرف من أين يبدأ.</p>
+<ol>
+  <li><code>1_collecter.py</code> — تنزيل المتن (نحو 5 دقائق)</li>
+  <li><code>2_indexer.py</code> — بناء الفهارس (نحو 12 دقيقة)</li>
+  <li><code>3_chercher.py</code> — البحث من الطرفية</li>
+  <li><code>4_evaluer.py</code> — إنتاج كل الأرقام</li>
+  <li><code>5_exporter_pdf.py</code> — التوثيق بصيغة PDF</li>
+</ol>
+</div>
+</div>
+
+<!-- ====================================================================== -->
+<h2 id="s13"><span class="num">13</span>Les questions du jury</h2>
+
+<div class="duo">
+<div class="fr">
+<p>Vingt-six questions, classées par thème. Clique sur une question pour voir la
+réponse. Les réponses sont rédigées comme tu peux les dire — pas comme un cours.</p>
+</div>
+<div class="ar">
+<p>ستة وعشرون سؤالاً، مرتّبة حسب الموضوع. انقري على السؤال لترى الجواب. والأجوبة مصوغة
+كما يمكنك قولها — لا كدرس.</p>
+</div>
+</div>
+
+<h3>Sur les concepts · حول المفاهيم</h3>
+
+<details class="qr"><summary>Qu'est-ce qu'un embedding, en une phrase ?</summary>
+<div class="reponse"><div class="duo">
+<div class="fr"><p>« C'est la transformation d'un texte en une liste de nombres — ici 384 — qui encode son sens, de telle sorte que deux textes de sens proche produisent des nombres proches, même s'ils n'ont aucun mot en commun. »</p></div>
+<div class="ar"><p>«هو تحويل نصّ إلى قائمة أعداد — هنا 384 — تُرمّز معناه، بحيث يُنتج نصّان متقاربان في المعنى أعداداً متقاربة، ولو لم يشتركا في كلمة واحدة.»</p></div>
+</div></div></details>
+
+<details class="qr"><summary>Pourquoi la similarité cosinus et pas la distance euclidienne ?</summary>
+<div class="reponse"><div class="duo">
+<div class="fr"><p>« Parce que le cosinus mesure un angle, donc une <em>direction</em> — le sens — alors que la distance euclidienne est sensible à la longueur des vecteurs, qui reflète surtout la taille du texte. Un résumé court et un résumé long sur le même sujet doivent être proches. En pratique, comme je normalise tous les vecteurs à une longueur de 1, le produit scalaire vaut exactement le cosinus, ce qui me permet d'utiliser l'index le plus rapide de FAISS. »</p></div>
+<div class="ar"><p>«لأن الجيب التمامي يقيس زاوية، أي <em>اتجاهاً</em> — أي المعنى — بينما تتأثّر المسافة الإقليدية بطول المتجهات، وهو يعكس حجم النصّ أساساً. فملخّص قصير وآخر طويل في الموضوع نفسه يجب أن يكونا متقاربين. وعملياً، لأنني أُنظّم كل المتجهات إلى طول 1، يصير الجداء السلّمي مساوياً تماماً للجيب التمامي، مما يتيح لي استعمال أسرع فهارس FAISS.»</p></div>
+</div></div></details>
+
+<details class="qr"><summary>Comment le modèle peut-il comprendre l'arabe alors que le corpus est en anglais ?</summary>
+<div class="reponse"><div class="duo">
+<div class="fr"><p>« Il ne traduit pas — il n'y a aucune étape de traduction dans mon projet. Le modèle a été entraîné sur des paires de phrases traduites dans une centaine de langues, et on lui a appris que les traductions d'une même idée doivent produire le même vecteur. Le résultat est un <em>espace partagé</em> : la question arabe et l'article anglais tombent naturellement au même endroit. »</p></div>
+<div class="ar"><p>«إنه لا يترجم — فلا توجد خطوة ترجمة في مشروعي إطلاقاً. لقد دُرِّب النموذج على أزواج من الجمل المترجَمة في نحو مئة لغة، وعُلِّم أن ترجمات الفكرة الواحدة يجب أن تُنتج المتجه نفسه. والنتيجة <em>فضاء مشترك</em>: يسقط فيه السؤال العربي والمقال الإنجليزي في المكان نفسه بشكل طبيعي.»</p></div>
+</div></div></details>
+
+<details class="qr"><summary>Pourquoi 384 dimensions ?</summary>
+<div class="reponse"><div class="duo">
+<div class="fr"><p>« Ce n'est pas un choix de ma part : c'est la dimension de sortie de <code>e5-small</code>. Sa variante <code>e5-base</code> en produit 768, pour environ trois fois plus de calcul. J'ai pris la petite version parce qu'elle tourne sur un processeur ordinaire, sans carte graphique. »</p></div>
+<div class="ar"><p>«ليس هذا اختياراً منّي: بل هو بُعد الخرج في <code>e5-small</code>. أما نسخته <code>e5-base</code> فتنتج 768 بكلفة حسابية أكبر بنحو ثلاث مرات. واخترتُ الصغيرة لأنها تشتغل على معالج عادي بلا بطاقة رسومية.»</p></div>
+</div></div></details>
+
+<details class="qr"><summary>Pourquoi découper les documents en passages ?</summary>
+<div class="reponse"><div class="duo">
+<div class="fr"><p>« Pour deux raisons. D'abord un modèle d'embeddings ne traite qu'une longueur limitée — 512 tokens ici — et au-delà il tronque <em>silencieusement</em>. Ensuite, même sans troncature, un texte trop long produit un vecteur moyen qui ne représente plus rien de précis. Dans mon cas, les résumés arXiv tiennent en un seul passage ; le découpage reste implémenté pour pouvoir indexer des documents longs sans changer une ligne du reste. »</p></div>
+<div class="ar"><p>«لسببين. أولاً لأن نموذج التضمين لا يعالج إلا طولاً محدوداً — 512 رمزاً هنا — وبعده يبتر <em>بصمت</em>. وثانياً، حتى بلا بتر، يُنتج النصّ المفرط الطول متجهاً وسطياً لا يمثّل شيئاً محدّداً. وفي حالتي تتّسع ملخّصات arXiv في مقطع واحد، لكن التقطيع يبقى منجزاً لإتاحة فهرسة وثائق طويلة دون تغيير سطر واحد في الباقي.»</p></div>
+</div></div></details>
+
+<h3>Sur les choix techniques · حول الاختيارات التقنية</h3>
+
+<details class="qr"><summary>Pourquoi BM25 et pas TF-IDF ?</summary>
+<div class="reponse"><div class="duo">
+<div class="fr"><p>« BM25 est l'amélioration directe de TF-IDF : il ajoute une saturation de la fréquence des termes et une correction par la longueur du document. C'est la référence en production — Lucene, Elasticsearch, Solr. Choisir TF-IDF aurait affaibli volontairement ma baseline, et une comparaison contre un adversaire affaibli ne prouve rien. »</p></div>
+<div class="ar"><p>«BM25 هو التحسين المباشر لـTF-IDF: يضيف تشبّع تواتر المصطلحات وتصحيحاً بحسب طول الوثيقة. وهو المرجع في الإنتاج — Lucene وElasticsearch وSolr. واختيار TF-IDF كان سيُضعف خطّ الأساس عمداً، والمقارنة بخصم مُضعَف لا تُثبت شيئاً.»</p></div>
+</div></div></details>
+
+<details class="qr"><summary>Pourquoi FAISS et pas ChromaDB, Qdrant ou Elasticsearch ?</summary>
+<div class="reponse"><div class="duo">
+<div class="fr"><p>« FAISS fait une seule chose et la fait très vite : trouver les plus proches voisins. Les autres sont des bases de données vectorielles complètes, avec un serveur à déployer et à administrer. Pour un corpus de 10 000 vecteurs qui tient en mémoire, cette infrastructure aurait été du poids inutile. FAISS m'a aussi donné accès aux deux types d'index — exact et approximatif — ce qui m'a permis de <em>mesurer</em> le compromis entre les deux plutôt que de le citer. »</p></div>
+<div class="ar"><p>«يفعل FAISS شيئاً واحداً ويفعله بسرعة كبيرة: إيجاد أقرب الجيران. أما الأخرى فقواعد بيانات متجهية كاملة، لها خادم يُنشَر ويُدار. ولمتن من عشرة آلاف متجه يتّسع في الذاكرة، كانت تلك البنية عبئاً بلا فائدة. كما أتاح لي FAISS نوعَي الفهرس — الدقيق والتقريبي — فاستطعتُ <em>قياس</em> المفاضلة بينهما بدل الاكتفاء بذكرها.»</p></div>
+</div></div></details>
+
+<details class="qr"><summary>Pourquoi ne pas supprimer les mots vides ni lemmatiser ?</summary>
+<div class="reponse"><div class="duo">
+<div class="fr"><p>« Parce que Sentence-BERT a été entraîné sur du texte naturel complet, avec ses articles et ses prépositions. Le mutiler avant de le lui donner dégraderait sa représentation. Ces opérations restent tout à fait pertinentes pour un pipeline TF-IDF classique — elles ne le sont pas pour un modèle contextuel. C'est un choix que j'ai documenté dans le code. »</p></div>
+<div class="ar"><p>«لأن Sentence-BERT دُرِّب على نصّ طبيعي كامل بأدواته وحروف جرّه. وبتره قبل تقديمه إليه يُفسد تمثيله. وتبقى هذه العمليات وجيهة تماماً في مسار TF-IDF تقليدي — لكنها ليست كذلك لنموذج سياقي. وهذا اختيار وثّقتُه في الشيفرة.»</p></div>
+</div></div></details>
+
+<details class="qr"><summary>Pourquoi le titre n'est-il pas indexé ?</summary>
+<div class="reponse"><div class="duo">
+<div class="fr"><p>« C'est la décision méthodologique la plus importante du projet. Mon évaluation utilise le titre d'un article comme requête. Si ce titre figurait aussi dans le texte indexé, BM25 le retrouverait par simple correspondance exacte — il chercherait une phrase qu'il contient déjà. Ses scores seraient artificiellement parfaits et la comparaison n'aurait plus aucune valeur. C'est une fuite de données, et l'éviter fait partie du travail. »</p></div>
+<div class="ar"><p>«هذا أهم قرار منهجي في المشروع. فتقييمي يستعمل عنوان المقال استعلاماً. ولو كان هذا العنوان موجوداً أيضاً في النصّ المفهرَس، لعثر عليه BM25 بمطابقة حرفية بسيطة — إذ سيبحث عن جملة يحتويها أصلاً. فتصير درجاته مثالية اصطناعياً ولا تعود للمقارنة أي قيمة. إنه تسرّب بيانات، وتجنّبه جزء من العمل.»</p></div>
+</div></div></details>
+
+<details class="qr"><summary>Pourquoi une API séparée de l'interface ?</summary>
+<div class="reponse"><div class="duo">
+<div class="fr"><p>« Trois raisons. L'index et le modèle sont chargés une seule fois au démarrage et restent en mémoire, donc chaque requête ne paie que le coût de la recherche. L'interface ignore tout du moteur : je peux changer de modèle sans toucher une ligne d'affichage. Et FastAPI génère seul une documentation interactive où chaque route se teste depuis le navigateur — je peux vous la montrer. »</p></div>
+<div class="ar"><p>«ثلاثة أسباب. يُحمَّل الفهرس والنموذج مرة واحدة عند الإقلاع ويبقيان في الذاكرة، فلا يدفع كل استعلام إلا كلفة البحث. والواجهة تجهل كل شيء عن المحرّك: أستطيع تغيير النموذج دون المساس بسطر عرض واحد. ويولّد FastAPI وحده توثيقاً تفاعلياً يُختبَر فيه كل مسار من المتصفّح — ويمكنني أن أُريكم إياه.»</p></div>
+</div></div></details>
+
+<h3>Sur l'évaluation · حول التقييم</h3>
+
+<details class="qr"><summary>Comment avez-vous obtenu la vérité terrain sans annotation manuelle ?</summary>
+<div class="reponse"><div class="duo">
+<div class="fr"><p>« Je prends le titre d'un article tiré au hasard et je m'en sers comme requête. Le bon résultat est connu d'avance : c'est l'article lui-même. Cela produit 500 requêtes annotées sans le moindre travail manuel, et sans biais de ma part puisque le tirage est aléatoire avec une graine fixée. »</p></div>
+<div class="ar"><p>«آخذ عنوان مقال مسحوب عشوائياً وأستعمله استعلاماً. والنتيجة الصحيحة معروفة سلفاً: هي المقال نفسه. وهذا يُنتج 500 استعلام موسوم دون أي عمل يدوي، وبلا تحيّز منّي لأن السحب عشوائي ببذرة ثابتة.»</p></div>
+</div></div></details>
+
+<details class="qr"><summary>Calculez-moi le MRR sur cet exemple.</summary>
+<div class="reponse"><div class="duo">
+<div class="fr"><p>« Le MRR, c'est 1 divisé par la position du bon document, moyenné sur toutes les requêtes. Si le bon document est 1<sup>er</sup>, ça vaut 1 ; 2<sup>e</sup>, 0,5 ; 4<sup>e</sup>, 0,25 ; absent du top K, 0. Par exemple sur quatre requêtes où il sort en 1<sup>re</sup>, 3<sup>e</sup>, 8<sup>e</sup> position et une fois absent : (1 + 0,333 + 0,125 + 0) / 4 = 0,365. »</p></div>
+<div class="ar"><p>«MRR هو واحد مقسوماً على موقع الوثيقة الصحيحة، ثم المتوسّط على كل الاستعلامات. فإن كانت الأولى فالقيمة 1، والثانية 0,5، والرابعة 0,25، وإن غابت عن أفضل K فصفر. مثلاً في أربعة استعلامات تظهر فيها في المراتب 1 و3 و8 ومرة غائبة: (1 + 0,333 + 0,125 + 0) ÷ 4 = 0,365.»</p></div>
+</div></div></details>
+
+<details class="qr"><summary>BM25 gagne sur votre protocole principal. Votre projet ne sert donc à rien ?</summary>
+<div class="reponse"><div class="duo">
+<div class="fr"><p>« Il gagne sur le protocole qui lui est le plus favorable, et j'explique pourquoi : un titre partage avec son résumé des termes techniques rares, et faire correspondre des termes rares est exactement ce que BM25 fait le mieux. Mais j'ai montré ensuite que ce protocole ne descend jamais dans le régime purement sémantique — même son tiers le plus difficile partage encore 63 % de vocabulaire. Et sur les requêtes multilingues, BM25 ne renvoie <em>rien</em>, vingt fois sur vingt. Ma conclusion n'est pas qu'un moteur bat l'autre : c'est qu'ils échouent à des endroits différents, et que c'est pour ça que la recherche hybride existe. »</p></div>
+<div class="ar"><p>«يتفوّق في البروتوكول الأنسب له، وأنا أشرح لماذا: فالعنوان يتقاسم مع ملخّصه مصطلحات تقنية نادرة، ومطابقة النادر هي ما يجيده BM25 أكثر من غيره. لكنني بيّنتُ بعد ذلك أن هذا البروتوكول لا ينزل أبداً إلى المجال الدلالي الخالص — فحتى ثلثه الأصعب ما زال يتقاسم 63% من المفردات. وفي الاستعلامات متعدّدة اللغات لا يعيد BM25 <em>شيئاً</em>، عشرين مرة من عشرين. وخلاصتي ليست أن محرّكاً يتفوّق على آخر، بل أنهما يُخفقان في مواضع مختلفة، ولهذا وُجد البحث الهجين.»</p></div>
+</div></div></details>
+
+<details class="qr"><summary>Comment savez-vous que vos résultats ne sont pas dus au hasard ?</summary>
+<div class="reponse"><div class="duo">
+<div class="fr"><p>« Quatre garde-fous. Cinq cents requêtes, pas cinq. Une graine aléatoire fixée, donc l'expérience est reproductible à l'identique. Trois protocoles indépendants qui mesurent des choses différentes. Et un fichier de résultats régénérable par une seule commande — l'interface le lit sans jamais recalculer, donc ce qu'elle affiche est exactement ce que contient mon rapport. »</p></div>
+<div class="ar"><p>«أربعة ضوابط. خمسمئة استعلام لا خمسة. وبذرة عشوائية ثابتة، فالتجربة قابلة للتكرار حرفياً. وثلاثة بروتوكولات مستقلّة تقيس أشياء مختلفة. وملفّ نتائج يُعاد توليده بأمر واحد — وتقرأه الواجهة دون أن تُعيد الحساب أبداً، فما تعرضه هو بالضبط ما يحويه تقريري.»</p></div>
+</div></div></details>
+
+<details class="qr"><summary>Le recouvrement multilingue de 0,445, c'est faible, non ?</summary>
+<div class="reponse"><div class="duo">
+<div class="fr"><p>« Il faut le lire avec prudence, et je le dis dans mon rapport. Sur un corpus aussi dense en sujets voisins, deux formulations d'une même question peuvent renvoyer des articles <em>différents et tous les deux pertinents</em>. Un recouvrement de 45 % n'est donc pas un échec de 55 %. Ce que ce protocole établit sans ambiguïté, c'est le point de comparaison : BM25 obtient 0,035 sur la même mesure, et zéro sur l'arabe. »</p></div>
+<div class="ar"><p>«يجب قراءتها بحذر، وأنا أقول ذلك في تقريري. ففي متن بهذه الكثافة من المواضيع المتقاربة، قد تعيد صياغتان للسؤال الواحد مقالات <em>مختلفة وكلاهما ملائم</em>. فتقاطع 45% ليس إخفاقاً بنسبة 55%. أما ما يُثبته هذا البروتوكول بلا لبس فهو نقطة المقارنة: يحصل BM25 على 0,035 في القياس نفسه، وعلى صفر في العربية.»</p></div>
+</div></div></details>
+
+<details class="qr"><summary>Pourquoi le score arabe (0,130) est-il si inférieur au français (0,445) ?</summary>
+<div class="reponse"><div class="duo">
+<div class="fr"><p>« Parce que la qualité multilingue de <code>e5-small</code> n'est pas uniforme entre les langues : l'arabe est moins représenté dans ses données d'entraînement que le français. C'est une limite réelle de mon travail, que j'énonce. Le levier existe : <code>multilingual-e5-base</code> devrait réduire cet écart, et c'est la première expérience que je mènerais si je continuais. »</p></div>
+<div class="ar"><p>«لأن جودة <code>e5-small</code> متعدّدة اللغات ليست متجانسة: فالعربية أقلّ حضوراً في بيانات تدريبه من الفرنسية. وهذا حدّ حقيقي في عملي أُعلنه. والرافعة موجودة: يُفترض أن يقلّص <code>multilingual-e5-base</code> هذه الفجوة، وهي أول تجربة سأجريها لو تابعتُ العمل.»</p></div>
+</div></div></details>
+
+<h3>Sur les limites et l'avenir · حول الحدود والآفاق</h3>
+
+<details class="qr"><summary>Quelles sont les limites de votre travail ?</summary>
+<div class="reponse"><div class="duo">
+<div class="fr"><p>« Cinq, que je peux énumérer. La qualité multilingue n'est pas uniforme — 0,130 en arabe contre 0,445 en français. Mon protocole principal ne descend jamais dans le régime purement sémantique. Le corpus est mono-domaine : uniquement des résumés scientifiques en anglais. L'explicabilité coûte neuf fois la recherche sur CPU, d'où le plafond à cinq résultats. Et mon filtrage procède par sur-échantillonnage, donc un filtre très sélectif peut manquer de survivants. »</p></div>
+<div class="ar"><p>«خمسة، أستطيع تعدادها. الجودة متعدّدة اللغات غير متجانسة — 0,130 بالعربية مقابل 0,445 بالفرنسية. وبروتوكولي الرئيسي لا ينزل أبداً إلى المجال الدلالي الخالص. والمتن أحادي المجال: ملخّصات علمية بالإنجليزية فقط. والتفسير يكلّف تسعة أضعاف البحث على المعالج، ومن هنا سقف النتائج الخمس. وترشيحي يمرّ بالإفراط في العيّنة، فقد يعوز مرشّحٌ شديد الانتقائية الناجون.»</p></div>
+</div></div></details>
+
+<details class="qr"><summary>Qu'auriez-vous fait avec plus de temps ?</summary>
+<div class="reponse"><div class="duo">
+<div class="fr"><p>« Le reranking par cross-encoder, en priorité. On repasse les cinquante premiers résultats dans un modèle qui lit la question et le document <em>ensemble</em>, au lieu de comparer deux vecteurs calculés séparément. Le gain de précision est net, le coût est en latence. Ensuite je ferais varier les poids de la fusion hybride — l'infrastructure est déjà là — et je comparerais <code>e5-base</code> à <code>e5-small</code> sur l'arabe. »</p></div>
+<div class="ar"><p>«إعادة الترتيب بمُرمِّز متقاطع، في المقام الأول. إذ نُمرّر النتائج الخمسين الأولى في نموذج يقرأ السؤال والوثيقة <em>معاً</em>، بدل مقارنة متجهين محسوبين على حدة. المكسب في الدقة واضح، والكلفة في زمن الاستجابة. ثم أُغيّر أوزان الدمج الهجين — والبنية جاهزة أصلاً — وأقارن <code>e5-base</code> بـ<code>e5-small</code> على العربية.»</p></div>
+</div></div></details>
+
+<details class="qr"><summary>Pourquoi ne pas simplement traduire la requête avant de chercher ?</summary>
+<div class="reponse"><div class="duo">
+<div class="fr"><p>« Ce serait une seconde brique à installer, à maintenir et à évaluer, avec ses propres erreurs qui se cumuleraient aux miennes. L'espace vectoriel partagé rend la traduction inutile, et il fonctionne sur une centaine de langues sans aucune configuration supplémentaire. C'est plus simple <em>et</em> plus général. »</p></div>
+<div class="ar"><p>«ستكون لبنة ثانية تُنصَّب وتُصان وتُقيَّم، بأخطائها الخاصة التي ستتراكم مع أخطائي. أما الفضاء المتجهي المشترك فيجعل الترجمة بلا داعٍ، ويشتغل على نحو مئة لغة دون أي إعداد إضافي. إنه أبسط <em>وأعمّ</em> في آن.»</p></div>
+</div></div></details>
+
+<details class="qr"><summary>Pourquoi n'avez-vous pas utilisé un LLM ou un chatbot ?</summary>
+<div class="reponse"><div class="duo">
+<div class="fr"><p>« Parce qu'un LLM ne remplace ni l'indexation, ni le classement, ni l'évaluation — c'est d'ailleurs précisé dans le cahier des charges. Il se branche <em>après</em>, sur des résultats déjà pertinents, pour en produire une synthèse citant ses sources. C'est le principe du RAG, et je l'ai gardé en perspective, pas comme cœur du projet. Le cœur, c'est la recherche d'information. »</p></div>
+<div class="ar"><p>«لأن النموذج اللغوي الكبير لا يحلّ محلّ الفهرسة ولا الترتيب ولا التقييم — وهذا منصوص عليه في دفتر التحمّلات. إنه يُوصَل <em>بعدها</em>، على نتائج ملائمة أصلاً، لإنتاج خلاصة تستشهد بمصادرها. وهذا مبدأ RAG، وقد أبقيتُه في الآفاق لا في قلب المشروع. فالقلب هو استرجاع المعلومات.»</p></div>
+</div></div></details>
+
+<details class="qr"><summary>Que se passerait-il avec un million de documents ?</summary>
+<div class="reponse"><div class="duo">
+<div class="fr"><p>« Trois choses changeraient. L'indexation passerait de douze minutes à plusieurs heures sur CPU — il faudrait une carte graphique. L'index exact deviendrait trop lent, et c'est là que l'index approximatif IVF que j'ai déjà implémenté prendrait tout son sens : à mon échelle il fait perdre 14 % de rappel pour économiser moins d'une milliseconde, donc il ne se justifie pas. Et la mémoire deviendrait un vrai sujet : un million de vecteurs en 384 dimensions représente environ 1,5 Go. »</p></div>
+<div class="ar"><p>«ثلاثة أمور ستتغيّر. ستنتقل الفهرسة من اثنتي عشرة دقيقة إلى عدّة ساعات على المعالج — وستلزم بطاقة رسومية. وسيصير الفهرس الدقيق بطيئاً جداً، وهنا يكتسب الفهرس التقريبي IVF الذي أنجزتُه معناه الكامل: فعند حجمي يُفقد 14% من الاسترجاع مقابل توفير أقلّ من ميلي ثانية، أي لا مبرّر له. وستصير الذاكرة موضوعاً حقيقياً: مليون متجه في 384 بُعداً يمثّل نحو 1,5 غيغابايت.»</p></div>
+</div></div></details>
+
+<h3>Sur le code · حول الشيفرة</h3>
+
+<details class="qr"><summary>Montrez-moi où se fait la recherche.</summary>
+<div class="reponse"><div class="duo">
+<div class="fr"><p>« Dans <code>src/moteur.py</code>, méthode <code>chercher()</code>. Elle fait trois choses : elle encode la requête avec le <em>même</em> modèle que celui de l'indexation, elle demande à FAISS les plus proches voisins — plus que K, parce que plusieurs passages peuvent venir du même article — puis elle regroupe les passages par article via <code>src/resultats.py</code>. »</p></div>
+<div class="ar"><p>«في <code>src/moteur.py</code>، الدالة <code>chercher()</code>. وهي تفعل ثلاثة أمور: تُرمّز الاستعلام بـ<em>النموذج نفسه</em> المستعمل في الفهرسة، ثم تطلب من FAISS أقرب الجيران — أكثر من K لأن عدّة مقاطع قد تأتي من المقال نفسه — ثم تجمّع المقاطع حسب المقال عبر <code>src/resultats.py</code>.»</p></div>
+</div></div></details>
+
+<details class="qr"><summary>Que se passe-t-il si on indexe avec un modèle et qu'on cherche avec un autre ?</summary>
+<div class="reponse"><div class="duo">
+<div class="fr"><p>« Les résultats deviennent du pur hasard, et — c'est le piège — <em>sans aucun message d'erreur</em>. Les deux ensembles de vecteurs vivent dans des espaces différents, donc les distances calculées n'ont plus de sens. C'est le piège numéro un du domaine. Dans mon architecture, un seul module connaît le modèle : <code>src/embeddings.py</code>. C'est ce qui rend l'erreur impossible. »</p></div>
+<div class="ar"><p>«تصير النتائج محض صدفة، و— هنا الفخّ — <em>دون أي رسالة خطأ</em>. فمجموعتا المتجهات تعيشان في فضاءين مختلفين، فلا تعود المسافات المحسوبة ذات معنى. وهذا هو الفخّ الأول في هذا الحقل. وفي بنيتي، وحدة واحدة فقط تعرف النموذج: <code>src/embeddings.py</code>. وهذا ما يجعل الخطأ مستحيلاً.»</p></div>
+</div></div></details>
+
+<details class="qr"><summary>Comment testez-vous votre code ?</summary>
+<div class="reponse"><div class="duo">
+<div class="fr"><p>« Quarante-sept tests automatiques qui ne téléchargent aucun modèle et n'ont besoin d'aucun index — ils tournent en moins d'une seconde. Ils vérifient la logique, pas la qualité des résultats : celle-ci est mesurée par le script d'évaluation. Ils protègent par exemple contre un chevauchement cassé qui couperait les idées en deux, contre le <code>-1</code> de FAISS lu comme un identifiant valide, ou contre une injection HTML venue d'un résumé arXiv. »</p></div>
+<div class="ar"><p>«سبعة وأربعون اختباراً آلياً لا تُنزّل أي نموذج ولا تحتاج أي فهرس — وتجري في أقلّ من ثانية. تتحقّق من المنطق لا من جودة النتائج: فتلك يقيسها نصّ التقييم. وهي تحمي مثلاً من تداخل معطوب يقطع الأفكار نصفين، أو من قراءة قيمة <code>-1</code> التي يعيدها FAISS كمعرّف صالح، أو من حقن HTML قادم من ملخّص arXiv.»</p></div>
+</div></div></details>
+
+<details class="qr"><summary>Votre projet est-il reproductible ?</summary>
+<div class="reponse"><div class="duo">
+<div class="fr"><p>« Entièrement, en cinq commandes numérotées dans l'ordre d'exécution. Le corpus se retélécharge à l'identique, les graines aléatoires sont fixées, et tous les réglages sont regroupés dans un seul fichier, <code>config.py</code> — aucun autre module ne contient de valeur en dur. »</p></div>
+<div class="ar"><p>«بالكامل، في خمسة أوامر مرقّمة بترتيب التنفيذ. فالمتن يُعاد تنزيله كما هو، والبذور العشوائية ثابتة، وكل الإعدادات مجمّعة في ملف واحد هو <code>config.py</code> — ولا تحتوي أي وحدة أخرى قيمة مثبّتة.»</p></div>
+</div></div></details>
+
+<h3>Les questions déstabilisantes · الأسئلة المُربكة</h3>
+
+<details class="qr"><summary>Qu'est-ce que vous avez trouvé de plus difficile ?</summary>
+<div class="reponse"><div class="duo">
+<div class="fr"><p>Réponds honnêtement et concrètement. Par exemple : « Construire un protocole d'évaluation qui ne me donne pas raison d'avance. Ma première version utilisait le titre à la fois comme requête et dans le texte indexé — BM25 obtenait des scores parfaits et je ne comprenais pas pourquoi. C'est en cherchant que j'ai identifié la fuite de données. »</p></div>
+<div class="ar"><p>أجيبي بصدق وبشكل ملموس. مثلاً: «بناء بروتوكول تقييم لا يمنحني الحقّ سلفاً. فنسختي الأولى كانت تستعمل العنوان استعلاماً وداخل النصّ المفهرَس معاً — فكان BM25 يحصل على درجات مثالية ولم أفهم السبب. وبالبحث اكتشفتُ تسرّب البيانات.»</p></div>
+</div></div></details>
+
+<details class="qr"><summary>Si vous deviez tout refaire, que changeriez-vous ?</summary>
+<div class="reponse"><div class="duo">
+<div class="fr"><p>« Je commencerais par le protocole d'évaluation, pas par le moteur. J'ai construit le moteur d'abord et l'évaluation ensuite, et c'est l'évaluation qui m'a appris ce que le moteur faisait vraiment. En la construisant en premier, j'aurais su plus tôt quoi optimiser. »</p></div>
+<div class="ar"><p>«كنتُ سأبدأ ببروتوكول التقييم لا بالمحرّك. فقد بنيتُ المحرّك أولاً ثم التقييم، وكان التقييم هو ما علّمني ما يفعله المحرّك حقاً. ولو بنيتُه أولاً لعرفتُ مبكّراً ما ينبغي تحسينه.»</p></div>
+</div></div></details>
+
+<details class="qr"><summary>Une question dont vous ne connaissez pas la réponse</summary>
+<div class="reponse"><div class="duo">
+<div class="fr"><p><strong>Ne l'invente jamais.</strong> Dis : « Je n'ai pas testé ce point, donc je ne veux pas avancer un chiffre au hasard. Ce que je peux dire, c'est comment je m'y prendrais pour le mesurer : … »</p><p>Un jury respecte infiniment plus « je ne sais pas, voici comment je le saurais » qu'une réponse floue et fausse. Et il le repère immédiatement.</p></div>
+<div class="ar"><p><strong>لا تختلقي الجواب أبداً.</strong> قولي: «لم أختبر هذه النقطة، ولا أريد أن أقدّم رقماً اعتباطياً. لكن ما أستطيع قوله هو كيف كنتُ سأقيسه: …»</p><p>فاللجنة تحترم «لا أعرف، وهكذا كنتُ سأعرف» أضعافَ ما تحترم جواباً غامضاً وخاطئاً. وهي تكتشف ذلك فوراً.</p></div>
+</div></div></details>
+
+<!-- ====================================================================== -->
+<h2 id="s14"><span class="num">14</span>Fiche de révision</h2>
+
+<div class="duo">
+<div class="fr">
+<p>À relire la veille. Si tu maîtrises cette page, tu maîtrises la soutenance.</p>
+</div>
+<div class="ar">
+<p>تُقرأ عشيّة المناقشة. فإن أتقنتِ هذه الصفحة أتقنتِ المناقشة.</p>
+</div>
+</div>
+
+<div class="fiche">
+<div class="entete-fiche">Les chiffres à connaître par cœur · الأرقام التي تُحفظ</div>
+<div class="corps-fiche">
+<div class="tableau">
+<table>
+<tbody>
+<tr><td>Articles dans le corpus</td><td class="num"><strong>8 569</strong></td></tr>
+<tr><td>Passages indexés</td><td class="num"><strong>10 897</strong></td></tr>
+<tr><td>Dimensions par vecteur</td><td class="num"><strong>384</strong></td></tr>
+<tr><td>Requêtes du protocole principal</td><td class="num"><strong>500</strong></td></tr>
+<tr><td>Questions multilingues</td><td class="num"><strong>20 × 3 langues</strong></td></tr>
+<tr><td>Requêtes arabes où BM25 échoue</td><td class="num"><strong>20 / 20</strong></td></tr>
+<tr><td>Durée d'indexation</td><td class="num"><strong>12 min sur CPU</strong></td></tr>
+<tr><td>Latence de recherche</td><td class="num"><strong>≈ 83 ms</strong></td></tr>
+<tr><td>Tests automatiques</td><td class="num"><strong>47</strong></td></tr>
+</tbody>
+</table>
+</div>
+</div>
+</div>
+
+<div class="fiche">
+<div class="entete-fiche">Les cinq phrases qui portent tout le projet · خمس جمل تحمل المشروع كله</div>
+<div class="corps-fiche">
+<div class="duo">
+<div class="fr">
+<ol>
+  <li><strong>« Le moteur ne cherche pas les mots, il cherche le sens. »</strong></li>
+  <li><strong>« Le modèle ne traduit pas : les langues partagent le même espace vectoriel. »</strong></li>
+  <li><strong>« Le titre n'est pas indexé, pour éviter une fuite de données. »</strong></li>
+  <li><strong>« Sur les requêtes arabes, BM25 ne renvoie rien — vingt fois sur vingt. »</strong></li>
+  <li><strong>« Ma conclusion n'est pas qu'un moteur gagne, mais qu'ils échouent à des endroits différents. »</strong></li>
+</ol>
+</div>
+<div class="ar">
+<ol>
+  <li><strong>«المحرّك لا يبحث عن الكلمات، بل عن المعنى.»</strong></li>
+  <li><strong>«النموذج لا يترجم: فاللغات تتقاسم الفضاء المتجهي نفسه.»</strong></li>
+  <li><strong>«العنوان غير مفهرَس، تفادياً لتسرّب البيانات.»</strong></li>
+  <li><strong>«في الاستعلامات العربية لا يعيد BM25 شيئاً — عشرين مرة من عشرين.»</strong></li>
+  <li><strong>«خلاصتي ليست أن محرّكاً يتفوّق، بل أنهما يُخفقان في مواضع مختلفة.»</strong></li>
+</ol>
+</div>
+</div>
+</div>
+</div>
+
+<div class="fiche">
+<div class="entete-fiche">Les trois pièges dont tu dois pouvoir parler · ثلاثة مزالق يجب أن تعرفيها</div>
+<div class="corps-fiche">
+<div class="duo">
+<div class="fr">
+<ol>
+  <li><strong>Modèle différent entre indexation et recherche</strong> → résultats aléatoires, aucun message d'erreur.</li>
+  <li><strong>Préfixes <code>query:</code> / <code>passage:</code> oubliés</strong> → qualité dégradée, aucun message d'erreur.</li>
+  <li><strong>Titre indexé alors qu'il sert de requête</strong> → fuite de données, scores artificiellement parfaits.</li>
+</ol>
+<p>Le point commun des trois : <em>ils ne provoquent aucune erreur visible</em>. C'est
+ce qui les rend dangereux, et c'est pour ça qu'un jury aime les entendre.</p>
+</div>
+<div class="ar">
+<ol>
+  <li><strong>اختلاف النموذج بين الفهرسة والبحث</strong> ← نتائج عشوائية بلا أي رسالة خطأ.</li>
+  <li><strong>إغفال البادئتين <code>query:</code> و<code>passage:</code></strong> ← جودة متدهورة بلا أي رسالة خطأ.</li>
+  <li><strong>فهرسة العنوان مع استعماله استعلاماً</strong> ← تسرّب بيانات ودرجات مثالية اصطناعياً.</li>
+</ol>
+<p>والقاسم المشترك بين الثلاثة: <em>أنها لا تُحدث أي خطأ ظاهر</em>. وهذا ما يجعلها خطيرة،
+ولهذا تحبّ اللجنة سماعها.</p>
+</div>
+</div>
+</div>
+</div>
+
+<!-- ====================================================================== -->
+<h2 id="s15"><span class="num">15</span>Le jour de la soutenance</h2>
+
+<div class="duo">
+<div class="fr">
+<h4>Avant d'entrer</h4>
+<ul>
+  <li>Lance l'API <strong>et</strong> l'interface, et fais une recherche de test.
+  Le premier appel charge le modèle : ne laisse pas le jury attendre quinze
+  secondes.</li>
+  <li>Ouvre un onglet sur <code>/docs</code> — la documentation de l'API. Elle
+  impressionne et elle sert de plan B si l'interface plante.</li>
+  <li>Prépare la présentation en plein écran, et garde le PDF ouvert dans un
+  autre onglet au cas où.</li>
+  <li>Vérifie que l'onglet <em>Démonstration</em> fonctionne : c'est ton moment
+  fort.</li>
+</ul>
+</div>
+<div class="ar">
+<h4>قبل الدخول</h4>
+<ul>
+  <li>شغّلي الواجهة البرمجية <strong>والواجهة الرسومية</strong> معاً، وأجري بحثاً
+  تجريبياً. فأول نداء يُحمّل النموذج: لا تجعلي اللجنة تنتظر خمس عشرة ثانية.</li>
+  <li>افتحي لساناً على <code>/docs</code> — توثيق الواجهة البرمجية. إنه يُبهر ويصلح
+  خطة بديلة إن تعطّلت الواجهة الرسومية.</li>
+  <li>جهّزي العرض في وضع ملء الشاشة، واحتفظي بملف PDF مفتوحاً في لسان آخر
+  احتياطاً.</li>
+  <li>تأكّدي أن شاشة <em>العرض التوضيحي</em> تشتغل: فهي لحظتك القوية.</li>
+</ul>
+</div>
+</div>
+
+<div class="duo">
+<div class="fr">
+<h4>Le déroulé conseillé — 15 à 20 minutes</h4>
+<div class="tableau">
+<table>
+<thead><tr><th>Temps</th><th>Contenu</th></tr></thead>
+<tbody>
+<tr><td class="mono">0–2 min</td><td>L'exemple arabe. Tu commences par le résultat, pas par la théorie.</td></tr>
+<tr><td class="mono">2–5 min</td><td>Le problème : pourquoi la recherche lexicale ne suffit pas.</td></tr>
+<tr><td class="mono">5–9 min</td><td>Les choix techniques : embeddings, FAISS, la décision sur le titre.</td></tr>
+<tr><td class="mono">9–14 min</td><td>Les résultats. Commence par celui qui ne t'arrange pas.</td></tr>
+<tr><td class="mono">14–17 min</td><td>La démonstration en direct, en trois langues.</td></tr>
+<tr><td class="mono">17–19 min</td><td>Conclusion, limites, perspectives.</td></tr>
+</tbody>
+</table>
+</div>
+</div>
+<div class="ar">
+<h4>السير المقترح — من 15 إلى 20 دقيقة</h4>
+<div class="tableau">
+<table>
+<thead><tr><th>الوقت</th><th>المحتوى</th></tr></thead>
+<tbody>
+<tr><td class="mono">0–2 د</td><td>المثال العربي. تبدئين بالنتيجة لا بالنظرية.</td></tr>
+<tr><td class="mono">2–5 د</td><td>المشكلة: لماذا لا يكفي البحث المعجمي.</td></tr>
+<tr><td class="mono">5–9 د</td><td>الاختيارات التقنية: التضمينات وFAISS وقرار العنوان.</td></tr>
+<tr><td class="mono">9–14 د</td><td>النتائج. ابدئي بتلك التي ليست في صالحك.</td></tr>
+<tr><td class="mono">14–17 د</td><td>العرض المباشر بثلاث لغات.</td></tr>
+<tr><td class="mono">17–19 د</td><td>الخلاصة والحدود والآفاق.</td></tr>
+</tbody>
+</table>
+</div>
+</div>
+</div>
+
+<div class="note jury">
+<span class="etiquette">Le scénario de démonstration · سيناريو العرض</span>
+<div class="duo">
+<div class="fr">
+<p>Trois temps, dans cet ordre. Il monte en puissance.</p>
+<ol>
+  <li><strong>En anglais</strong> — <em>machine learning for banking fraud
+  detection</em>. Les mots existent dans le corpus : les deux moteurs fonctionnent
+  et s'accordent. C'est le cas normal.</li>
+  <li><strong>En français</strong> — <em>détection de la fraude bancaire par
+  apprentissage automatique</em>. BM25 s'effondre. Le sémantique continue.</li>
+  <li><strong>En arabe</strong> — <em>كشف الاحتيال المصرفي باستخدام التعلم
+  الآلي</em>. BM25 ne renvoie plus <strong>rien</strong>. Le sémantique répond, et
+  l'interface signale d'elle-même « aucun mot en commun ».</li>
+</ol>
+<p>L'onglet <em>Démonstration</em> déroule ce scénario automatiquement et termine
+par un tableau récapitulatif. Laisse-le parler : ne commente pas pendant qu'il
+tourne.</p>
+</div>
+<div class="ar">
+<p>ثلاث مراحل بهذا الترتيب. وهي تتصاعد.</p>
+<ol>
+  <li><strong>بالإنجليزية</strong> — <em>machine learning for banking fraud
+  detection</em>. الكلمات موجودة في المتن: يشتغل المحرّكان ويتّفقان. وهذه الحالة
+  العادية.</li>
+  <li><strong>بالفرنسية</strong> — <em>détection de la fraude bancaire…</em>.
+  ينهار BM25، ويواصل الدلالي.</li>
+  <li><strong>بالعربية</strong> — <em>كشف الاحتيال المصرفي باستخدام التعلم
+  الآلي</em>. لا يعيد BM25 <strong>شيئاً</strong>. ويجيب الدلالي، وتُعلن الواجهة من
+  تلقائها «لا كلمة مشتركة».</li>
+</ol>
+<p>تُجري شاشة <em>العرض التوضيحي</em> هذا السيناريو تلقائياً وتنتهي بجدول تلخيصي. دعيه
+يتكلّم: لا تُعلّقي أثناء اشتغاله.</p>
+</div>
+</div>
+</div>
+
+<div class="note cle">
+<span class="etiquette">Trois règles pour la partie questions · ثلاث قواعد لجزء الأسئلة</span>
+<div class="duo">
+<div class="fr">
+<ol>
+  <li><strong>Écoute la question jusqu'au bout.</strong> Ne réponds pas à celle
+  que tu espérais.</li>
+  <li><strong>Si tu ne sais pas, dis-le</strong> — et enchaîne sur comment tu
+  t'y prendrais pour le savoir. C'est une réponse, pas un aveu.</li>
+  <li><strong>Ramène toujours à une mesure.</strong> « Je l'ai mesuré, voici le
+  chiffre » vaut mieux que n'importe quelle explication théorique.</li>
+</ol>
+</div>
+<div class="ar">
+<ol>
+  <li><strong>استمعي إلى السؤال حتى نهايته.</strong> لا تُجيبي عن السؤال الذي كنتِ
+  ترجينه.</li>
+  <li><strong>إن كنتِ لا تعرفين فقولي ذلك</strong> — ثم انتقلي إلى كيف كنتِ ستعرفين.
+  فهذا جواب لا اعتراف بالعجز.</li>
+  <li><strong>أرجعي كل شيء إلى قياس.</strong> فـ«قِستُه، وهذا هو الرقم» خير من أي شرح
+  نظري.</li>
+</ol>
+</div>
+</div>
+</div>
+
+<div class="duo">
+<div class="fr">
+<h4>Un dernier mot</h4>
+<p>Ce projet est solide parce qu'il est honnête. Il ne prétend pas que la
+recherche sémantique gagne partout — il montre où chacune des deux approches
+gagne, et il le prouve avec des chiffres reproductibles.</p>
+<p>C'est une position beaucoup plus difficile à attaquer qu'une démonstration
+enthousiaste. Tiens-la, et la soutenance se passera bien.</p>
+</div>
+<div class="ar">
+<h4>كلمة أخيرة</h4>
+<p>هذا المشروع متين لأنه صادق. فهو لا يدّعي أن البحث الدلالي يتفوّق في كل الحالات — بل
+يبيّن أين يتفوّق كلٌّ من المنهجين، ويُثبت ذلك بأرقام قابلة للتكرار.</p>
+<p>وهذا موقف أصعب على النقد بكثير من عرضٍ متحمّس. تمسّكي به، وستمرّ المناقشة على خير.</p>
+</div>
+</div>
+
+
+</main>
+</div>
+
+<script>
+/* --- changement de langue ------------------------------------------------ */
+const boutons = document.querySelectorAll('.commutateur button');
+boutons.forEach(b => b.addEventListener('click', () => {
+  const langue = b.dataset.langue;
+  document.body.dataset.langue = langue;
+  document.documentElement.lang = langue === 'ar' ? 'ar' : 'fr';
+  boutons.forEach(x => x.classList.toggle('actif', x === b));
+  try { localStorage.setItem('guide-langue', langue); } catch (e) { /* navigation privée */ }
+}));
+
+// On restaure le mode choisi à la visite précédente.
+try {
+  const memorise = localStorage.getItem('guide-langue');
+  if (memorise) document.querySelector(`.commutateur button[data-langue="${memorise}"]`)?.click();
+} catch (e) { /* sans importance */ }
+
+/* --- sommaire : surlignage de la section lue ----------------------------- */
+const liens = [...document.querySelectorAll('#sommaire a')];
+const sections = liens.map(a => document.querySelector(a.getAttribute('href'))).filter(Boolean);
+
+const observateur = new IntersectionObserver((entrees) => {
+  entrees.forEach(e => {
+    if (!e.isIntersecting) return;
+    liens.forEach(a => a.classList.toggle('courant', a.getAttribute('href') === '#' + e.target.id));
+  });
+}, { rootMargin: '-15% 0px -75% 0px' });
+sections.forEach(s => observateur.observe(s));
+
+/* --- questions du jury : repliées à l'écran, ouvertes à l'impression ------
+   Un `details` fermé n'imprime pas son contenu — aucune règle CSS n'y change
+   quoi que ce soit, parce que le navigateur ne rend tout simplement pas les
+   enfants d'un `details` sans attribut `open`. Sur un guide de révision, cela
+   donnerait un PDF avec 26 questions et zéro réponse. On les ouvre donc
+   explicitement avant toute impression. */
+
+function ouvrirToutesLesQuestions() {
+  document.querySelectorAll('details.qr').forEach(d => { d.open = true; });
+}
+
+window.addEventListener('beforeprint', ouvrirToutesLesQuestions);
+
+// Le script d'export PDF charge la page avec ?print=1 : le navigateur sans
+// interface ne déclenche pas toujours « beforeprint », d'où cette seconde voie.
+if (new URLSearchParams(location.search).has('print')) {
+  ouvrirToutesLesQuestions();
+}
+
+/* --- sommaire repliable sur petit écran ---------------------------------- */
+const menu = document.getElementById('bouton-menu');
+const sommaire = document.getElementById('sommaire');
+menu.addEventListener('click', () => sommaire.classList.toggle('ouvert'));
+sommaire.addEventListener('click', e => {
+  if (e.target.tagName === 'A') sommaire.classList.remove('ouvert');
+});
+</script>
+</body>
+</html>

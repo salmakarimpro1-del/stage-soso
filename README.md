@@ -28,6 +28,7 @@ d'évaluation.
 | **README.md** (ce fichier) | installation, utilisation, choix techniques, résultats mesurés |
 | [soutenance.pptx](soutenance.pptx) | **le support de soutenance en PowerPoint** — 26 diapositives, notes de l'orateur dans le volet Commentaires |
 | [soutenance.html](soutenance.html) | le même support dans le navigateur, sans rien installer |
+| [guide_complet.html](guide_complet.html) | **le guide de compréhension, français et arabe** — 63 pages : glossaire, métriques calculées à la main, 26 questions de jury avec leurs réponses |
 | [GUIDE_DU_CODE.md](GUIDE_DU_CODE.md) | le code expliqué fichier par fichier, dans l'ordre où la donnée le traverse |
 | [plan_apprentissage.html](plan_apprentissage.html) | plan d'apprentissage en 9 modules pour maîtriser les technologies employées |
 | [resultats/rapport_evaluation.md](resultats/rapport_evaluation.md) | tous les tableaux de mesures, régénérables |
@@ -64,6 +65,30 @@ Pour la version PDF, une diapositive par page :
 ```bash
 python scripts/5_exporter_pdf.py
 ```
+
+### Le guide de compréhension — français et arabe
+
+**`guide_complet.html`** explique le projet de bout en bout, dans les deux
+langues. Il ne sert pas à présenter : il sert à *comprendre*, avant de
+présenter.
+
+Un bouton en haut à droite bascule entre **Français**, **العربية** et
+**Les deux** côte à côte. La logique de fond : le français est la langue de la
+soutenance, l'arabe est la langue qui fait comprendre.
+
+Ce qu'il contient, en seize chapitres :
+
+- un **glossaire bilingue** de 38 termes — la base de tout le reste ;
+- les concepts expliqués sans mathématiques : embeddings, cosinus, BM25, RRF ;
+- les **métriques calculées à la main** — Recall@K, MRR et nDCG sur des exemples
+  chiffrés, pour ne jamais être pris en défaut dessus ;
+- les résultats commentés un par un, avec ce qu'il faut en dire ;
+- la carte du code, fichier par fichier ;
+- **26 questions de jury** avec leurs réponses rédigées, dans les deux langues ;
+- une fiche de révision et le déroulé minuté du jour de la soutenance.
+
+La version PDF fait 63 pages et contient toujours les deux langues, quel que
+soit le mode d'affichage choisi à l'écran (`export/guide_complet.pdf`).
 
 ---
 

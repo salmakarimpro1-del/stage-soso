@@ -1,12 +1,13 @@
 """
 Script 5 — Exporter la documentation en PDF.
 
-Produit trois documents dans export/ :
+Produit quatre documents dans export/ :
 
     dossier_technique.pdf    le README complet, suivi du rapport d'évaluation
                              détaillé en annexe
     plan_apprentissage.pdf   le plan d'apprentissage en neuf modules
     soutenance.pdf           le support de soutenance, une diapositive par page
+    guide_complet.pdf        le guide de compréhension, français et arabe
 
 Le rendu passe par Chrome (ou Edge) en mode sans interface, qui applique
 les feuilles de style d'impression et conserve les liens cliquables. Aucune
@@ -221,6 +222,7 @@ def imprimer_en_pdf(
     source: Path,
     destination: Path,
     paysage: bool = False,
+    parametres: str = "",
 ) -> bool:
     """
     Rend une page HTML en PDF via le navigateur sans interface.
@@ -229,6 +231,9 @@ def imprimer_en_pdf(
         paysage: le support de soutenance est en 16/9. Sans cette option, Chrome
                  l'imprimerait au format portrait A4 et chaque diapositive
                  arriverait rognée sur les côtés.
+        parametres: chaîne ajoutée à l'URL, du type "?print=1". Le guide s'en
+                 sert pour déplier ses questions : un bloc <details> fermé
+                 n'imprime pas son contenu, et aucune règle CSS ne corrige cela.
     """
     destination.parent.mkdir(parents=True, exist_ok=True)
     if destination.exists():
@@ -243,11 +248,13 @@ def imprimer_en_pdf(
         "--virtual-time-budget=20000",
         f"--print-to-pdf={destination}",
     ]
+    adresse = source.as_uri() + parametres
+
     if paysage:
         # Les couleurs de fond sont indispensables ici : le support est sur fond
         # sombre, et Chrome les supprime par défaut à l'impression.
         commande += ["--landscape", "--print-to-pdf-no-header"]
-    commande.append(source.as_uri())
+    commande.append(adresse)
 
     depart = time.perf_counter()
     resultat = subprocess.run(commande, capture_output=True, timeout=180)
@@ -283,6 +290,16 @@ def main() -> None:
             navigateur, plan, DOSSIER_EXPORT / "plan_apprentissage.pdf") and succes
     else:
         print("  plan_apprentissage.html introuvable, ignoré")
+
+    # Le guide bilingue. Sa feuille de style d'impression force l'affichage des
+    # deux langues, quel que soit le mode choisi à l'écran.
+    guide = config.RACINE / "guide_complet.html"
+    if guide.exists():
+        succes = imprimer_en_pdf(
+            navigateur, guide, DOSSIER_EXPORT / "guide_complet.pdf",
+            parametres="?print=1") and succes
+    else:
+        print("  guide_complet.html introuvable, ignoré")
 
     # Le support de soutenance : une diapositive par page, au format paysage.
     soutenance = config.RACINE / "soutenance.html"
