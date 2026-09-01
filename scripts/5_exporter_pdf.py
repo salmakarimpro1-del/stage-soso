@@ -1,11 +1,12 @@
 """
 Script 5 — Exporter la documentation en PDF.
 
-Produit deux documents dans export/ :
+Produit trois documents dans export/ :
 
     dossier_technique.pdf    le README complet, suivi du rapport d'évaluation
                              détaillé en annexe
     plan_apprentissage.pdf   le plan d'apprentissage en neuf modules
+    soutenance.pdf           le support de soutenance, une diapositive par page
 
 Le rendu passe par Chrome (ou Edge) en mode sans interface, qui applique
 les feuilles de style d'impression et conserve les liens cliquables. Aucune
@@ -215,8 +216,20 @@ def construire_documentation() -> Path:
     return destination
 
 
-def imprimer_en_pdf(navigateur: str, source: Path, destination: Path) -> bool:
-    """Rend une page HTML en PDF via le navigateur sans interface."""
+def imprimer_en_pdf(
+    navigateur: str,
+    source: Path,
+    destination: Path,
+    paysage: bool = False,
+) -> bool:
+    """
+    Rend une page HTML en PDF via le navigateur sans interface.
+
+    Args:
+        paysage: le support de soutenance est en 16/9. Sans cette option, Chrome
+                 l'imprimerait au format portrait A4 et chaque diapositive
+                 arriverait rognée sur les côtés.
+    """
     destination.parent.mkdir(parents=True, exist_ok=True)
     if destination.exists():
         destination.unlink()
@@ -229,8 +242,12 @@ def imprimer_en_pdf(navigateur: str, source: Path, destination: Path) -> bool:
         "--run-all-compositor-stages-before-draw",
         "--virtual-time-budget=20000",
         f"--print-to-pdf={destination}",
-        source.as_uri(),
     ]
+    if paysage:
+        # Les couleurs de fond sont indispensables ici : le support est sur fond
+        # sombre, et Chrome les supprime par défaut à l'impression.
+        commande += ["--landscape", "--print-to-pdf-no-header"]
+    commande.append(source.as_uri())
 
     depart = time.perf_counter()
     resultat = subprocess.run(commande, capture_output=True, timeout=180)
@@ -266,6 +283,15 @@ def main() -> None:
             navigateur, plan, DOSSIER_EXPORT / "plan_apprentissage.pdf") and succes
     else:
         print("  plan_apprentissage.html introuvable, ignoré")
+
+    # Le support de soutenance : une diapositive par page, au format paysage.
+    soutenance = config.RACINE / "soutenance.html"
+    if soutenance.exists():
+        succes = imprimer_en_pdf(
+            navigateur, soutenance, DOSSIER_EXPORT / "soutenance.pdf",
+            paysage=True) and succes
+    else:
+        print("  soutenance.html introuvable, ignoré")
 
     if succes:
         print(f"\nPDF disponibles dans {DOSSIER_EXPORT}")
