@@ -41,15 +41,25 @@ un vecteur
    ▼
 identifiants de passages
    │  src/resultats.py         regroupe les passages par article
+   │                           (et applique les filtres de src/filtres.py)
    ▼
 liste d'articles classés
+   │  src/surlignage.py        ajoute la phrase clé et les mots partagés
+   ▼
+liste d'articles justifiés
    │  api/main.py              expose le tout en service web
    ▼
-ui/app.py                      affiche
+ui/                            affiche
 ```
 
-Deux fichiers vivent en dehors de ce trajet : `src/baseline_bm25.py`, le moteur
-de comparaison, et `src/evaluation.py`, qui mesure les deux.
+Quatre fichiers vivent en dehors de ce trajet, chacun pour une raison précise :
+
+| Fichier | Pourquoi il est à part |
+|---|---|
+| `src/baseline_bm25.py` | second moteur, parcourt le même chemin en parallèle |
+| `src/hybride.py` | ne cherche rien lui-même : il fusionne les classements des deux autres |
+| `src/comparaison.py` | ne classe pas, il analyse deux classements déjà produits |
+| `src/evaluation.py` | mesure les trois moteurs, hors ligne |
 
 ---
 
@@ -393,27 +403,187 @@ le schéma une fois suffit.
 `_chercher` contient la logique commune aux routes GET et POST : on l'écrit une
 fois et les deux routes l'appellent.
 
+**Les routes, et ce qu'elles servent à autre chose qu'à chercher :**
+
+| Route | Ce qu'elle apporte |
+|---|---|
+| `/recherche` | un moteur, k résultats, filtres et explications facultatives |
+| `/comparer` | plusieurs moteurs d'un coup, **plus l'analyse de leurs écarts** |
+| `/facettes` | les catégories et années réellement présentes dans l'index |
+| `/exemples` | le jeu de questions multilingues, lu depuis `eval/` |
+| `/metriques` | le fichier produit par `scripts/4_evaluer.py`, servi tel quel |
+
+Deux choix méritent d'être signalés.
+
+`/facettes` est calculée **une fois au démarrage**, pas à chaque appel : c'est
+un parcours de tout l'index. Elle permet à l'interface de ne proposer que des
+filtres qui ont des résultats — proposer une catégorie vide serait une impasse.
+
+`/metriques` **ne recalcule jamais rien**. Elle se contente de servir le fichier
+d'évaluation. Un graphique qui recalculerait ses chiffres à l'affichage pourrait
+montrer autre chose que le rapport écrit, et c'est exactement le genre d'écart
+qu'un jury repère.
+
 ---
 
-## 10. `ui/app.py` — l'interface
+## 10. `src/hybride.py` — faire voter les deux moteurs
 
-**Rôle.** Afficher. Ce fichier ne sait rien de Sentence-BERT ni de FAISS : il
+**Rôle.** Fusionner les classements du moteur sémantique et de BM25 en un seul.
+
+**Le problème à résoudre.** Un score BM25 vaut entre 0 et 40, sans borne haute.
+Un cosinus vaut entre −1 et 1. Les additionner reviendrait à laisser BM25
+décider seul. Normaliser les scores ne marche pas non plus : la normalisation
+dépendrait du lot renvoyé, donc de la requête, et deux requêtes ne seraient
+plus comparables.
+
+**La solution.** La *Reciprocal Rank Fusion* n'utilise que les **rangs**, qui
+sont dans la même unité par construction :
+
+```python
+score_rrf = somme sur chaque moteur de  poids / (60 + rang)
+```
+
+Un document deuxième chez les deux moteurs passe ainsi devant un document
+premier chez un seul. C'est voulu : l'accord entre deux méthodes indépendantes
+vaut mieux qu'un avis unique.
+
+**Deux détails d'implémentation qui comptent :**
+
+- `PROFONDEUR_FUSION = 50` — on demande cinquante candidats à chaque moteur
+  avant de fusionner, pas dix. Fusionner seulement les dix premiers perdrait
+  les documents classés quinzièmes par les deux, qui sont précisément ceux que
+  la fusion sait faire remonter.
+- **Le score n'est pas arrondi.** Les scores RRF valent quelques centièmes et
+  se distinguent à la cinquième décimale. Un arrondi placé dans le moteur
+  rendrait des documents artificiellement ex æquo ; c'est à l'affichage de
+  choisir son format.
+
+`MoteurHybride` expose `chercher` et `chercher_lot` avec la même signature que
+les deux autres moteurs. Conséquence : l'API, l'interface et le script
+d'évaluation l'utilisent sans une seule ligne de code spécifique.
+
+---
+
+## 11. `src/filtres.py` — restreindre sans casser le classement
+
+**Rôle.** Filtrer par catégorie arXiv, par année, par auteur.
+
+**Le piège.** Filtrer les dix premiers résultats est faux. Si aucun des dix ne
+relève de la catégorie demandée, la recherche ne renvoie rien — alors que le
+corpus contient peut-être cent articles pertinents un peu plus loin.
+
+**L'ordre correct** est donc : demander un vivier vingt fois plus large,
+écarter, puis garder les k premiers survivants. C'est ce que fait
+`taille_vivier()`, et le filtre lui-même s'applique dans
+`regrouper_par_document` — donc pour les trois moteurs à l'identique. Un filtre
+qui ne s'appliquerait qu'à l'un d'eux invaliderait toute comparaison.
+
+Limite à connaître et à énoncer : sur un filtre très sélectif, même un vivier
+élargi peut ne pas contenir assez de survivants. Le plafond `VIVIER_MAXIMUM`
+est un compromis entre exhaustivité et latence, pas une garantie.
+
+---
+
+## 12. `src/surlignage.py` — pourquoi ce résultat ?
+
+**Rôle.** Rendre un score vérifiable à l'œil nu.
+
+Deux justifications, de coûts très différents :
+
+| Justification | Comment | Coût |
+|---|---|---|
+| **mots partagés** | intersection des mots significatifs question / document | nul |
+| **phrase clé** | chaque phrase du résumé est encodée, on garde la plus proche | un appel au modèle |
+
+La seconde est la seule qui fonctionne quand il n'y a aucun mot en commun —
+c'est-à-dire précisément dans le cas qui justifie le projet. Le modèle désigne
+lui-même ce qui, dans le document, a déclenché le rapprochement.
+
+**Le coût est réel et mesuré** : sur un CPU sans carte graphique, encoder les
+78 phrases de dix résumés prend environ trois secondes, contre cent
+millisecondes pour la recherche. L'explicabilité coûte trente fois la
+recherche. D'où `NB_EXPLICATIONS_PAR_DEFAUT = 5` : la phrase clé n'est calculée
+que pour les résultats réellement lus, tandis que les mots partagés — gratuits —
+restent calculés pour tous.
+
+**Toutes les phrases sont encodées en un seul lot.** Encoder résultat par
+résultat multiplierait par dix le nombre d'appels au modèle pour la même
+quantité de texte.
+
+**`surligner()` échappe le HTML avant d'ajouter la moindre balise.** Un résumé
+arXiv contient des chevrons et des esperluettes : les laisser passer casserait
+la mise en page, et ouvrirait une injection HTML dans l'interface.
+
+---
+
+## 13. `src/comparaison.py` — ce qu'un moteur est seul à trouver
+
+**Rôle.** Analyser deux classements portant sur la même requête.
+
+Afficher deux listes côte à côte est la forme minimale de la comparaison, et la
+moins informative : deux colonnes de dix titres se ressemblent toujours un peu,
+et l'œil ne sait pas où regarder. Ce module calcule ce que les listes ne
+montrent pas d'elles-mêmes — les exclusivités de chaque moteur, le taux de
+recouvrement, les articles fortement reclassés — puis `verdict()` rédige la
+phrase correspondante à partir des résultats réels.
+
+Le cas le plus parlant sort tout seul : quand `moteurs_muets` n'est pas vide,
+un moteur n'a rien renvoyé du tout. C'est la situation des requêtes arabes, et
+la condition de validation n°7 du cahier des charges.
+
+---
+
+## 14. `ui/` — l'interface
+
+**Rôle.** Afficher. Ce dossier ne sait rien de Sentence-BERT ni de FAISS : il
 appelle l'API. C'est ce découplage qui permet de changer entièrement le moteur
 sans toucher à l'affichage.
 
+| Fichier | Responsabilité unique |
+|---|---|
+| `app.py` | assemble les cinq vues, gère l'état de la session |
+| `theme.py` | palette, typographie, feuille de style — **le seul endroit avec une couleur** |
+| `composants.py` | cartes de résultats, panneaux, badges — du HTML, rien d'autre |
+| `graphiques.py` | les courbes de l'onglet Évaluation |
+| `client.py` | **le seul fichier qui fait un appel réseau** |
+
 **Le modèle d'exécution de Streamlit déroute au début** : à chaque interaction,
 le script entier se relance du haut vers le bas. Rien ne survit d'un clic à
-l'autre, sauf ce qui est rangé dans `st.session_state`. C'est pour cela que les
-boutons d'exemple écrivent dans `st.session_state["requete"]` au lieu de
-modifier directement le champ de saisie.
+l'autre, sauf ce qui est rangé dans `st.session_state`.
+
+Trois pièges rencontrés dans ce projet, qui ne produisent aucune erreur :
+
+1. **Écrire dans la clé d'un widget déjà instancié n'a aucun effet.** Les
+   boutons d'exemple passent donc par `on_click=` : les fonctions de rappel
+   s'exécutent avant la reconstruction des widgets, c'est le seul moment où
+   l'écriture est prise en compte. Sans cela, cliquer sur un exemple ne
+   remplissait tout simplement pas la barre de recherche.
+2. **Une ligne vide dans un bloc HTML le referme.** Streamlit interprète
+   d'abord la chaîne comme du Markdown : une partie facultative laissée vide
+   produit une ligne blanche, et la balise fermante suivante s'affiche en clair
+   à l'écran. D'où `_bloc()` dans `composants.py`, qui supprime les lignes vides.
+3. **Un état lu en haut du script doit être la clé du widget qui le règle.**
+   Le sélecteur de thème se trouve dans la barre latérale, mais la feuille de
+   style est injectée bien avant. Il porte donc la clé `choix_theme` :
+   Streamlit restaure l'état des widgets avant de rejouer le script, la valeur
+   est donc déjà disponible en haut. Écrire cet état après coup ferait changer
+   le thème un clic trop tard.
 
 ---
 
-## 11. `tests/test_moteur.py` — le filet de sécurité
+## 15. `tests/` — le filet de sécurité
 
-Dix-neuf tests qui ne téléchargent aucun modèle et n'ont besoin d'aucun index :
-ils vérifient la logique, pas la qualité des résultats — celle-ci est mesurée
-par `scripts/4_evaluer.py`.
+Quarante-sept tests répartis en deux fichiers, qui ne téléchargent aucun modèle
+et n'ont besoin d'aucun index : ils vérifient la logique, pas la qualité des
+résultats — celle-ci est mesurée par `scripts/4_evaluer.py`. L'ensemble tourne
+en moins d'une seconde.
+
+- `test_moteur.py` — le cœur : prétraitement, index, regroupement, métriques.
+- `test_extensions.py` — fusion RRF, filtres, explication, comparaison.
+
+L'encodeur y est remplacé par une classe factice de dix lignes qui projette un
+texte sur deux dimensions. Tester la logique d'explication ne demande pas un
+vrai modèle : il suffit que les vecteurs soient prévisibles.
 
 Ce qu'ils protègent réellement :
 
@@ -425,6 +595,11 @@ Ce qu'ils protègent réellement :
 | `test_les_passages_d_un_meme_article_sont_fusionnes` | un article occupant plusieurs places du classement |
 | `test_les_identifiants_invalides_sont_ignores` | le `-1` de FAISS lu comme dernier passage du corpus |
 | `test_ndcg_decroit_avec_le_rang` | une métrique fausse, donc une évaluation fausse |
+| `test_un_accord_entre_moteurs_bat_une_premiere_place_isolee` | une fusion RRF qui ne fusionnerait rien |
+| `test_un_moteur_muet_ne_casse_pas_la_fusion` | une exception sur toutes les requêtes arabes |
+| `test_le_filtre_s_applique_avant_la_troncature_a_k` | un filtre qui renverrait des trous au lieu de résultats |
+| `test_surlignage_echappe_le_html_avant_de_baliser` | une injection HTML venue d'un résumé arXiv |
+| `test_l_explication_lexicale_couvre_tous_les_resultats` | le signal « aucun mot en commun » perdu au-delà du 5e résultat |
 
 **Pour vérifier qu'un test sert à quelque chose, casse le code exprès.** Si
 aucun test ne tombe, le test ne protège rien.
@@ -468,11 +643,24 @@ Attention aux préfixes : ils sont propres à la famille E5. Un modèle
 
 Le champ doit traverser les cinq étapes : c'est le prix du découplage.
 
-### Ajouter un filtre par catégorie
+### Ajouter un critère de filtrage
 
-Les catégories sont déjà stockées dans chaque passage. Il suffit de filtrer la
-liste renvoyée par `regrouper_par_document`, en demandant davantage de passages
-en amont pour compenser ceux qui seront écartés.
+Les filtres existent déjà (catégorie, année, auteur) : voir `src/filtres.py`.
+Pour en ajouter un — la revue de publication, le nombre de citations —, trois
+endroits suffisent :
+
+1. stocker l'information dans chaque passage, dans `preparer_passages` ;
+2. ajouter le test correspondant dans `filtres.construire()` ;
+3. exposer le paramètre dans `api/main.py`, puis dans la barre latérale.
+
+Rien à toucher dans les moteurs : ils reçoivent le filtre déjà construit et le
+transmettent à `regrouper_par_document`.
+
+### Changer le poids d'un moteur dans la fusion
+
+`MoteurHybride(semantique, lexical, poids_semantique=2.0)` fait peser le
+sémantique double dans le vote. Un poids nul exclut un moteur — pratique pour
+vérifier que la fusion se réduit bien au classement de l'autre.
 
 ### Changer de corpus
 

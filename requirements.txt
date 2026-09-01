@@ -16,8 +16,12 @@ fastapi>=0.115.0
 uvicorn>=0.30.0
 
 # Interface graphique
+# streamlit installe deja pandas et altair, mais l'interface les importe
+# directement (ui/graphiques.py) : une dependance utilisee doit etre declaree.
 streamlit>=1.38.0
 requests>=2.32.0
+pandas>=2.0.0
+altair>=5.0.0
 
 # Export PDF de la documentation (scripts/5_exporter_pdf.py)
 markdown>=3.5

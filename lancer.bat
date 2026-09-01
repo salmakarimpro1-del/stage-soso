@@ -52,7 +52,7 @@ echo [1/5] Environnement virtuel .............. deja present
 :venv_fait
 
 rem --- 3. Dependances ----------------------------------------------------
-"%PY%" -c "import faiss, sentence_transformers, fastapi, uvicorn, streamlit, rank_bm25, markdown" >nul 2>&1
+"%PY%" -c "import faiss, sentence_transformers, fastapi, uvicorn, streamlit, rank_bm25, markdown, pandas, altair" >nul 2>&1
 if not errorlevel 1 goto deps_deja
 echo [2/5] Installation des dependances : environ 2 Go a telecharger,
 echo       comptez 5 a 15 minutes selon la connexion.

@@ -7,7 +7,7 @@ venv/
 data/brut/*.jsonl
 data/index/*
 
-.streamlit/
+.streamlit/secrets.toml
 .pytest_cache/
 .DS_Store
 
