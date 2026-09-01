@@ -22,6 +22,7 @@ from pathlib import Path
 
 import config
 from src.embeddings import Encodeur
+from src.filtres import taille_vivier
 from src.index_faiss import IndexVectoriel
 from src.pretraitement import preparer_passages
 from src.resultats import regrouper_par_document
@@ -149,13 +150,14 @@ class MoteurSemantique:
         """
         self.encodeur.encoder_requetes(["préchauffage"], barre=False)
 
-    def chercher(self, requete: str, k: int | None = None) -> list[dict]:
+    def chercher(self, requete: str, k: int | None = None, filtres=None) -> list[dict]:
         """
         Recherche les articles les plus proches d'une requête en langage naturel.
 
         Args:
             requete: la question de l'utilisateur, dans n'importe quelle langue.
             k: nombre d'articles souhaités.
+            filtres: test optionnel sur les métadonnées (voir src/filtres.py).
 
         Returns:
             Une liste d'articles triés du plus pertinent au moins pertinent.
@@ -168,13 +170,17 @@ class MoteurSemantique:
 
         vecteur = self.encodeur.encoder_requete(requete)
         # On demande plus de passages que d'articles voulus, car plusieurs
-        # passages peuvent appartenir au même article.
-        scores, identifiants = self.index.rechercher(
-            vecteur, k * config.MULTIPLICATEUR_PASSAGES
+        # passages peuvent appartenir au même article — et beaucoup plus encore
+        # quand un filtre va en écarter une partie.
+        nb_candidats = taille_vivier(k, filtres is not None, config.MULTIPLICATEUR_PASSAGES)
+        scores, identifiants = self.index.rechercher(vecteur, nb_candidats)
+        return regrouper_par_document(
+            scores[0], identifiants[0], self.passages, k, filtre=filtres
         )
-        return regrouper_par_document(scores[0], identifiants[0], self.passages, k)
 
-    def chercher_lot(self, requetes: list[str], k: int | None = None) -> list[list[dict]]:
+    def chercher_lot(
+        self, requetes: list[str], k: int | None = None, filtres=None
+    ) -> list[list[dict]]:
         """
         Version par lot, utilisée par l'évaluation.
 
@@ -186,11 +192,12 @@ class MoteurSemantique:
             return []
 
         vecteurs = self.encodeur.encoder_requetes(requetes, barre=self.verbeux)
-        scores, identifiants = self.index.rechercher(
-            vecteurs, k * config.MULTIPLICATEUR_PASSAGES
-        )
+        nb_candidats = taille_vivier(k, filtres is not None, config.MULTIPLICATEUR_PASSAGES)
+        scores, identifiants = self.index.rechercher(vecteurs, nb_candidats)
         return [
-            regrouper_par_document(scores[i], identifiants[i], self.passages, k)
+            regrouper_par_document(
+                scores[i], identifiants[i], self.passages, k, filtre=filtres
+            )
             for i in range(len(requetes))
         ]
 

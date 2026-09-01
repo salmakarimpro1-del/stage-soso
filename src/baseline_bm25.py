@@ -28,6 +28,7 @@ import re
 from pathlib import Path
 
 import config
+from src.filtres import taille_vivier
 from src.resultats import regrouper_par_document
 
 # \w en Python couvre l'alphabet latin accentué ET l'alphabet arabe, ce qui
@@ -95,7 +96,7 @@ class MoteurLexical:
 
     # ------------------------------------------------------------------
 
-    def chercher(self, requete: str, k: int | None = None) -> list[dict]:
+    def chercher(self, requete: str, k: int | None = None, filtres=None) -> list[dict]:
         """Même signature et même format de sortie que le moteur sémantique."""
         k = k or config.TOP_K
         if not requete or not requete.strip() or self.bm25 is None:
@@ -108,7 +109,10 @@ class MoteurLexical:
         import numpy as np
 
         scores = np.asarray(self.bm25.get_scores(mots))
-        nb_a_prendre = min(k * config.MULTIPLICATEUR_PASSAGES, len(scores))
+        nb_a_prendre = min(
+            taille_vivier(k, filtres is not None, config.MULTIPLICATEUR_PASSAGES),
+            len(scores),
+        )
 
         # argpartition isole les nb_a_prendre meilleurs sans trier les 10 000
         # autres : on ne trie ensuite que ce petit sous-ensemble. Trier le
@@ -120,12 +124,14 @@ class MoteurLexical:
         meilleurs = [int(i) for i in indices if scores[i] > 0]
 
         return regrouper_par_document(
-            [scores[i] for i in meilleurs], meilleurs, self.passages, k
+            [scores[i] for i in meilleurs], meilleurs, self.passages, k, filtre=filtres
         )
 
-    def chercher_lot(self, requetes: list[str], k: int | None = None) -> list[list[dict]]:
+    def chercher_lot(
+        self, requetes: list[str], k: int | None = None, filtres=None
+    ) -> list[list[dict]]:
         """BM25 n'a pas de traitement par lot : on boucle simplement."""
-        return [self.chercher(requete, k) for requete in requetes]
+        return [self.chercher(requete, k, filtres=filtres) for requete in requetes]
 
     @property
     def nb_documents(self) -> int:

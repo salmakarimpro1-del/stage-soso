@@ -12,9 +12,14 @@ pooling », la plus courante et la plus simple à justifier.
 
 Cette fonction est partagée par le moteur sémantique et par la baseline
 lexicale, ce qui garantit que les deux sont comparés à traitement identique.
+C'est aussi ici que s'appliquent les filtres sur métadonnées, pour la même
+raison : un filtre qui ne s'appliquerait qu'à un seul des deux moteurs
+invaliderait toute comparaison.
 """
 
 from __future__ import annotations
+
+from typing import Callable
 
 
 def regrouper_par_document(
@@ -22,6 +27,7 @@ def regrouper_par_document(
     identifiants: list[int],
     passages: list[dict],
     k: int,
+    filtre: Callable[[dict], bool] | None = None,
 ) -> list[dict]:
     """
     Convertit une liste de passages trouvés en liste d'articles.
@@ -31,6 +37,10 @@ def regrouper_par_document(
         identifiants: position du passage dans la liste `passages`.
         passages: la liste complète des passages indexés.
         k: nombre d'articles à renvoyer.
+        filtre: test optionnel sur les métadonnées (voir src/filtres.py).
+                Il s'applique passage par passage, avant le regroupement et
+                avant la troncature à k : un article écarté libère donc sa
+                place pour le suivant au lieu de laisser un trou.
 
     Returns:
         Les k meilleurs articles, triés par score décroissant.
@@ -43,6 +53,10 @@ def regrouper_par_document(
             continue
 
         passage = passages[identifiant]
+
+        if filtre is not None and not filtre(passage):
+            continue
+
         id_doc = passage["id_doc"]
         score = float(score)
 
