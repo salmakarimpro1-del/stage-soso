@@ -26,7 +26,8 @@ d'évaluation.
 | Document | Ce qu'il contient |
 |---|---|
 | **README.md** (ce fichier) | installation, utilisation, choix techniques, résultats mesurés |
-| [soutenance.html](soutenance.html) | **le support de soutenance** — 26 diapositives, notes de l'orateur incluses |
+| [soutenance.pptx](soutenance.pptx) | **le support de soutenance en PowerPoint** — 26 diapositives, notes de l'orateur dans le volet Commentaires |
+| [soutenance.html](soutenance.html) | le même support dans le navigateur, sans rien installer |
 | [GUIDE_DU_CODE.md](GUIDE_DU_CODE.md) | le code expliqué fichier par fichier, dans l'ordre où la donnée le traverse |
 | [plan_apprentissage.html](plan_apprentissage.html) | plan d'apprentissage en 9 modules pour maîtriser les technologies employées |
 | [resultats/rapport_evaluation.md](resultats/rapport_evaluation.md) | tous les tableaux de mesures, régénérables |
@@ -35,8 +36,16 @@ d'évaluation.
 
 ### Le support de soutenance
 
-Un double-clic sur **`soutenance.html`** suffit : il s'ouvre dans n'importe quel
-navigateur, sans connexion et sans rien installer.
+Il existe en deux formats, avec exactement le même contenu et les mêmes notes.
+
+**`soutenance.pptx`** — le format attendu par la plupart des jurys. Il s'ouvre
+dans PowerPoint, LibreOffice Impress ou Google Slides, se modifie diapositive
+par diapositive, et les notes de l'orateur sont dans le volet Commentaires. Les
+cinq graphiques sont des graphiques PowerPoint **natifs** : cliquables,
+modifiables, avec leurs données — pas des images.
+
+**`soutenance.html`** — la même présentation dans le navigateur, sans rien
+installer et sans connexion. Un double-clic suffit.
 
 | Touche | Effet |
 |---|---|
