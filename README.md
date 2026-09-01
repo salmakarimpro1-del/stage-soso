@@ -26,8 +26,7 @@ d'évaluation.
 | Document | Ce qu'il contient |
 |---|---|
 | **README.md** (ce fichier) | installation, utilisation, choix techniques, résultats mesurés |
-| [soutenance.pptx](soutenance.pptx) | **le support de soutenance en PowerPoint** — 26 diapositives, notes de l'orateur dans le volet Commentaires |
-| [soutenance.html](soutenance.html) | le même support dans le navigateur, sans rien installer |
+| [soutenance.pptx](soutenance.pptx) | **le support de soutenance** — 14 diapositives présentées + 4 annexes, notes de l'orateur incluses |
 | [guide_complet.html](guide_complet.html) | **le guide de compréhension, français et arabe** — 63 pages : glossaire, métriques calculées à la main, 26 questions de jury avec leurs réponses |
 | [GUIDE_DU_CODE.md](GUIDE_DU_CODE.md) | le code expliqué fichier par fichier, dans l'ordre où la donnée le traverse |
 | [plan_apprentissage.html](plan_apprentissage.html) | plan d'apprentissage en 9 modules pour maîtriser les technologies employées |
@@ -37,34 +36,49 @@ d'évaluation.
 
 ### Le support de soutenance
 
-Il existe en deux formats, avec exactement le même contenu et les mêmes notes.
+**`soutenance.pptx`** — calibré pour une soutenance de **10 à 15 minutes** :
+14 diapositives présentées, soit environ une minute chacune.
 
-**`soutenance.pptx`** — le format attendu par la plupart des jurys. Il s'ouvre
-dans PowerPoint, LibreOffice Impress ou Google Slides, se modifie diapositive
-par diapositive, et les notes de l'orateur sont dans le volet Commentaires. Les
-cinq graphiques sont des graphiques PowerPoint **natifs** : cliquables,
-modifiables, avec leurs données — pas des images.
+Il s'ouvre dans PowerPoint, LibreOffice Impress ou Google Slides. Les notes de
+l'orateur sont dans le volet Commentaires — elles contiennent ce qu'il y a à
+dire, diapositive par diapositive. Les cinq graphiques sont des graphiques
+PowerPoint **natifs** : cliquables, modifiables, avec leurs données — pas des
+images.
 
-**`soutenance.html`** — la même présentation dans le navigateur, sans rien
-installer et sans connexion. Un double-clic suffit.
+**Quatre annexes** suivent la quatorzième diapositive et ne sont pas projetées :
+requêtes appauvries, coût de l'index, calcul des métriques, questions probables.
+On y saute si le jury pose la question. C'est la pratique en soutenance, et cela
+évite de gonfler le temps de parole.
 
-| Touche | Effet |
-|---|---|
-| `→` `Espace` / `←` | diapositive suivante / précédente |
-| `O` | vue d'ensemble des 26 diapositives, cliquables |
-| `N` | **notes de l'orateur** — ce qu'il y a à dire, diapositive par diapositive |
-| `F` | plein écran |
-| `P` | impression, ou export PDF |
+Le déroulé :
 
-Chaque diapositive porte son numéro dans l'adresse (`soutenance.html#19` ouvre
-directement le résultat multilingue). Tous les chiffres cités proviennent de
-`resultats/evaluation.json` : aucune valeur n'est saisie à la main.
+| # | Diapositive | Rôle |
+|---|---|---|
+| 1 | Titre | identité du projet |
+| 2 | Le problème | l'exemple arabe — commencer par le résultat |
+| 3 | Objectifs & périmètre | les 7 conditions de validation |
+| 4 | Architecture | les deux chaînes, un seul espace vectoriel |
+| 5 | Choix techniques | modèle, index, et la décision anti-fuite |
+| 6 | Les trois moteurs | sémantique, lexical, fusion RRF |
+| 7 | L'application | API, interface, explicabilité |
+| 8 | Protocole d'évaluation | trois protocoles, zéro annotation |
+| 9 | Résultat 1 | BM25 gagne — commencer par ce qui n'arrange pas |
+| 10 | Résultat 2 | ce que ce protocole ne mesure pas |
+| 11 | Résultat 3 | **le multilingue — le résultat central** |
+| 12 | Résultat 4 | la fusion hybride, et son coût |
+| 13 | Conclusion | la thèse, les limites, les perspectives |
+| 14 | Démonstration | le scénario en trois langues, puis les questions |
 
-Pour la version PDF, une diapositive par page :
+Deux partis pris de mise en forme. **Fond clair** : un projecteur de salle de
+cours délave les fonds sombres, alors que l'écran de l'application les rend très
+bien — d'où deux traitements différents pour deux supports différents. Seules
+l'ouverture et la clôture sont sombres, pour marquer le début et la fin.
+**Couleurs des moteurs conservées** : violet le sémantique, ambre le lexical,
+émeraude l'hybride, exactement comme dans l'application.
 
-```bash
-python scripts/5_exporter_pdf.py
-```
+Tous les chiffres cités proviennent de `resultats/evaluation.json` : aucune
+valeur n'est saisie à la main. Pour une version PDF, PowerPoint exporte
+nativement (Fichier → Exporter → PDF).
 
 ### Le guide de compréhension — français et arabe
 

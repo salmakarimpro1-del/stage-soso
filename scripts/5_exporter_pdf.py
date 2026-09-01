@@ -1,13 +1,15 @@
 """
 Script 5 — Exporter la documentation en PDF.
 
-Produit quatre documents dans export/ :
+Produit trois documents dans export/ :
 
     dossier_technique.pdf    le README complet, suivi du rapport d'évaluation
                              détaillé en annexe
     plan_apprentissage.pdf   le plan d'apprentissage en neuf modules
-    soutenance.pdf           le support de soutenance, une diapositive par page
     guide_complet.pdf        le guide de compréhension, français et arabe
+
+Le support de soutenance, lui, est un fichier PowerPoint : soutenance.pptx.
+PowerPoint l'exporte en PDF nativement, il n'a donc rien à faire ici.
 
 Le rendu passe par Chrome (ou Edge) en mode sans interface, qui applique
 les feuilles de style d'impression et conserve les liens cliquables. Aucune
@@ -300,15 +302,6 @@ def main() -> None:
             parametres="?print=1") and succes
     else:
         print("  guide_complet.html introuvable, ignoré")
-
-    # Le support de soutenance : une diapositive par page, au format paysage.
-    soutenance = config.RACINE / "soutenance.html"
-    if soutenance.exists():
-        succes = imprimer_en_pdf(
-            navigateur, soutenance, DOSSIER_EXPORT / "soutenance.pdf",
-            paysage=True) and succes
-    else:
-        print("  soutenance.html introuvable, ignoré")
 
     if succes:
         print(f"\nPDF disponibles dans {DOSSIER_EXPORT}")
