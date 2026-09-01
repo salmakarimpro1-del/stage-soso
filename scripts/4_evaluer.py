@@ -1,5 +1,11 @@
 """
-Script 4 — Évaluer et comparer les deux moteurs.
+Script 4 — Évaluer et comparer les moteurs.
+
+Trois moteurs sont mesurés sur exactement les mêmes requêtes : le moteur
+sémantique, la baseline lexicale BM25, et leur fusion hybride. Le troisième
+n'est pas un bonus décoratif — l'évaluation montre que chacun des deux premiers
+gagne sur un terrain différent, et la fusion est la conséquence logique de ce
+constat. Il fallait donc la mesurer, pas seulement l'annoncer.
 
 Produit deux fichiers dans resultats/ :
 
@@ -9,6 +15,7 @@ Produit deux fichiers dans resultats/ :
 Utilisation :
     python scripts/4_evaluer.py
     python scripts/4_evaluer.py --nb-requetes 200     # version rapide
+    python scripts/4_evaluer.py --sans-hybride        # les deux moteurs seuls
     python scripts/4_evaluer.py --sans-index          # sans le banc d'essai FAISS
 """
 
@@ -32,7 +39,17 @@ from src.evaluation import (
     mesurer_latences,
     stratifier_par_recouvrement,
 )
+from src.hybride import MoteurHybride
 from src.moteur import MoteurSemantique
+
+# Noms affichés dans les tableaux, associés aux clés du fichier de résultats.
+# Le fichier conserve la clé « bm25 » utilisée depuis le début du projet : la
+# renommer invaliderait les mesures déjà publiées dans le rapport.
+NOMS_MOTEURS = {
+    "semantique": "Sémantique (SBERT + FAISS)",
+    "bm25": "Lexical (BM25)",
+    "hybride": "Hybride (fusion RRF)",
+}
 
 
 def tableau_markdown(lignes: list[dict], colonnes: list[str]) -> str:
@@ -46,12 +63,25 @@ def tableau_markdown(lignes: list[dict], colonnes: list[str]) -> str:
     return "\n".join([entete, separateur, *corps])
 
 
+def moteurs_presents(bloc: dict) -> list[tuple[str, str]]:
+    """
+    (clé, nom affiché) des moteurs réellement mesurés dans un bloc de résultats.
+
+    Le rapport est ainsi écrit à partir de ce qui a été mesuré, et non d'une
+    liste figée : lancer l'évaluation avec `--sans-hybride` produit un rapport
+    à deux colonnes, sans ligne vide ni exception.
+    """
+    return [(cle, nom) for cle, nom in NOMS_MOTEURS.items() if isinstance(bloc.get(cle), dict)]
+
+
 def main() -> None:
     analyseur = argparse.ArgumentParser(description="Évaluation des moteurs")
     analyseur.add_argument("--nb-requetes", type=int, default=500)
     analyseur.add_argument("-k", type=int, default=10)
     analyseur.add_argument("--sans-index", action="store_true",
                            help="ne pas comparer index exact et index approximatif")
+    analyseur.add_argument("--sans-hybride", action="store_true",
+                           help="n'évaluer que le moteur sémantique et BM25")
     arguments = analyseur.parse_args()
 
     print("=" * 70)
@@ -62,9 +92,17 @@ def main() -> None:
     semantique = MoteurSemantique(verbeux=False).charger()
     lexical = MoteurLexical(verbeux=False).charger()
 
+    # Les trois moteurs partagent le même index et les mêmes passages : la
+    # comparaison porte donc uniquement sur la façon de classer, jamais sur
+    # ce qui a été indexé.
+    moteurs: dict = {"semantique": semantique, "bm25": lexical}
+    if not arguments.sans_hybride:
+        moteurs["hybride"] = MoteurHybride(semantique, lexical)
+
     print(f"Corpus   : {len(corpus)} articles")
     print(f"Index    : {semantique.nb_passages} passages, {semantique.nb_documents} articles")
     print(f"Modèle   : {config.NOM_MODELE}")
+    print(f"Moteurs  : {', '.join(moteurs)}")
 
     rapport: dict = {
         "configuration": {
@@ -74,6 +112,7 @@ def main() -> None:
             "nb_documents": semantique.nb_documents,
             "nb_passages": semantique.nb_passages,
             "k": arguments.k,
+            "moteurs": list(moteurs),
         }
     }
 
@@ -84,18 +123,15 @@ def main() -> None:
     requetes, attendus = construire_requetes_titres(corpus, nb_requetes=arguments.nb_requetes)
     print(f"{len(requetes)} requêtes générées automatiquement")
 
-    print("  moteur sémantique ...")
-    resultat_semantique = evaluer_moteur(semantique, requetes, attendus, k=arguments.k)
-    print("  baseline BM25 ...")
-    resultat_lexical = evaluer_moteur(lexical, requetes, attendus, k=arguments.k)
+    reference = {}
+    for cle, moteur in moteurs.items():
+        print(f"  {NOMS_MOTEURS[cle]} ...")
+        reference[cle] = evaluer_moteur(moteur, requetes, attendus, k=arguments.k)
 
-    rapport["titre_vers_resume"] = {
-        "semantique": resultat_semantique,
-        "bm25": resultat_lexical,
-    }
+    rapport["titre_vers_resume"] = reference
 
-    for nom, mesures in (("Sémantique", resultat_semantique), ("BM25", resultat_lexical)):
-        print(f"  {nom:<12} recall@1={mesures['recall@1']:.3f}  "
+    for cle, mesures in reference.items():
+        print(f"  {NOMS_MOTEURS[cle]:<28} recall@1={mesures['recall@1']:.3f}  "
               f"recall@10={mesures['recall@10']:.3f}  "
               f"MRR={mesures[f'mrr@{arguments.k}']:.3f}")
 
@@ -107,24 +143,24 @@ def main() -> None:
     stratification = []
 
     for groupe in groupes:
-        mesures_sem = evaluer_moteur(
-            semantique, groupe["requetes"], groupe["attendus"], k=arguments.k)
-        mesures_lex = evaluer_moteur(
-            lexical, groupe["requetes"], groupe["attendus"], k=arguments.k)
-
-        stratification.append({
+        entree = {
             "groupe": groupe["nom"],
             "nb_requetes": len(groupe["requetes"]),
             "recouvrement_moyen": groupe["recouvrement_moyen"],
             "recouvrement_min": groupe["recouvrement_min"],
             "recouvrement_max": groupe["recouvrement_max"],
-            "semantique": mesures_sem,
-            "bm25": mesures_lex,
-        })
+        }
+        for cle, moteur in moteurs.items():
+            entree[cle] = evaluer_moteur(
+                moteur, groupe["requetes"], groupe["attendus"], k=arguments.k)
 
-        print(f"  {groupe['nom']:<22} recouvrement={groupe['recouvrement_moyen']:.2f}  "
-              f"sémantique MRR={mesures_sem[f'mrr@{arguments.k}']:.3f}  "
-              f"BM25 MRR={mesures_lex[f'mrr@{arguments.k}']:.3f}")
+        stratification.append(entree)
+
+        mesures = "  ".join(
+            f"{NOMS_MOTEURS[cle].split(' ')[0]} MRR={entree[cle][f'mrr@{arguments.k}']:.3f}"
+            for cle in moteurs
+        )
+        print(f"  {groupe['nom']:<22} recouvrement={groupe['recouvrement_moyen']:.2f}  {mesures}")
 
     rapport["stratification_lexicale"] = stratification
 
@@ -137,23 +173,20 @@ def main() -> None:
     print(f"  exemple  avant : {origines[0][:72]}")
     print(f"           après : {appauvries[0][:72]}")
 
-    app_semantique = evaluer_moteur(semantique, appauvries, attendus_app, k=arguments.k)
-    app_lexical = evaluer_moteur(lexical, appauvries, attendus_app, k=arguments.k)
-
-    rapport["requetes_appauvries"] = {
+    bloc_appauvri = {
         "nb_mots_retires": 3,
         "exemple_avant": origines[0],
         "exemple_apres": appauvries[0],
-        "semantique": app_semantique,
-        "bm25": app_lexical,
     }
+    for cle, moteur in moteurs.items():
+        bloc_appauvri[cle] = evaluer_moteur(moteur, appauvries, attendus_app, k=arguments.k)
 
-    for nom, mesures, reference in (
-        ("Sémantique", app_semantique, resultat_semantique),
-        ("BM25", app_lexical, resultat_lexical),
-    ):
-        chute = mesures[f"mrr@{arguments.k}"] - reference[f"mrr@{arguments.k}"]
-        print(f"  {nom:<12} MRR={mesures[f'mrr@{arguments.k}']:.3f}  "
+    rapport["requetes_appauvries"] = bloc_appauvri
+
+    for cle in moteurs:
+        mesures = bloc_appauvri[cle]
+        chute = mesures[f"mrr@{arguments.k}"] - reference[cle][f"mrr@{arguments.k}"]
+        print(f"  {NOMS_MOTEURS[cle]:<28} MRR={mesures[f'mrr@{arguments.k}']:.3f}  "
               f"recall@10={mesures['recall@10']:.3f}  (variation {chute:+.3f})")
 
     # ------------------------------------------------------------------
@@ -164,16 +197,13 @@ def main() -> None:
         triplets = json.load(entree)["triplets"]
     print(f"{len(triplets)} questions posées en français, arabe et anglais")
 
-    multi_semantique = evaluer_coherence_multilingue(semantique, triplets, k=arguments.k)
-    multi_lexical = evaluer_coherence_multilingue(lexical, triplets, k=arguments.k)
-
     rapport["coherence_multilingue"] = {
-        "semantique": multi_semantique,
-        "bm25": multi_lexical,
+        cle: evaluer_coherence_multilingue(moteur, triplets, k=arguments.k)
+        for cle, moteur in moteurs.items()
     }
 
-    for nom, mesures in (("Sémantique", multi_semantique), ("BM25", multi_lexical)):
-        print(f"  {nom:<12} recouvrement fr/en={mesures['recouvrement_moyen_fr_en']:.3f}  "
+    for cle, mesures in rapport["coherence_multilingue"].items():
+        print(f"  {NOMS_MOTEURS[cle]:<28} fr/en={mesures['recouvrement_moyen_fr_en']:.3f}  "
               f"ar/en={mesures['recouvrement_moyen_ar_en']:.3f}  "
               f"(requêtes arabes sans résultat : {mesures['requetes_sans_resultat_ar']})")
 
@@ -182,17 +212,14 @@ def main() -> None:
     # ------------------------------------------------------------------
     print("\n--- Protocole 3 : latences ---")
     echantillon = requetes[:100]
-    latence_semantique = mesurer_latences(semantique, echantillon, k=arguments.k)
-    latence_lexical = mesurer_latences(lexical, echantillon, k=arguments.k)
-
     rapport["latences"] = {
-        "semantique": latence_semantique,
-        "bm25": latence_lexical,
+        cle: mesurer_latences(moteur, echantillon, k=arguments.k)
+        for cle, moteur in moteurs.items()
     }
-    print(f"  Sémantique   médiane={latence_semantique['latence_mediane_ms']} ms  "
-          f"p95={latence_semantique['latence_p95_ms']} ms")
-    print(f"  BM25         médiane={latence_lexical['latence_mediane_ms']} ms  "
-          f"p95={latence_lexical['latence_p95_ms']} ms")
+
+    for cle, mesures in rapport["latences"].items():
+        print(f"  {NOMS_MOTEURS[cle]:<28} médiane={mesures['latence_mediane_ms']} ms  "
+              f"p95={mesures['latence_p95_ms']} ms")
 
     # ------------------------------------------------------------------
     # Protocole 3 bis : index exact contre index approximatif
@@ -244,9 +271,10 @@ def ecrire_rapport(sortie, rapport: dict, k: int) -> None:
                  "lui-même. Le titre n'est pas indexé, ce qui écarte toute correspondance "
                  "exacte en faveur de BM25.\n\n")
 
+    bloc = rapport["titre_vers_resume"]
     lignes = []
-    for nom, cle in (("Sémantique (SBERT + FAISS)", "semantique"), ("Lexical (BM25)", "bm25")):
-        mesures = rapport["titre_vers_resume"][cle]
+    for cle, nom in moteurs_presents(bloc):
+        mesures = bloc[cle]
         lignes.append({
             "Moteur": nom,
             "Recall@1": f"{mesures['recall@1']:.3f}",
@@ -261,23 +289,27 @@ def ecrire_rapport(sortie, rapport: dict, k: int) -> None:
 
     if "stratification_lexicale" in rapport:
         sortie.write("## Protocole 1 bis — selon le recouvrement lexical\n\n")
-        sortie.write("Les mêmes 500 requêtes, réparties en trois groupes selon la part "
+        sortie.write("Les mêmes requêtes, réparties en trois groupes selon la part "
                      "des mots de la requête effectivement présents dans le document "
                      "attendu. C'est la quantité dont BM25 dépend entièrement.\n\n")
 
+        cles = [cle for cle, _ in moteurs_presents(rapport["stratification_lexicale"][0])]
+        colonnes = ["Groupe", "Requêtes", "Recouvrement"] + [
+            f"{NOMS_MOTEURS[cle].split(' ')[0]} MRR@{k}" for cle in cles
+        ]
+
         lignes = []
         for groupe in rapport["stratification_lexicale"]:
-            lignes.append({
+            ligne = {
                 "Groupe": groupe["groupe"],
                 "Requêtes": groupe["nb_requetes"],
                 "Recouvrement": f"{groupe['recouvrement_moyen']:.2f}",
-                f"Sémantique MRR@{k}": f"{groupe['semantique'][f'mrr@{k}']:.3f}",
-                f"BM25 MRR@{k}": f"{groupe['bm25'][f'mrr@{k}']:.3f}",
-                "Écart": f"{groupe['semantique'][f'mrr@{k}'] - groupe['bm25'][f'mrr@{k}']:+.3f}",
-            })
-        sortie.write(tableau_markdown(lignes, [
-            "Groupe", "Requêtes", "Recouvrement",
-            f"Sémantique MRR@{k}", f"BM25 MRR@{k}", "Écart"]))
+            }
+            for cle in cles:
+                ligne[f"{NOMS_MOTEURS[cle].split(' ')[0]} MRR@{k}"] = f"{groupe[cle][f'mrr@{k}']:.3f}"
+            lignes.append(ligne)
+
+        sortie.write(tableau_markdown(lignes, colonnes))
         sortie.write("\n\nMême le tiers le plus difficile partage encore les deux tiers de "
                      "son vocabulaire avec le bon document : ce protocole n'atteint jamais "
                      "le régime où la correspondance de mots cesse de fonctionner.\n\n")
@@ -292,14 +324,14 @@ def ecrire_rapport(sortie, rapport: dict, k: int) -> None:
         sortie.write(f"- Après : *{appauvries['exemple_apres']}*\n\n")
 
         lignes = []
-        for nom, cle in (("Sémantique", "semantique"), ("Lexical (BM25)", "bm25")):
+        for cle, nom in moteurs_presents(appauvries):
             mesures = appauvries[cle]
-            reference = rapport["titre_vers_resume"][cle]
+            depart = rapport["titre_vers_resume"][cle]
             lignes.append({
                 "Moteur": nom,
-                f"MRR@{k} normal": f"{reference[f'mrr@{k}']:.3f}",
+                f"MRR@{k} normal": f"{depart[f'mrr@{k}']:.3f}",
                 f"MRR@{k} appauvri": f"{mesures[f'mrr@{k}']:.3f}",
-                "Variation": f"{mesures[f'mrr@{k}'] - reference[f'mrr@{k}']:+.3f}",
+                "Variation": f"{mesures[f'mrr@{k}'] - depart[f'mrr@{k}']:+.3f}",
                 "Recall@10": f"{mesures['recall@10']:.3f}",
             })
         sortie.write(tableau_markdown(lignes, [
@@ -316,9 +348,10 @@ def ecrire_rapport(sortie, rapport: dict, k: int) -> None:
                  "corpus entièrement anglophone. On mesure la part d'articles communs "
                  "entre les résultats de deux langues.\n\n")
 
+    bloc = rapport["coherence_multilingue"]
     lignes = []
-    for nom, cle in (("Sémantique", "semantique"), ("Lexical (BM25)", "bm25")):
-        mesures = rapport["coherence_multilingue"][cle]
+    for cle, nom in moteurs_presents(bloc):
+        mesures = bloc[cle]
         lignes.append({
             "Moteur": nom,
             "Recouvrement fr/en": f"{mesures['recouvrement_moyen_fr_en']:.3f}",
@@ -346,9 +379,10 @@ def ecrire_rapport(sortie, rapport: dict, k: int) -> None:
     sortie.write("\n\n")
 
     sortie.write("## Protocole 3 — latences\n\n")
+    bloc = rapport["latences"]
     lignes = []
-    for nom, cle in (("Sémantique", "semantique"), ("Lexical (BM25)", "bm25")):
-        mesures = rapport["latences"][cle]
+    for cle, nom in moteurs_presents(bloc):
+        mesures = bloc[cle]
         lignes.append({
             "Moteur": nom,
             "Médiane (ms)": mesures["latence_mediane_ms"],
@@ -358,7 +392,9 @@ def ecrire_rapport(sortie, rapport: dict, k: int) -> None:
         })
     sortie.write(tableau_markdown(
         lignes, ["Moteur", "Médiane (ms)", "Moyenne (ms)", "p95 (ms)", "Max (ms)"]))
-    sortie.write("\n\n")
+    sortie.write("\n\nLe moteur hybride, lorsqu'il est évalué, interroge les deux autres "
+                 "puis fusionne : sa latence est par construction la somme des leurs. "
+                 "C'est le prix de la fusion, et il se lit directement dans ce tableau.\n\n")
 
     if "comparaison_index" in rapport:
         sortie.write("## Protocole 3 bis — index exact contre index approximatif\n\n")
