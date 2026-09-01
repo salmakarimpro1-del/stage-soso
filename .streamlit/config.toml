@@ -1,0 +1,25 @@
+# Thème de base de Streamlit.
+#
+# L'essentiel de l'apparence est défini dans ui/theme.py, qui injecte sa
+# propre feuille de style. Ce fichier ne règle que ce qui est décidé avant
+# l'exécution du script : la couleur de fond du tout premier affichage, et
+# le thème des composants internes (menus déroulants, curseurs).
+#
+# Sans lui, la page apparaît blanche une fraction de seconde avant que le CSS
+# ne soit appliqué — un clignotement très visible en démonstration.
+
+[theme]
+base = "dark"
+primaryColor = "#8b5cf6"
+backgroundColor = "#080a0f"
+secondaryBackgroundColor = "#11141d"
+textColor = "#e9ecf5"
+font = "sans serif"
+
+[server]
+# Le rechargement automatique évite d'avoir à redémarrer l'interface à chaque
+# modification du code pendant le développement.
+runOnSave = true
+
+[browser]
+gatherUsageStats = false
